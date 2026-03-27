@@ -4,7 +4,7 @@ resolver = "2"
 
 [package]
 name = "typst-business-templates"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Casoon <info@casoon.de>"]
 description = "Business document templates (invoices, offers, contracts) as an embeddable Rust library — powered by Typst, no CLI required"
@@ -22,15 +22,18 @@ exclude = [
     "releases/",
     "cli/",
     ".github/",
+    ".claude/",
+    ".gitguardian.yaml",
     "docs/",
     "examples/",
+    "fonts/",
+    "data/",
+    "schema/",
+    "Formula/",
+    "install.sh",
     "*.tar.gz",
     "*.zip",
     "**/*.pdf",
-    "data/docgen.db",
-    "data/logo.png",
-    "Formula/",
-    "install.sh",
     "CHANGELOG.md",
     "CONCEPT.md",
     "DOCUMENT-TYPES.md",
