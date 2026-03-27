@@ -246,8 +246,6 @@
       text(fill: rgb("#92400e"))[→],
       [Ab Seite 2 beginnt das Schülermaterial — diese Seite vor dem Kopieren entfernen.],
       text(fill: rgb("#92400e"))[→],
-      [Der KI-Hinweis auf dem Schülerblatt erklärt transparent, welche KI-Nutzung erlaubt ist.],
-      text(fill: rgb("#92400e"))[→],
       [Version #version — bei inhaltlichen Änderungen bitte Versionsnummer erhöhen.],
     )
   ]
@@ -293,7 +291,7 @@
           align: (left, center, right),
           [#category #if subject != none [· #subject]],
           [Seite #counter(page).display()],
-          [Upscale],
+          [Language Toolbox],
         )
       ]
     },
