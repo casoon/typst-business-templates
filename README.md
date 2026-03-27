@@ -1,5 +1,144 @@
 # Typst Business Templates
 
+[![Crates.io](https://img.shields.io/crates/v/typst-business-templates.svg)](https://crates.io/crates/typst-business-templates)
+[![Documentation](https://docs.rs/typst-business-templates/badge.svg)](https://docs.rs/typst-business-templates)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+**Professional document generation for small businesses — as a Rust library or standalone CLI.**
+
+Generate invoices, offers, contracts and more as PDF without a running Typst installation.
+Templates, fonts and localization are embedded directly in the binary.
+
+Created by [casoon.de](https://www.casoon.de).
+
+---
+
+## Rust Library
+
+Add to your `Cargo.toml`:
+
+```toml
+[dependencies]
+typst-business-templates = "0.1"
+```
+
+### Quick Start
+
+```rust
+use typst_business_templates::{
+    DocgenCompiler, CompanyData, CompanyAddress, CompanyContact,
+    InvoiceData, InvoiceMetadata, InvoiceRecipient, InvoiceItem,
+};
+
+fn main() -> anyhow::Result<()> {
+    let company = CompanyData {
+        name: "Mustermann IT-Services".into(),
+        language: "de".into(),
+        address: CompanyAddress {
+            street: "Musterstraße".into(),
+            house_number: "1".into(),
+            postal_code: "12345".into(),
+            city: "Berlin".into(),
+            country: Some("Deutschland".into()),
+        },
+        contact: CompanyContact {
+            email: Some("info@example.com".into()),
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+
+    let invoice = InvoiceData {
+        metadata: InvoiceMetadata {
+            invoice_number: "RE-2024-001".into(),
+            invoice_date: "01.01.2024".into(),
+            due_date: "15.01.2024".into(),
+            ..Default::default()
+        },
+        recipient: InvoiceRecipient {
+            name: "Kunde GmbH".into(),
+            company: Some("Kunde GmbH".into()),
+            address: typst_business_templates::types::RecipientAddress {
+                street: "Kundenstraße".into(),
+                house_number: "42".into(),
+                postal_code: "10115".into(),
+                city: "Berlin".into(),
+                country: None,
+            },
+        },
+        items: vec![InvoiceItem {
+            position: 1,
+            description: "Webentwicklung".into(),
+            quantity: 8.0,
+            unit: "h".into(),
+            vat_rate: typst_business_templates::types::VatRate { percentage: 19 },
+            unit_price: typst_business_templates::types::MoneyAmount { amount: 90.0, currency: None },
+            total: typst_business_templates::types::MoneyAmount { amount: 720.0, currency: None },
+            sub_items: vec![],
+        }],
+        totals: typst_business_templates::types::InvoiceTotals {
+            subtotal: typst_business_templates::types::MoneyAmount { amount: 720.0, currency: None },
+            vat_breakdown: vec![typst_business_templates::types::VatBreakdownItem {
+                rate: 19,
+                base: typst_business_templates::types::MoneyAmount { amount: 720.0, currency: None },
+                amount: typst_business_templates::types::MoneyAmount { amount: 136.80, currency: None },
+            }],
+            total: typst_business_templates::types::MoneyAmount { amount: 856.80, currency: None },
+        },
+        payment: typst_business_templates::types::InvoicePayment {
+            due_date: "15.01.2024".into(),
+            bank_transfer_note: None,
+        },
+        salutation: None,
+        closing: None,
+    };
+
+    let pdf = DocgenCompiler::new().compile_invoice(&invoice, &company)?;
+    std::fs::write("rechnung.pdf", pdf)?;
+    println!("PDF generated: rechnung.pdf");
+    Ok(())
+}
+```
+
+### Supported Templates
+
+| Template name | Document type |
+|---|---|
+| `invoice` | Rechnung / Invoice |
+| `offer` | Angebot / Offer |
+| `contract` | Vertrag / Contract |
+| `credentials` | Zugangsdaten / Credentials |
+| `concept` | Konzept / Concept |
+| `documentation` | Dokumentation / Documentation |
+| `letter` | Brief / Letter |
+| `delivery-note` | Lieferschein / Delivery Note |
+| `credit-note` | Gutschrift / Credit Note |
+| `reminder` | Mahnung / Reminder |
+
+For templates other than `invoice`, use the generic `compile()` method:
+
+```rust
+let pdf = DocgenCompiler::new().compile(
+    "offer",
+    serde_json::to_vec(&offer_data)?,
+    &company,
+    "de",
+)?;
+```
+
+### Custom Fonts
+
+By default, system fonts are used. To load additional fonts:
+
+```rust
+let compiler = DocgenCompiler::new()
+    .with_fonts_dir("/path/to/fonts");
+```
+
+---
+
+## CLI (`docgen`)
+
 **Professional document generation for small businesses without expensive software.**
 
 Stop paying for bloated invoice and document software. This open-source solution combines:

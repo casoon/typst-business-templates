@@ -1,0 +1,62 @@
+[workspace]
+members = [".", "cli"]
+resolver = "2"
+
+[package]
+name = "typst-business-templates"
+version = "0.1.0"
+edition = "2021"
+authors = ["Casoon <info@casoon.de>"]
+description = "Business document templates (invoices, offers, contracts) as an embeddable Rust library — powered by Typst, no CLI required"
+homepage = "https://www.casoon.de"
+repository = "https://github.com/casoon/typst-business-templates"
+documentation = "https://docs.rs/typst-business-templates"
+license = "MIT"
+keywords = ["invoice", "pdf", "typst", "business", "document"]
+categories = ["text-processing", "rendering", "template-engine"]
+readme = "README.md"
+rust-version = "1.75"
+exclude = [
+    "target/",
+    "output/",
+    "releases/",
+    "cli/",
+    ".github/",
+    "docs/",
+    "examples/",
+    "*.tar.gz",
+    "*.zip",
+    "**/*.pdf",
+    "data/docgen.db",
+    "data/logo.png",
+    "Formula/",
+    "install.sh",
+    "CHANGELOG.md",
+    "CONCEPT.md",
+    "DOCUMENT-TYPES.md",
+]
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+# Typst as embedded render engine
+typst = "0.13"
+typst-pdf = "0.13"
+
+# Embed templates + locale at compile time
+include_dir = "0.7"
+
+# Font handling
+fontdb = "0.22"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "2.0"
+
+# Date/time
+chrono = "0.4"

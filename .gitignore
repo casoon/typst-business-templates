@@ -4,6 +4,7 @@
 !examples/*/output/*.pdf
 
 # Rust
+/target/
 /cli/target/
 
 # Database
