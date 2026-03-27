@@ -2548,7 +2548,7 @@ checksum = "b5bf0cc3c2265502b51fcb73147cc7c951ceb694507195b93c2ab0b901abb902"
 
 [[package]]
 name = "typst-business-templates"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "chrono",
