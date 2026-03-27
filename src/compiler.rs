@@ -11,6 +11,9 @@ pub static TEMPLATES: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/templates
 /// Locale JSON files, embedded at compile time
 pub static LOCALE: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/locale");
 
+/// Bundled Google Fonts, embedded at compile time
+pub static FONTS: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/fonts");
+
 /// Compiles business document templates to PDF bytes.
 ///
 /// # Example

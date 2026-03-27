@@ -11,7 +11,9 @@ use typst::syntax::{FileId, Source, VirtualPath};
 use typst::text::{Font, FontBook};
 use typst::{Library, World};
 
-use crate::compiler::{LOCALE, TEMPLATES};
+use include_dir::Dir;
+
+use crate::compiler::{FONTS, LOCALE, TEMPLATES};
 
 pub struct DocgenWorld {
     main_id: FileId,
@@ -55,8 +57,9 @@ impl DocgenWorld {
 
         let library = typst::utils::LazyHash::new(Library::builder().with_inputs(inputs).build());
 
-        // Font setup
+        // Font setup — embedded fonts first, then system/custom paths
         let mut fontdb = Database::new();
+        load_embedded_fonts(&FONTS, &mut fontdb);
         if use_system_fonts {
             fontdb.load_system_fonts();
         }
@@ -207,5 +210,18 @@ impl World for DocgenWorld {
                 now.format("%S").to_string().parse().ok()?,
             )
         })
+    }
+}
+
+/// Recursively load all embedded .ttf/.otf font files into fontdb.
+fn load_embedded_fonts(dir: &Dir, fontdb: &mut Database) {
+    for file in dir.files() {
+        let name = file.path().to_string_lossy().to_lowercase();
+        if name.ends_with(".ttf") || name.ends_with(".otf") {
+            fontdb.load_font_data(file.contents().to_vec());
+        }
+    }
+    for subdir in dir.dirs() {
+        load_embedded_fonts(subdir, fontdb);
     }
 }
