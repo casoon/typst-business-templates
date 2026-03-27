@@ -1,6 +1,5 @@
 //! Typst World implementation for embedded compilation without CLI.
 
-use std::cell::OnceCell;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{OnceLock, RwLock};
@@ -24,25 +23,6 @@ pub struct DocgenWorld {
     virtual_files: RwLock<HashMap<FileId, Bytes>>,
     now: OnceLock<Option<Datetime>>,
 }
-
-/// Slot for lazily-loaded template source files
-struct SourceSlot {
-    source: OnceCell<FileResult<Source>>,
-    bytes: OnceCell<FileResult<Bytes>>,
-}
-
-impl SourceSlot {
-    fn new() -> Self {
-        Self {
-            source: OnceCell::new(),
-            bytes: OnceCell::new(),
-        }
-    }
-}
-
-// Safety: OnceCell is single-initialization only
-unsafe impl Send for SourceSlot {}
-unsafe impl Sync for SourceSlot {}
 
 impl DocgenWorld {
     pub fn new(
