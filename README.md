@@ -110,6 +110,7 @@ fn main() -> anyhow::Result<()> {
 | `credentials` | Zugangsdaten / Credentials |
 | `concept` | Konzept / Concept |
 | `documentation` | Dokumentation / Documentation |
+| `diagram` | Diagramme / Diagrams |
 | `letter` | Brief / Letter |
 | `delivery-note` | Lieferschein / Delivery Note |
 | `credit-note` | Gutschrift / Credit Note |
@@ -121,6 +122,17 @@ For templates other than `invoice`, use the generic `compile()` method:
 let pdf = DocgenCompiler::new().compile(
     "offer",
     serde_json::to_vec(&offer_data)?,
+    &company,
+    "de",
+)?;
+```
+
+For diagrams, pass a JSON structure with nodes, edges, and layout metadata:
+
+```rust
+let pdf = DocgenCompiler::new().compile(
+    "diagram",
+    std::fs::read("examples/diagram-flow/diagram.json")?,
     &company,
     "de",
 )?;
@@ -192,6 +204,7 @@ An AI assistant (we recommend [Claude](https://claude.ai)) generates the JSON, y
 - **Credentials Template** - Secure access documentation for clients
 - **Concept Template** - Project concepts and proposals
 - **Documentation Template** - Technical documentation, API docs, project docs
+- **Diagram Template** - Mindmaps, flowcharts, org charts, and simple software architecture diagrams
 - **Simple CLI** - Manage clients, projects, and create documents
 - **JSON Data Storage** - Human-readable data files with automatic numbering
 - **Direct .typ File Support** - Write documents directly in Typst without JSON
@@ -269,6 +282,28 @@ docgen --help
 ```
 
 ## Direct .typ File Support & Templates
+
+## Diagram PDFs
+
+`docgen` can now generate diagram PDFs from JSON without manual positioning or external Typst packages.
+
+Supported diagram styles:
+- `tree` / `hierarchical`
+- `flow` / `layered`
+- `mindmap` / `radial`
+- `architecture` / `layered`
+
+Example:
+
+```bash
+docgen compile examples/diagram-flow/diagram.json -o output/diagram.pdf
+```
+
+Available showcase examples:
+- `examples/diagram-flow/diagram.json`
+- `examples/diagram-mindmap/diagram.json`
+- `examples/diagram-orgchart/diagram.json`
+- `examples/diagram-architecture/diagram.json`
 
 ### Template System (v0.5.0+)
 

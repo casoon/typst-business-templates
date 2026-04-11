@@ -1,0 +1,82 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "architecture",
+    "layout": "layered",
+    "title": "Plattform-Architektur",
+    "subtitle": "Frontend, APIs, Services und Datenhaltung"
+  },
+  "nodes": [
+    {
+      "id": "web-app",
+      "label": "Web App",
+      "shape": "rounded",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "mobile-app",
+      "label": "Mobile App",
+      "shape": "rounded",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "api-gateway",
+      "label": "API Gateway",
+      "shape": "rounded",
+      "style": { "fill": "#ffffff", "stroke": "#0f172a" }
+    },
+    {
+      "id": "auth-service",
+      "label": "Auth Service",
+      "shape": "rounded",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "project-service",
+      "label": "Project Service",
+      "shape": "rounded",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "billing-service",
+      "label": "Billing Service",
+      "shape": "rounded",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "queue",
+      "label": "Job Queue",
+      "shape": "rounded",
+      "style": { "fill": "#ede9fe", "stroke": "#7c3aed" }
+    },
+    {
+      "id": "postgres",
+      "label": "PostgreSQL",
+      "shape": "circle",
+      "style": { "fill": "#fee2e2", "stroke": "#dc2626" }
+    },
+    {
+      "id": "storage",
+      "label": "Object Storage",
+      "shape": "circle",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    }
+  ],
+  "edges": [
+    { "from": "web-app", "to": "api-gateway", "label": "HTTPS" },
+    { "from": "mobile-app", "to": "api-gateway", "label": "HTTPS" },
+    { "from": "api-gateway", "to": "auth-service", "label": "JWT" },
+    { "from": "api-gateway", "to": "project-service", "label": "REST" },
+    { "from": "api-gateway", "to": "billing-service", "label": "REST" },
+    { "from": "project-service", "to": "queue", "label": "Events" },
+    { "from": "auth-service", "to": "postgres", "label": "Users" },
+    { "from": "project-service", "to": "postgres", "label": "Projects" },
+    { "from": "billing-service", "to": "postgres", "label": "Invoices" },
+    { "from": "project-service", "to": "storage", "label": "Files" },
+    { "from": "queue", "to": "storage", "label": "Exports" }
+  ]
+}

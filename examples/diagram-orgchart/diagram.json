@@ -1,0 +1,77 @@
+{
+  "document": {
+    "paper": "a4",
+    "flipped": true,
+    "margin": "14mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "tree",
+    "layout": "hierarchical",
+    "title": "Organigramm",
+    "subtitle": "Beispielstruktur einer Agentur"
+  },
+  "nodes": [
+    {
+      "id": "ceo",
+      "label": "Geschäftsführung",
+      "shape": "rounded",
+      "style": { "fill": "#ffffff", "stroke": "#0f172a" }
+    },
+    {
+      "id": "strategy",
+      "label": "Strategie",
+      "parent": "ceo",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "design",
+      "label": "Design",
+      "parent": "ceo",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    },
+    {
+      "id": "engineering",
+      "label": "Engineering",
+      "parent": "ceo",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "client-services",
+      "label": "Client Services",
+      "parent": "ceo",
+      "style": { "fill": "#ede9fe", "stroke": "#7c3aed" }
+    },
+    {
+      "id": "research",
+      "label": "Research",
+      "parent": "strategy"
+    },
+    {
+      "id": "brand",
+      "label": "Brand Design",
+      "parent": "design"
+    },
+    {
+      "id": "product",
+      "label": "Product Design",
+      "parent": "design"
+    },
+    {
+      "id": "frontend",
+      "label": "Frontend",
+      "parent": "engineering"
+    },
+    {
+      "id": "backend",
+      "label": "Backend",
+      "parent": "engineering"
+    },
+    {
+      "id": "pm",
+      "label": "Projektleitung",
+      "parent": "client-services"
+    }
+  ],
+  "edges": []
+}

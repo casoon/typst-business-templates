@@ -32,6 +32,7 @@ pub fn get_available_templates() -> Vec<String> {
         "credentials".to_string(),
         "credit-note".to_string(),
         "delivery-note".to_string(),
+        "diagram".to_string(),
         "documentation".to_string(),
         "invoice".to_string(),
         "letter".to_string(),

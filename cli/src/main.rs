@@ -8,8 +8,10 @@ mod locale;
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use colored::Colorize;
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use typst_business_templates::{CompanyData, DocgenCompiler};
 use walkdir::WalkDir;
 
 // Import new JSON-based stores
@@ -531,6 +533,30 @@ fn compile_document(
         // JSON-based compilation with template
         let doc_type = template
             .unwrap_or_else(|| detect_document_type(input).unwrap_or("invoice".to_string()));
+
+        if doc_type == "diagram" {
+            let company = load_company_data(company_json_path)?;
+            let data = fs::read(input).context("Failed to read diagram JSON")?;
+            let pdf =
+                DocgenCompiler::new().compile("diagram", data, &company, &company.language)?;
+            fs::write(&output_path, pdf).context("Failed to write diagram PDF")?;
+
+            if encrypt {
+                encrypt::check_qpdf_available()?;
+
+                println!("{} {}", "→".blue(), "Encrypting PDF...");
+                let encryption_opts = encrypt::prompt_encryption_options()?;
+                let temp_path = output_path.with_extension("pdf.tmp");
+                std::fs::rename(&output_path, &temp_path)?;
+                encrypt::encrypt_pdf(&temp_path, &output_path, encryption_opts)?;
+                std::fs::remove_file(&temp_path)?;
+                println!("{} {}", "✓".green(), "PDF encrypted successfully");
+            }
+
+            println!("{} {}", "✓".green(), t("compile", "success"));
+            return Ok(());
+        }
+
         let template_path = format!(".docgen/templates/{}/default.typ", doc_type);
         let data_path = format!("/{}", input.display());
 
@@ -579,6 +605,37 @@ fn compile_document(
         Ok(())
     } else {
         anyhow::bail!("{}", t("compile", "failed"))
+    }
+}
+
+fn load_company_data(path: &Path) -> Result<CompanyData> {
+    if path.exists() {
+        let content = fs::read(path)?;
+        Ok(serde_json::from_slice(&content).context("Failed to parse data/company.json")?)
+    } else {
+        Ok(CompanyData {
+            name: "Diagram".to_string(),
+            language: "de".to_string(),
+            logo: None,
+            logo_width: None,
+            branding: Default::default(),
+            address: typst_business_templates::types::CompanyAddress {
+                street: String::new(),
+                house_number: String::new(),
+                postal_code: String::new(),
+                city: String::new(),
+                country: None,
+            },
+            contact: typst_business_templates::types::CompanyContact {
+                phone: None,
+                email: None,
+                website: None,
+            },
+            tax_id: None,
+            vat_id: None,
+            business_owner: None,
+            bank_account: None,
+        })
     }
 }
 
@@ -734,6 +791,13 @@ fn detect_document_type(path: &Path) -> Option<String> {
         Some("concept".to_string())
     } else if s.contains("documentation") || s.contains("dokumentation") || s.contains("/dok-") {
         Some("documentation".to_string())
+    } else if s.contains("diagram")
+        || s.contains("mindmap")
+        || s.contains("flowchart")
+        || s.contains("organigram")
+        || s.contains("visual")
+    {
+        Some("diagram".to_string())
     } else if s.contains("contract") || s.contains("vertrag") || s.contains("/vtr-") {
         Some("contract".to_string())
     } else if s.contains("protocol") || s.contains("protokoll") || s.contains("/prot-") {

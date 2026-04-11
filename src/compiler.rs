@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use include_dir::{include_dir, Dir};
 
+use crate::diagram::preprocess_diagram_data;
 use crate::types::CompanyData;
 use crate::world::DocgenWorld;
 
@@ -71,10 +72,14 @@ impl DocgenCompiler {
     pub fn compile(
         &self,
         template_name: &str,
-        data_json: Vec<u8>,
+        mut data_json: Vec<u8>,
         company: &CompanyData,
         language: &str,
     ) -> anyhow::Result<Vec<u8>> {
+        if template_name == "diagram" {
+            data_json = preprocess_diagram_data(&data_json)?;
+        }
+
         // Load template source
         let template_path = format!("{}/default.typ", template_name);
         let template_file = TEMPLATES
@@ -110,12 +115,12 @@ impl DocgenCompiler {
 
         match result.output {
             Ok(document) => {
-                let pdf = typst_pdf::pdf(&document, &typst_pdf::PdfOptions::default())
-                    .map_err(|errors| {
-                        let msgs: Vec<String> =
-                            errors.iter().map(|e| format!("{:?}", e)).collect();
+                let pdf = typst_pdf::pdf(&document, &typst_pdf::PdfOptions::default()).map_err(
+                    |errors| {
+                        let msgs: Vec<String> = errors.iter().map(|e| format!("{:?}", e)).collect();
                         anyhow::anyhow!("PDF rendering failed: {}", msgs.join("; "))
-                    })?;
+                    },
+                )?;
                 Ok(pdf)
             }
             Err(errors) => {
@@ -123,7 +128,10 @@ impl DocgenCompiler {
                     .iter()
                     .map(|e| format!("{:?}: {}", e.span, e.message))
                     .collect();
-                Err(anyhow::anyhow!("Typst compilation failed: {}", msgs.join("\n")))
+                Err(anyhow::anyhow!(
+                    "Typst compilation failed: {}",
+                    msgs.join("\n")
+                ))
             }
         }
     }

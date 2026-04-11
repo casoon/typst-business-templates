@@ -1,0 +1,26 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "flow",
+    "layout": "layered",
+    "title": "Release-Workflow",
+    "subtitle": "Automatisch berechnetes Diagramm ohne manuelle Positionierung"
+  },
+  "nodes": [
+    { "id": "briefing", "label": "Briefing", "shape": "rounded", "style": { "fill": "#ffffff" } },
+    { "id": "design", "label": "Design", "shape": "rounded", "style": { "fill": "#dbeafe" } },
+    { "id": "review", "label": "Review", "shape": "diamond", "style": { "fill": "#fef3c7" } },
+    { "id": "build", "label": "Build", "shape": "rounded", "style": { "fill": "#dcfce7" } },
+    { "id": "release", "label": "Release", "shape": "circle", "style": { "fill": "#fee2e2" } }
+  ],
+  "edges": [
+    { "from": "briefing", "to": "design", "label": "Input" },
+    { "from": "design", "to": "review", "label": "Entwurf" },
+    { "from": "review", "to": "build", "label": "Freigabe" },
+    { "from": "build", "to": "release", "label": "Deploy" }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "flow",
+    "layout": "layered",
+    "title": "Projektfreigabe",
+    "subtitle": "Von der Anfrage bis zur Auslieferung"
+  },
+  "nodes": [
+    {
+      "id": "anfrage",
+      "label": "Anfrage",
+      "shape": "rounded",
+      "style": { "fill": "#ffffff", "stroke": "#1d4ed8" }
+    },
+    {
+      "id": "analyse",
+      "label": "Analyse",
+      "shape": "rounded",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "entscheidung",
+      "label": "Freigabe?",
+      "shape": "diamond",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    },
+    {
+      "id": "umsetzung",
+      "label": "Umsetzung",
+      "shape": "rounded",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "qa",
+      "label": "QA & Abnahme",
+      "shape": "rounded",
+      "style": { "fill": "#ede9fe", "stroke": "#7c3aed" }
+    },
+    {
+      "id": "go-live",
+      "label": "Go-Live",
+      "shape": "circle",
+      "style": { "fill": "#fee2e2", "stroke": "#dc2626" }
+    }
+  ],
+  "edges": [
+    { "from": "anfrage", "to": "analyse", "label": "Briefing" },
+    { "from": "analyse", "to": "entscheidung", "label": "Konzept" },
+    { "from": "entscheidung", "to": "umsetzung", "label": "Ja" },
+    { "from": "umsetzung", "to": "qa", "label": "Build" },
+    { "from": "qa", "to": "go-live", "label": "Freigabe" }
+  ]
+}

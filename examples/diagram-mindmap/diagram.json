@@ -1,0 +1,86 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "10mm",
+    "background": "#fffdf8"
+  },
+  "diagram": {
+    "kind": "mindmap",
+    "layout": "radial",
+    "title": "Produktstrategie 2026",
+    "subtitle": "Zentrale Themen und Maßnahmen"
+  },
+  "nodes": [
+    {
+      "id": "core",
+      "label": "Plattform",
+      "shape": "circle",
+      "style": { "fill": "#fee2e2", "stroke": "#dc2626" }
+    },
+    {
+      "id": "ux",
+      "label": "UX",
+      "parent": "core",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "data",
+      "label": "Daten",
+      "parent": "core",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "ops",
+      "label": "Operations",
+      "parent": "core",
+      "style": { "fill": "#ede9fe", "stroke": "#7c3aed" }
+    },
+    {
+      "id": "growth",
+      "label": "Growth",
+      "parent": "core",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    },
+    {
+      "id": "design-system",
+      "label": "Design System",
+      "parent": "ux"
+    },
+    {
+      "id": "mobile",
+      "label": "Mobile Optimierung",
+      "parent": "ux"
+    },
+    {
+      "id": "tracking",
+      "label": "Tracking",
+      "parent": "data"
+    },
+    {
+      "id": "reporting",
+      "label": "Reporting",
+      "parent": "data"
+    },
+    {
+      "id": "deploy",
+      "label": "Deployment",
+      "parent": "ops"
+    },
+    {
+      "id": "monitoring",
+      "label": "Monitoring",
+      "parent": "ops"
+    },
+    {
+      "id": "seo",
+      "label": "SEO",
+      "parent": "growth"
+    },
+    {
+      "id": "crm",
+      "label": "CRM-Automation",
+      "parent": "growth"
+    }
+  ],
+  "edges": []
+}

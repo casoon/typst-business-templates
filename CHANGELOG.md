@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.12] - 2026-04-11
+
+### Added
+- **Integrated diagram document type:** New `diagram` template with internal preprocessing and automatic layout rendering
+  - Supports `tree` / `hierarchical`, `flow` / `layered`, `mindmap` / `radial`, and simple `architecture` diagrams
+  - No manual positioning required in JSON
+  - No external Typst packages required
+- **CLI support for diagram JSON:** `docgen compile diagram.json` now routes diagram documents through the embedded Rust renderer
+- **Example diagrams:** Added four showcase examples under `examples/`
+  - `diagram-flow`
+  - `diagram-mindmap`
+  - `diagram-orgchart`
+  - `diagram-architecture`
+
 ## [0.6.11] - 2026-01-27
 
 ### Changed
