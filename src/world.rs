@@ -157,16 +157,15 @@ impl World for DocgenWorld {
         {
             let vfiles = self.virtual_files.read().unwrap();
             if let Some(bytes) = vfiles.get(&id) {
-                let text = std::str::from_utf8(bytes.as_slice())
-                    .map_err(|_| FileError::InvalidUtf8)?;
+                let text =
+                    std::str::from_utf8(bytes.as_slice()).map_err(|_| FileError::InvalidUtf8)?;
                 return Ok(Source::new(id, text.to_string()));
             }
         }
 
         // Try embedded template files
         if let Some(content) = self.resolve_template_bytes(id) {
-            let text =
-                std::str::from_utf8(&content).map_err(|_| FileError::InvalidUtf8)?;
+            let text = std::str::from_utf8(&content).map_err(|_| FileError::InvalidUtf8)?;
             return Ok(Source::new(id, text.to_string()));
         }
 
@@ -187,6 +186,14 @@ impl World for DocgenWorld {
         // Try embedded template assets (images etc.)
         if let Some(content) = self.resolve_template_bytes(id) {
             return Ok(Bytes::new(content));
+        }
+
+        // Allow loading absolute filesystem assets such as uploaded logos.
+        let rooted = id.vpath().as_rooted_path().to_path_buf();
+        if rooted.is_absolute() {
+            if let Ok(bytes) = std::fs::read(&rooted) {
+                return Ok(Bytes::new(bytes));
+            }
         }
 
         Err(FileError::NotFound(
