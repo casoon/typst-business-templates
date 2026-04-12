@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-04-12
+
+### Added
+- **More integrated diagram layouts:** Added `timeline`, `swimlane`, `quadrant`, and `roadmap` to the built-in `diagram` document type
+- **More diagram examples:** Added showcase examples for all four new layouts under `examples/`
+
+### Fixed
+- **Parallel compile race in local template updates:** `.docgen/templates/` now uses a version marker and lock file to avoid concurrent delete/extract failures during parallel `docgen compile` runs
+
 ## [0.6.12] - 2026-04-11
 
 ### Added
