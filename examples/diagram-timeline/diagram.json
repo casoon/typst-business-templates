@@ -1,0 +1,46 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "timeline",
+    "title": "Produkt-Rollout",
+    "subtitle": "Phasen vom Kickoff bis zum Launch"
+  },
+  "phases": ["Kickoff", "Design", "Build", "Launch"],
+  "nodes": [
+    {
+      "id": "kickoff",
+      "label": "Kickoff",
+      "shape": "circle",
+      "phase": "Kickoff",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "wireframes",
+      "label": "Wireframes",
+      "phase": "Design",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    },
+    {
+      "id": "implementation",
+      "label": "Implementierung",
+      "phase": "Build",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "launch",
+      "label": "Launch",
+      "shape": "circle",
+      "phase": "Launch",
+      "style": { "fill": "#fee2e2", "stroke": "#dc2626" }
+    }
+  ],
+  "edges": [
+    { "from": "kickoff", "to": "wireframes", "kind": "direct" },
+    { "from": "wireframes", "to": "implementation", "kind": "direct" },
+    { "from": "implementation", "to": "launch", "kind": "direct" }
+  ]
+}

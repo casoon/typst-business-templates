@@ -292,6 +292,10 @@ Supported diagram styles:
 - `flow` / `layered`
 - `mindmap` / `radial`
 - `architecture` / `layered`
+- `timeline`
+- `swimlane`
+- `quadrant`
+- `roadmap`
 
 Example:
 
@@ -304,6 +308,10 @@ Available showcase examples:
 - `examples/diagram-mindmap/diagram.json`
 - `examples/diagram-orgchart/diagram.json`
 - `examples/diagram-architecture/diagram.json`
+- `examples/diagram-timeline/diagram.json`
+- `examples/diagram-swimlane/diagram.json`
+- `examples/diagram-quadrant/diagram.json`
+- `examples/diagram-roadmap/diagram.json`
 
 ### Template System (v0.5.0+)
 

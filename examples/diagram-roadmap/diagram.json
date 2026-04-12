@@ -1,0 +1,63 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "roadmap",
+    "title": "Roadmap 2026",
+    "subtitle": "Streams und Quartale"
+  },
+  "lanes": ["Platform", "Growth", "Operations"],
+  "phases": ["Q1", "Q2", "Q3", "Q4"],
+  "nodes": [
+    {
+      "id": "platform-core",
+      "label": "Core Refactor",
+      "lane": "Platform",
+      "phase": "Q1",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "api-version",
+      "label": "API v2",
+      "lane": "Platform",
+      "phase": "Q3",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "seo",
+      "label": "SEO Sprint",
+      "lane": "Growth",
+      "phase": "Q2",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "crm",
+      "label": "CRM Automation",
+      "lane": "Growth",
+      "phase": "Q4",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "backup",
+      "label": "Backup Redesign",
+      "lane": "Operations",
+      "phase": "Q2",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    },
+    {
+      "id": "monitoring",
+      "label": "Monitoring Refresh",
+      "lane": "Operations",
+      "phase": "Q3",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    }
+  ],
+  "edges": [
+    { "from": "platform-core", "to": "api-version" },
+    { "from": "seo", "to": "crm" },
+    { "from": "backup", "to": "monitoring" }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "quadrant",
+    "title": "Feature-Priorisierung",
+    "subtitle": "Impact vs. Aufwand"
+  },
+  "nodes": [
+    {
+      "id": "analytics",
+      "label": "Analytics Dashboard",
+      "quadrant": "top-right",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "sso",
+      "label": "SSO Integration",
+      "quadrant": "top-left",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "darkmode",
+      "label": "Dark Mode",
+      "quadrant": "bottom-right",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    },
+    {
+      "id": "legacy",
+      "label": "Legacy Import",
+      "quadrant": "bottom-left",
+      "style": { "fill": "#fee2e2", "stroke": "#dc2626" }
+    }
+  ],
+  "edges": []
+}

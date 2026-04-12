@@ -18,6 +18,10 @@ pub struct DiagramSpec {
     #[serde(default)]
     pub diagram: DiagramMeta,
     #[serde(default)]
+    pub lanes: Vec<String>,
+    #[serde(default)]
+    pub phases: Vec<String>,
+    #[serde(default)]
     pub nodes: Vec<NodeSpec>,
     #[serde(default)]
     pub edges: Vec<EdgeSpec>,
@@ -49,6 +53,10 @@ pub struct NodeSpec {
     pub label: String,
     pub shape: Option<String>,
     pub parent: Option<String>,
+    pub group: Option<String>,
+    pub lane: Option<String>,
+    pub phase: Option<String>,
+    pub quadrant: Option<String>,
     #[serde(default)]
     pub style: NodeStyle,
 }
@@ -79,6 +87,7 @@ pub struct EdgeStyle {
 struct DiagramRenderModel {
     document: RenderDocument,
     diagram: RenderDiagramMeta,
+    zones: Vec<RenderZone>,
     nodes: Vec<RenderNode>,
     edges: Vec<RenderEdge>,
 }
@@ -100,6 +109,18 @@ struct RenderDiagramMeta {
     title: Option<String>,
     subtitle: Option<String>,
     theme: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct RenderZone {
+    label: String,
+    x_pt: f64,
+    y_pt: f64,
+    width_pt: f64,
+    height_pt: f64,
+    fill: String,
+    stroke: String,
+    text: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -157,6 +178,24 @@ struct WorkingEdge {
     points: Vec<(f64, f64)>,
 }
 
+#[derive(Debug, Clone)]
+struct WorkingZone {
+    label: String,
+    x_pt: f64,
+    y_pt: f64,
+    width_pt: f64,
+    height_pt: f64,
+    fill: String,
+    stroke: String,
+    text: String,
+}
+
+#[derive(Debug, Clone, Default)]
+struct WorkingLayout {
+    placements: HashMap<String, NodePlacement>,
+    zones: Vec<WorkingZone>,
+}
+
 pub fn preprocess_diagram_data(data: &[u8]) -> Result<Vec<u8>> {
     let spec: DiagramSpec = serde_json::from_slice(data).context("Failed to parse diagram JSON")?;
     let render = build_render_model(spec)?;
@@ -189,16 +228,30 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
         .map(|(idx, node)| (node.spec.id.as_str(), idx))
         .collect();
 
-    let placements = match layout.as_str() {
-        "radial" => layout_radial(&measured, &spec.edges, &node_index),
-        "layered" => layout_layered(&measured, &spec.edges, &node_index),
-        _ => layout_hierarchical(&measured, &spec.edges, &node_index),
-    }?;
+    let working_layout = match layout.as_str() {
+        "radial" => WorkingLayout {
+            placements: layout_radial(&measured, &spec.edges, &node_index)?,
+            zones: vec![],
+        },
+        "layered" => WorkingLayout {
+            placements: layout_layered(&measured, &spec.edges, &node_index)?,
+            zones: vec![],
+        },
+        "timeline" => layout_timeline(&spec, &measured)?,
+        "swimlane" => layout_swimlane(&spec, &measured)?,
+        "quadrant" => layout_quadrant(&spec, &measured)?,
+        "roadmap" => layout_roadmap(&spec, &measured)?,
+        _ => WorkingLayout {
+            placements: layout_hierarchical(&measured, &spec.edges, &node_index)?,
+            zones: vec![],
+        },
+    };
 
     let mut nodes = measured
         .iter()
         .map(|node| {
-            let placement = placements
+            let placement = working_layout
+                .placements
                 .get(node.spec.id.as_str())
                 .ok_or_else(|| anyhow!("Missing placement for node '{}'", node.spec.id))?;
             Ok((
@@ -234,8 +287,23 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
         .collect::<Result<HashMap<_, _>>>()?;
 
     let mut edges = build_edges(&spec.edges, &nodes, &layout)?;
-    normalize_to_page(&doc, &mut nodes, &mut edges);
-    apply_direction(&direction, &doc, &mut nodes, &mut edges);
+    let mut zones = working_layout.zones;
+    normalize_to_page(&doc, &mut nodes, &mut edges, &mut zones);
+    apply_direction(&direction, &doc, &mut nodes, &mut edges, &mut zones);
+
+    let render_zones = zones
+        .into_iter()
+        .map(|zone| RenderZone {
+            label: zone.label,
+            x_pt: zone.x_pt,
+            y_pt: zone.y_pt,
+            width_pt: zone.width_pt,
+            height_pt: zone.height_pt,
+            fill: zone.fill,
+            stroke: zone.stroke,
+            text: zone.text,
+        })
+        .collect();
 
     let render_nodes = measured
         .iter()
@@ -318,6 +386,7 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
             subtitle: spec.diagram.subtitle,
             theme,
         },
+        zones: render_zones,
         nodes: render_nodes,
         edges: render_edges,
     })
@@ -423,6 +492,10 @@ fn resolve_layout(diagram: &DiagramMeta) -> String {
     match diagram.kind.as_deref() {
         Some("mindmap") => "radial".to_string(),
         Some("flow") | Some("architecture") => "layered".to_string(),
+        Some("timeline") => "timeline".to_string(),
+        Some("swimlane") => "swimlane".to_string(),
+        Some("quadrant") => "quadrant".to_string(),
+        Some("roadmap") => "roadmap".to_string(),
         _ => "hierarchical".to_string(),
     }
 }
@@ -432,6 +505,10 @@ fn normalize_layout(layout: &str) -> String {
         "tree" | "hierarchical" => "hierarchical".to_string(),
         "flow" | "layered" => "layered".to_string(),
         "mindmap" | "radial" => "radial".to_string(),
+        "timeline" => "timeline".to_string(),
+        "swimlane" => "swimlane".to_string(),
+        "quadrant" => "quadrant".to_string(),
+        "roadmap" => "roadmap".to_string(),
         other => other.to_string(),
     }
 }
@@ -732,6 +809,236 @@ fn layout_radial(
     Ok(placements)
 }
 
+fn layout_timeline(spec: &DiagramSpec, nodes: &[MeasuredNode]) -> Result<WorkingLayout> {
+    let phases = ordered_labels(&spec.phases, nodes, |node| node.spec.phase.clone());
+    let count = nodes.len().max(1) as f64;
+    let lane_y = 120.0;
+    let width = (count - 1.0).max(1.0) * 190.0 + 140.0;
+    let mut placements = HashMap::new();
+
+    for (idx, node) in nodes.iter().enumerate() {
+        placements.insert(
+            node.spec.id.clone(),
+            NodePlacement {
+                center_x: 70.0 + idx as f64 * ((width - 140.0) / (count - 1.0).max(1.0)),
+                center_y: lane_y,
+            },
+        );
+    }
+
+    let mut zones = vec![WorkingZone {
+        label: "Timeline".to_string(),
+        x_pt: 40.0,
+        y_pt: lane_y - 8.0,
+        width_pt: width,
+        height_pt: 16.0,
+        fill: "#cbd5e1".to_string(),
+        stroke: "#94a3b8".to_string(),
+        text: "#475569".to_string(),
+    }];
+
+    if !phases.is_empty() {
+        let phase_width = width / phases.len() as f64;
+        for (idx, phase) in phases.iter().enumerate() {
+            zones.push(WorkingZone {
+                label: phase.clone(),
+                x_pt: 40.0 + idx as f64 * phase_width,
+                y_pt: 24.0,
+                width_pt: phase_width - 10.0,
+                height_pt: 44.0,
+                fill: "#eff6ff".to_string(),
+                stroke: "#bfdbfe".to_string(),
+                text: "#1d4ed8".to_string(),
+            });
+        }
+    }
+
+    Ok(WorkingLayout { placements, zones })
+}
+
+fn layout_swimlane(spec: &DiagramSpec, nodes: &[MeasuredNode]) -> Result<WorkingLayout> {
+    let lanes = ordered_labels(&spec.lanes, nodes, lane_of);
+    if lanes.is_empty() {
+        bail!("Swimlane diagrams require at least one node with 'lane' or 'group'");
+    }
+
+    let lane_height = 120.0;
+    let column_width = 180.0;
+    let mut placements = HashMap::new();
+    let mut zones = Vec::new();
+    let mut lane_items: HashMap<String, Vec<&MeasuredNode>> = HashMap::new();
+    for node in nodes {
+        lane_items
+            .entry(lane_of(node).unwrap_or_else(|| "General".to_string()))
+            .or_default()
+            .push(node);
+    }
+
+    let max_columns = lane_items
+        .values()
+        .map(|items| items.len())
+        .max()
+        .unwrap_or(1)
+        .max(1);
+    for (lane_idx, lane) in lanes.iter().enumerate() {
+        let y = lane_idx as f64 * lane_height;
+        zones.push(WorkingZone {
+            label: lane.clone(),
+            x_pt: 0.0,
+            y_pt: y,
+            width_pt: 160.0 + max_columns as f64 * column_width,
+            height_pt: lane_height - 12.0,
+            fill: if lane_idx % 2 == 0 {
+                "#f8fafc"
+            } else {
+                "#f1f5f9"
+            }
+            .to_string(),
+            stroke: "#cbd5e1".to_string(),
+            text: "#0f172a".to_string(),
+        });
+
+        let mut items = lane_items.remove(lane).unwrap_or_default();
+        items.sort_by_key(|node| node.spec.phase.clone().unwrap_or_default());
+        for (idx, node) in items.iter().enumerate() {
+            placements.insert(
+                node.spec.id.clone(),
+                NodePlacement {
+                    center_x: 200.0 + idx as f64 * column_width,
+                    center_y: y + lane_height / 2.0 - 8.0,
+                },
+            );
+        }
+    }
+
+    Ok(WorkingLayout { placements, zones })
+}
+
+fn layout_quadrant(spec: &DiagramSpec, nodes: &[MeasuredNode]) -> Result<WorkingLayout> {
+    let quadrants = vec![
+        ("top-left", "Strategic Bets", 0.0, 0.0),
+        ("top-right", "Quick Wins", 300.0, 0.0),
+        ("bottom-left", "Evaluate", 0.0, 220.0),
+        ("bottom-right", "Backlog", 300.0, 220.0),
+    ];
+    let mut placements = HashMap::new();
+    let mut zones = Vec::new();
+
+    for (_, label, x, y) in &quadrants {
+        zones.push(WorkingZone {
+            label: label.to_string(),
+            x_pt: *x,
+            y_pt: *y,
+            width_pt: 280.0,
+            height_pt: 200.0,
+            fill: "#f8fafc".to_string(),
+            stroke: "#cbd5e1".to_string(),
+            text: "#334155".to_string(),
+        });
+    }
+
+    let mut buckets: HashMap<String, Vec<&MeasuredNode>> = HashMap::new();
+    for node in nodes {
+        let quadrant = node
+            .spec
+            .quadrant
+            .clone()
+            .unwrap_or_else(|| "bottom-right".to_string());
+        buckets.entry(quadrant).or_default().push(node);
+    }
+
+    for (name, _, x, y) in quadrants {
+        let items = buckets.remove(name).unwrap_or_default();
+        for (idx, node) in items.iter().enumerate() {
+            let col = idx % 2;
+            let row = idx / 2;
+            placements.insert(
+                node.spec.id.clone(),
+                NodePlacement {
+                    center_x: x + 74.0 + col as f64 * 130.0,
+                    center_y: y + 74.0 + row as f64 * 78.0,
+                },
+            );
+        }
+    }
+
+    if placements.len() != nodes.len() {
+        bail!("Quadrant layout could not place all nodes");
+    }
+
+    let _ = spec;
+    Ok(WorkingLayout { placements, zones })
+}
+
+fn layout_roadmap(spec: &DiagramSpec, nodes: &[MeasuredNode]) -> Result<WorkingLayout> {
+    let lanes = ordered_labels(&spec.lanes, nodes, lane_of);
+    let phases = ordered_labels(&spec.phases, nodes, |node| node.spec.phase.clone());
+    if lanes.is_empty() {
+        bail!("Roadmap diagrams require at least one node with 'lane' or 'group'");
+    }
+    if phases.is_empty() {
+        bail!("Roadmap diagrams require at least one node with 'phase'");
+    }
+
+    let lane_height = 110.0;
+    let phase_width = 180.0;
+    let mut placements = HashMap::new();
+    let mut zones = Vec::new();
+
+    for (phase_idx, phase) in phases.iter().enumerate() {
+        zones.push(WorkingZone {
+            label: phase.clone(),
+            x_pt: 160.0 + phase_idx as f64 * phase_width,
+            y_pt: 0.0,
+            width_pt: phase_width - 12.0,
+            height_pt: 46.0,
+            fill: "#eff6ff".to_string(),
+            stroke: "#bfdbfe".to_string(),
+            text: "#1d4ed8".to_string(),
+        });
+    }
+
+    for (lane_idx, lane) in lanes.iter().enumerate() {
+        zones.push(WorkingZone {
+            label: lane.clone(),
+            x_pt: 0.0,
+            y_pt: 60.0 + lane_idx as f64 * lane_height,
+            width_pt: 160.0 + phases.len() as f64 * phase_width,
+            height_pt: lane_height - 10.0,
+            fill: if lane_idx % 2 == 0 {
+                "#f8fafc"
+            } else {
+                "#f1f5f9"
+            }
+            .to_string(),
+            stroke: "#cbd5e1".to_string(),
+            text: "#0f172a".to_string(),
+        });
+    }
+
+    let mut cell_offsets: HashMap<(String, String), usize> = HashMap::new();
+    for node in nodes {
+        let lane = lane_of(node).unwrap_or_else(|| lanes[0].clone());
+        let phase = node.spec.phase.clone().unwrap_or_else(|| phases[0].clone());
+        let lane_idx = lanes.iter().position(|entry| entry == &lane).unwrap_or(0);
+        let phase_idx = phases.iter().position(|entry| entry == &phase).unwrap_or(0);
+        let slot = cell_offsets
+            .entry((lane.clone(), phase.clone()))
+            .and_modify(|count| *count += 1)
+            .or_insert(0);
+
+        placements.insert(
+            node.spec.id.clone(),
+            NodePlacement {
+                center_x: 200.0 + phase_idx as f64 * phase_width,
+                center_y: 96.0 + lane_idx as f64 * lane_height + *slot as f64 * 40.0,
+            },
+        );
+    }
+
+    Ok(WorkingLayout { placements, zones })
+}
+
 fn compute_leaf_counts(
     node_id: &str,
     tree: &HashMap<String, Vec<String>>,
@@ -850,6 +1157,7 @@ fn normalize_to_page(
     doc: &ResolvedDocument,
     nodes: &mut HashMap<String, PositionedNode>,
     edges: &mut [WorkingEdge],
+    zones: &mut [WorkingZone],
 ) {
     let mut min_x = f64::MAX;
     let mut min_y = f64::MAX;
@@ -870,6 +1178,13 @@ fn normalize_to_page(
             max_x = max_x.max(point.0);
             max_y = max_y.max(point.1);
         }
+    }
+
+    for zone in zones.iter() {
+        min_x = min_x.min(zone.x_pt);
+        min_y = min_y.min(zone.y_pt);
+        max_x = max_x.max(zone.x_pt + zone.width_pt);
+        max_y = max_y.max(zone.y_pt + zone.height_pt);
     }
 
     let width = (max_x - min_x).max(1.0);
@@ -896,6 +1211,13 @@ fn normalize_to_page(
             point.1 = offset_y + (point.1 - min_y) * scale;
         }
     }
+
+    for zone in zones.iter_mut() {
+        zone.x_pt = offset_x + (zone.x_pt - min_x) * scale;
+        zone.y_pt = offset_y + (zone.y_pt - min_y) * scale;
+        zone.width_pt *= scale;
+        zone.height_pt *= scale;
+    }
 }
 
 fn apply_direction(
@@ -903,6 +1225,7 @@ fn apply_direction(
     doc: &ResolvedDocument,
     nodes: &mut HashMap<String, PositionedNode>,
     edges: &mut [WorkingEdge],
+    zones: &mut [WorkingZone],
 ) {
     if direction != "left-right" {
         return;
@@ -930,7 +1253,41 @@ fn apply_direction(
         }
     }
 
+    for zone in zones.iter_mut() {
+        let rel_x = zone.x_pt - content_origin_x;
+        let rel_y = zone.y_pt - content_origin_y;
+        let new_x = content_origin_x + rel_y;
+        let new_y =
+            content_origin_y + (content_height - rel_x - zone.width_pt).clamp(0.0, content_height);
+        std::mem::swap(&mut zone.width_pt, &mut zone.height_pt);
+        zone.x_pt = new_x;
+        zone.y_pt = new_y;
+    }
+
     let _ = content_width;
+}
+
+fn ordered_labels<F>(explicit: &[String], nodes: &[MeasuredNode], f: F) -> Vec<String>
+where
+    F: Fn(&MeasuredNode) -> Option<String>,
+{
+    if !explicit.is_empty() {
+        return explicit.to_vec();
+    }
+
+    let mut labels = Vec::new();
+    for node in nodes {
+        if let Some(value) = f(node) {
+            if !labels.contains(&value) {
+                labels.push(value);
+            }
+        }
+    }
+    labels
+}
+
+fn lane_of(node: &MeasuredNode) -> Option<String> {
+    node.spec.lane.clone().or_else(|| node.spec.group.clone())
 }
 
 fn directed_children(nodes: &[MeasuredNode], edges: &[EdgeSpec]) -> HashMap<String, Vec<String>> {

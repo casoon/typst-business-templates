@@ -3,6 +3,8 @@ use anyhow::{Context, Result};
 use include_dir::{include_dir, Dir};
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::thread;
+use std::time::{Duration, SystemTime};
 use walkdir::WalkDir;
 
 // Embed all templates at compile time
@@ -16,6 +18,18 @@ pub fn get_local_templates_dir() -> PathBuf {
 /// Get the custom templates directory in the current project
 pub fn get_custom_templates_dir() -> PathBuf {
     PathBuf::from("templates")
+}
+
+fn get_docgen_dir() -> PathBuf {
+    PathBuf::from(".docgen")
+}
+
+fn get_templates_version_file() -> PathBuf {
+    get_local_templates_dir().join(".docgen-version")
+}
+
+fn get_templates_lock_file() -> PathBuf {
+    get_docgen_dir().join("templates.lock")
 }
 
 /// Get the current docgen version
@@ -52,12 +66,23 @@ pub fn get_available_templates() -> Vec<String> {
 /// Ensure .docgen/templates/ is up-to-date with current docgen version
 /// This is called automatically on every compile/build
 pub fn ensure_local_templates_updated() -> Result<()> {
+    fs::create_dir_all(get_docgen_dir()).context("Failed to create .docgen directory")?;
     let templates_dir = get_local_templates_dir();
 
     // Create .docgen/templates if it doesn't exist
     if !templates_dir.exists() {
         fs::create_dir_all(&templates_dir)
             .context("Failed to create .docgen/templates directory")?;
+    }
+
+    if templates_are_current(&templates_dir)? {
+        return Ok(());
+    }
+
+    let _lock = acquire_templates_lock()?;
+
+    if templates_are_current(&templates_dir)? {
+        return Ok(());
     }
 
     // Extract embedded templates to .docgen/templates/
@@ -78,7 +103,82 @@ pub fn ensure_local_templates_updated() -> Result<()> {
         }
     }
 
+    write_templates_version()?;
+
     Ok(())
+}
+
+fn templates_are_current(templates_dir: &Path) -> Result<bool> {
+    let version_file = get_templates_version_file();
+    let version = match fs::read_to_string(&version_file) {
+        Ok(value) => value,
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => return Ok(false),
+        Err(err) => return Err(err).context("Failed to read template version marker"),
+    };
+
+    if version.trim() != get_docgen_version() {
+        return Ok(false);
+    }
+
+    Ok(get_available_templates()
+        .into_iter()
+        .all(|template| templates_dir.join(template).exists()))
+}
+
+fn write_templates_version() -> Result<()> {
+    fs::write(
+        get_templates_version_file(),
+        format!("{}\n", get_docgen_version()),
+    )
+    .context("Failed to write template version marker")
+}
+
+struct TemplatesLock {
+    path: PathBuf,
+}
+
+impl Drop for TemplatesLock {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.path);
+    }
+}
+
+fn acquire_templates_lock() -> Result<TemplatesLock> {
+    let path = get_templates_lock_file();
+    let stale_after = Duration::from_secs(30);
+
+    for _ in 0..200 {
+        match fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+        {
+            Ok(_) => {
+                return Ok(TemplatesLock { path });
+            }
+            Err(err) if err.kind() == std::io::ErrorKind::AlreadyExists => {
+                if lock_is_stale(&path, stale_after) {
+                    let _ = fs::remove_file(&path);
+                    continue;
+                }
+                thread::sleep(Duration::from_millis(50));
+            }
+            Err(err) => {
+                return Err(err).context("Failed to acquire template update lock");
+            }
+        }
+    }
+
+    anyhow::bail!("Timed out waiting for template update lock")
+}
+
+fn lock_is_stale(path: &Path, stale_after: Duration) -> bool {
+    fs::metadata(path)
+        .and_then(|meta| meta.modified())
+        .ok()
+        .and_then(|modified| SystemTime::now().duration_since(modified).ok())
+        .map(|age| age > stale_after)
+        .unwrap_or(false)
 }
 
 /// Extract an embedded directory to the filesystem

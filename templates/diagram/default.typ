@@ -119,6 +119,23 @@
   }
 }
 
+#let draw-zone(zone) = place(
+  top + left,
+  dx: zone.x_pt * 1pt,
+  dy: zone.y_pt * 1pt,
+  block(
+    width: zone.width_pt * 1pt,
+    height: zone.height_pt * 1pt,
+    inset: (x: 10pt, y: 8pt),
+    radius: 10pt,
+    fill: rgb(zone.fill),
+    stroke: 0.8pt + rgb(zone.stroke),
+  )[
+    #set text(size: 8pt, weight: "bold", fill: rgb(zone.text))
+    #zone.label
+  ],
+)
+
 #block(width: page-width, height: page-height, inset: 0pt)[
   #if title != none {
     place(
@@ -136,6 +153,10 @@
       dy: 42pt,
       text(size: 9pt, fill: rgb("#475569"))[#subtitle],
     )
+  }
+
+  #for zone in data.zones {
+    draw-zone(zone)
   }
 
   #for edge in data.edges {

@@ -1,0 +1,44 @@
+{
+  "document": {
+    "paper": "presentation-16-9",
+    "margin": "12mm",
+    "background": "#f8fafc"
+  },
+  "diagram": {
+    "kind": "swimlane",
+    "title": "Support-Prozess",
+    "subtitle": "Ablauf über mehrere Rollen"
+  },
+  "lanes": ["Kunde", "Support", "Engineering"],
+  "nodes": [
+    {
+      "id": "request",
+      "label": "Anfrage senden",
+      "lane": "Kunde",
+      "style": { "fill": "#ffffff", "stroke": "#1d4ed8" }
+    },
+    {
+      "id": "triage",
+      "label": "Ticket triagieren",
+      "lane": "Support",
+      "style": { "fill": "#dbeafe", "stroke": "#2563eb" }
+    },
+    {
+      "id": "fix",
+      "label": "Bug fixen",
+      "lane": "Engineering",
+      "style": { "fill": "#dcfce7", "stroke": "#16a34a" }
+    },
+    {
+      "id": "reply",
+      "label": "Rückmeldung",
+      "lane": "Support",
+      "style": { "fill": "#fef3c7", "stroke": "#d97706" }
+    }
+  ],
+  "edges": [
+    { "from": "request", "to": "triage" },
+    { "from": "triage", "to": "fix" },
+    { "from": "fix", "to": "reply" }
+  ]
+}

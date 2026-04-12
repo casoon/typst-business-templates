@@ -7,6 +7,10 @@ Unterstützte Modi:
 - `tree` / `hierarchical`
 - `flow` / `layered`
 - `mindmap` / `radial`
+- `timeline`
+- `swimlane`
+- `quadrant`
+- `roadmap`
 
 Beispiel:
 
