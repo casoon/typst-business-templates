@@ -113,17 +113,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  update-homebrew:
-    name: Update Homebrew Formula
-    needs: release
-    runs-on: ubuntu-latest
-    if: github.repository == 'casoon/typst-business-templates'
-
-    steps:
-      - name: Update Homebrew tap
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          repository: casoon/homebrew-tap
-          event-type: update-formula
-          client-payload: '{"version": "${{ github.ref_name }}"}'
