@@ -57,16 +57,16 @@ jobs:
       - name: Package (Unix)
         if: runner.os != 'Windows'
         run: |
-          cd cli/target/${{ matrix.target }}/release
-          tar -czvf ../../../../${{ matrix.name }}.tar.gz docgen
-          cd ../../../..
+          cd target/${{ matrix.target }}/release
+          tar -czvf ../../../${{ matrix.name }}.tar.gz docgen
+          cd ../../..
 
       - name: Package (Windows)
         if: runner.os == 'Windows'
         run: |
-          cd cli/target/${{ matrix.target }}/release
-          Compress-Archive -Path docgen.exe -DestinationPath ../../../../${{ matrix.name }}.zip
-          cd ../../../..
+          cd target/${{ matrix.target }}/release
+          Compress-Archive -Path docgen.exe -DestinationPath ../../../${{ matrix.name }}.zip
+          cd ../..\..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
