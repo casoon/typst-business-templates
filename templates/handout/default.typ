@@ -61,7 +61,7 @@
   let cat-light = cat-color.lighten(92%)
   let cat-mid = cat-color.lighten(80%)
 
-  set text(font: fonts.body, size: size-medium, lang: "de")
+  set text(font: fonts.body, size: size-medium, lang: get-language(company))
   set par(justify: true, leading: 0.65em)
 
   // Links

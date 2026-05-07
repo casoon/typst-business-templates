@@ -102,7 +102,7 @@
   set text(
     font: fonts.body,
     size: size-medium,
-    lang: "de"
+    lang: get-language(company)
   )
   
   set par(justify: true, leading: 0.65em)

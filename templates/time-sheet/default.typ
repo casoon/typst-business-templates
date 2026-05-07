@@ -39,7 +39,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: "de")
+#set text(font: "Helvetica", size: 10pt, lang: company.language)
 
 // Header with logo and metadata
 #accounting-header(

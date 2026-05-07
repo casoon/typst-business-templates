@@ -26,7 +26,7 @@
 #set text(
   font: "Helvetica",
   size: 10pt,
-  lang: "de"
+  lang: company.language
 )
 
 // ============================================================================

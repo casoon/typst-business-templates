@@ -127,6 +127,10 @@
   }
 }
 
+#let get-language(company) = {
+  if company != none and "language" in company { company.language } else { "de" }
+}
+
 #let color-secondary = rgb("#34495e")
 #let color-text = rgb("#2c3e50")
 #let color-text-light = rgb("#7f8c8d")

@@ -6,6 +6,8 @@
   none
 }
 
+#let company = if "company" in sys.inputs { json(sys.inputs.company) } else { (:) }
+
 #let page-width = data.document.width_pt * 1pt
 #let page-height = data.document.height_pt * 1pt
 #let title = data.diagram.title
@@ -18,7 +20,7 @@
   fill: rgb(data.document.background),
 )
 
-#set text(font: "Inter", size: 10pt, lang: "de")
+#set text(font: "Inter", size: 10pt, lang: get-language(company))
 
 #let draw-segment(segment, color) = place(
   top + left,
