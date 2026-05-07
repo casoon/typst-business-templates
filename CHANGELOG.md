@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2026-05-07
+
+### Changed
+- **Installation:** Removed Homebrew support; curl install script is now the recommended method
+- **README:** Clarified that `docgen compile` passes `--font-path fonts` automatically
+
 ## [0.7.1] - 2026-05-07
 
 ### Fixed

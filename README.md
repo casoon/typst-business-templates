@@ -221,23 +221,13 @@ Install [Typst](https://github.com/typst/typst#installation) (required for PDF g
 
 ### Installation
 
-#### Option 1: Homebrew (macOS/Linux)
-
-```bash
-# Add the tap
-brew tap casoon/tap
-
-# Install docgen
-brew install docgen
-```
-
-#### Option 2: Install Script (macOS/Linux)
+#### Option 1: Install Script (macOS/Linux)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/casoon/typst-business-templates/main/install.sh | bash
 ```
 
-#### Option 3: Download Binary
+#### Option 2: Download Binary
 
 Download the latest release for your platform from [GitHub Releases](https://github.com/casoon/typst-business-templates/releases).
 
@@ -249,7 +239,7 @@ Download the latest release for your platform from [GitHub Releases](https://git
 | Linux (ARM64) | `docgen-aarch64-unknown-linux-gnu.tar.gz` |
 | Windows (x64) | `docgen-x86_64-pc-windows-msvc.zip` |
 
-#### Option 4: Build from Source
+#### Option 3: Build from Source
 
 ```bash
 # Clone repository
@@ -722,7 +712,7 @@ Set the `language` field in `company.json` to change all labels, headings, and C
 | `work-sans` | Work Sans | Fira Code | Neutral |
 | `default` | Helvetica | Courier New | System fallback |
 
-All fonts are included in the `fonts/` directory. Use `--font-path fonts` when compiling:
+All fonts are included in the `fonts/` directory. `docgen compile` passes `--font-path fonts` automatically. When calling `typst` directly, add it yourself:
 
 ```bash
 typst compile --root . --font-path fonts templates/invoice/default.typ output/invoice.pdf \
