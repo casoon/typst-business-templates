@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2026-05-07
+
+### Fixed
+- **Font path not passed to typst:** `docgen compile` now passes `--font-path fonts` to `typst compile`, so bundled fonts are found as documented
+- **Hardcoded document language:** All templates now read `language` from `company.json` instead of always using `"de"`; added `get-language(company)` helper to `styles.typ`
+
 ## [0.7.0] - 2026-04-12
 
 ### Added
