@@ -76,6 +76,7 @@ jobs:
           path: |
             *.tar.gz
             *.zip
+          retention-days: 1
 
   release:
     name: Create Release
