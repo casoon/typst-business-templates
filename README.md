@@ -9,6 +9,8 @@
 Generate invoices, offers, contracts and more as PDF without a running Typst installation.
 Templates, fonts and localization are embedded directly in the binary.
 
+**Website:** [typst-business-templates.casoon.de](https://typst-business-templates.casoon.de/en/)
+
 Created by [casoon.de](https://www.casoon.de).
 
 ---
