@@ -74,7 +74,7 @@ get_latest_version() {
 
 # Download and install
 install() {
-    local platform version url tmp_dir
+    local platform version url tmp_dir expected actual
 
     platform=$(detect_platform)
     version=$(get_latest_version)
@@ -92,6 +92,23 @@ install() {
 
     info "Downloading from $url"
     curl -fsSL "$url" -o "$tmp_dir/docgen.tar.gz"
+
+    info "Verifying checksum..."
+    curl -fsSL "https://github.com/$REPO/releases/download/$version/checksums.txt" -o "$tmp_dir/checksums.txt"
+    expected=$(awk -v asset="docgen-${platform}.tar.gz" '$2 == asset || $2 == "*" asset { print $1 }' "$tmp_dir/checksums.txt")
+    if [ -z "$expected" ]; then
+        error "No checksum published for docgen-${platform}.tar.gz"
+    fi
+    if command -v sha256sum &> /dev/null; then
+        actual=$(sha256sum "$tmp_dir/docgen.tar.gz" | awk '{ print $1 }')
+    elif command -v shasum &> /dev/null; then
+        actual=$(shasum -a 256 "$tmp_dir/docgen.tar.gz" | awk '{ print $1 }')
+    else
+        error "No SHA-256 tool found (sha256sum or shasum)"
+    fi
+    if [ "$actual" != "$expected" ]; then
+        error "Checksum mismatch for docgen-${platform}.tar.gz"
+    fi
 
     info "Extracting..."
     tar -xzf "$tmp_dir/docgen.tar.gz" -C "$tmp_dir"
