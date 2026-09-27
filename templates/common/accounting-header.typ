@@ -188,7 +188,7 @@
 /// Parameters:
 /// - confirmation_number: Order confirmation number (required)
 /// - confirmation_date: Confirmation date object (required)
-/// - order_number: Order number (required)
+/// - order_number: Optional customer order number
 /// - expected_delivery: Optional expected delivery date object
 ///
 /// Returns: Content block with formatted metadata
@@ -199,7 +199,9 @@
   expected_delivery: none,
 ) = [
   *Bestätigungs-Nr.:* #confirmation_number\
-  *Bestellnummer:* #order_number\
+  #if order_number != none [
+    *Bestellnummer:* #order_number\
+  ]
   *Datum:* #format_german_date(confirmation_date)\
   #if expected_delivery != none [
     *Voraussichtl. Lieferung:* #format_german_date(expected_delivery)\

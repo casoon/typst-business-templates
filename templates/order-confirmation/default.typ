@@ -30,8 +30,8 @@
   metadata_content: order-confirmation-metadata(
     confirmation_number: data.metadata.confirmation_number,
     confirmation_date: data.metadata.confirmation_date,
-    order_number: data.metadata.order_number,
-    expected_delivery: if "expected_delivery" in data.metadata { data.metadata.expected_delivery } else { none },
+    order_number: data.metadata.at("order_number", default: none),
+    expected_delivery: data.metadata.at("expected_delivery", default: none),
   )
 )
 
@@ -100,6 +100,9 @@
         #if "article_number" in item and item.article_number != none [
           #text(weight: "bold")[Art.-Nr.: #item.article_number]\
         ]
+        #if "title" in item and item.title != none [
+          #text(weight: "bold")[#item.title]\
+        ]
         #item.description
       ],
       [#item.quantity],
@@ -126,18 +129,20 @@
 #v(10pt)
 
 // Terms and closing
+#let terms = { let t = data.at("terms", default: none); if t == none { (:) } else { t } }
+
 #block[
   #set text(size: 10pt, font: "Helvetica")
   #set par(justify: true)
 
-  #if "payment_terms" in data.terms and data.terms.payment_terms != none [
-    *Zahlungsbedingungen:* #data.terms.payment_terms
+  #if "payment_terms" in terms and terms.payment_terms != none [
+    *Zahlungsbedingungen:* #terms.payment_terms
 
     #v(8pt)
   ]
 
-  #if "delivery_terms" in data.terms and data.terms.delivery_terms != none [
-    *Lieferbedingungen:* #data.terms.delivery_terms
+  #if "delivery_terms" in terms and terms.delivery_terms != none [
+    *Lieferbedingungen:* #terms.delivery_terms
 
     #v(8pt)
   ]

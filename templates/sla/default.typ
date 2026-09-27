@@ -151,46 +151,18 @@
     "Erstellt am" 
   }
 
-  // Extract party names and addresses
-  let party1-name = if service_provider != none and type(service_provider) == dictionary [
-    if "company" in service_provider and service_provider.company != none [
-      service_provider.company
-    ] else if "name" in service_provider [
-      service_provider.name
-    ] else [
-      none
-    ]
-  ] else if service_provider != none [
-    service_provider
-  ] else [
-    none
-  ]
-  
-  let party1-address = if service_provider != none and type(service_provider) == dictionary and "address" in service_provider [
-    service_provider.address
-  ] else [
-    none
-  ]
-  
-  let party2-name = if customer != none and type(customer) == dictionary [
-    if "company" in customer and customer.company != none [
-      customer.company
-    ] else if "name" in customer [
-      customer.name
-    ] else [
-      none
-    ]
-  ] else if customer != none [
-    customer
-  ] else [
-    none
-  ]
-  
-  let party2-address = if customer != none and type(customer) == dictionary and "address" in customer [
-    customer.address
-  ] else [
-    none
-  ]
+  // Extract party names and addresses (a party is a dictionary or a plain name string)
+  let party-name(party) = if type(party) == dictionary {
+    if "company" in party and party.company != none { party.company } else { party.at("name", default: none) }
+  } else {
+    party
+  }
+  let party-address(party) = if type(party) == dictionary { party.at("address", default: none) } else { none }
+
+  let party1-name = party-name(service_provider)
+  let party1-address = party-address(service_provider)
+  let party2-name = party-name(customer)
+  let party2-address = party-address(customer)
 
   // Build metadata dictionary
   let metadata = (:)

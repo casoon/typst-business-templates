@@ -84,13 +84,13 @@
         #if version != none [
           // Version-style (for specification, contract, etc.)
           #strong[Version:] #version #linebreak()
-          #l-status: #status #linebreak()
+          #if status != none [#l-status: #status #linebreak()]
           #if last_updated != none [Aktualisiert: #last_updated]
         ] else [
           // Standard style (for documentation, concept)
           #strong[#l-created:] #linebreak()
           #if created_at != none [#created_at] #linebreak()
-          #l-status: #status
+          #if status != none [#l-status: #status]
         ]
       ],
     )

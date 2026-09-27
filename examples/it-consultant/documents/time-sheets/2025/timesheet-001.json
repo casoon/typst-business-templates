@@ -1,7 +1,12 @@
 {
   "metadata": {
     "timesheet_number": "TS-2025-001",
-    "period": "01.01.2025 - 15.01.2025",
+    "period_start": {
+      "date": "2025-01-01"
+    },
+    "period_end": {
+      "date": "2025-01-15"
+    },
     "employee": "Max Mustermann",
     "project_name": "DataFlow Analytics - API Migration"
   },

@@ -1,11 +1,11 @@
 {
   "metadata": {
     "confirmation_number": "AB-2025-001",
-    "order_reference": "BE-2025-015",
-    "date": {
+    "order_number": "BE-2025-015",
+    "confirmation_date": {
       "date": "2025-01-29"
     },
-    "delivery_date": {
+    "expected_delivery": {
       "date": "2025-02-12"
     }
   },

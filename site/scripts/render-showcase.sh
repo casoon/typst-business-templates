@@ -16,7 +16,7 @@ cargo build --release -p docgen --manifest-path "$repo/Cargo.toml"
 docgen="$repo/target/release/docgen"
 
 cp -R "$repo/examples/it-consultant" "$repo/examples/digitalagentur" "$tmp/"
-(cd "$tmp/it-consultant" && "$docgen" build) || true   # some fixtures fail; the list below only uses working ones
+(cd "$tmp/it-consultant" && "$docgen" build)
 (cd "$tmp/digitalagentur" && "$docgen" build)
 
 # slug=source PDF (relative to $tmp)

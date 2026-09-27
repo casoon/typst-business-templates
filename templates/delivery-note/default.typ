@@ -34,7 +34,7 @@
 )
 
 // DIN 5008 address block with delivery address support
-din5008-address-block-with-delivery(
+#din5008-address-block-with-delivery(
   company: company,
   recipient: data.recipient,
   delivery_address: if "delivery_address" in data { data.delivery_address } else { none },
