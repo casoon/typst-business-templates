@@ -73,5 +73,16 @@
       "parent": "client-services"
     }
   ],
-  "edges": []
+  "edges": [
+    { "from": "ceo", "to": "strategy" },
+    { "from": "ceo", "to": "design" },
+    { "from": "ceo", "to": "engineering" },
+    { "from": "ceo", "to": "client-services" },
+    { "from": "strategy", "to": "research" },
+    { "from": "design", "to": "brand" },
+    { "from": "design", "to": "product" },
+    { "from": "engineering", "to": "frontend" },
+    { "from": "engineering", "to": "backend" },
+    { "from": "client-services", "to": "pm" }
+  ]
 }

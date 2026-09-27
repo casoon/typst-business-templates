@@ -12,6 +12,8 @@
 #let page-height = data.document.height_pt * 1pt
 #let title = data.diagram.title
 #let subtitle = data.diagram.subtitle
+// The layout is shrunk to fit the page; text and padding shrink with it so labels stay inside nodes.
+#let s = data.document.at("scale", default: 1.0)
 
 #set page(
   width: page-width,
@@ -42,10 +44,10 @@
   block(
     width: node.width_pt * 1pt,
     height: node.height_pt * 1pt,
-    inset: (x: 10pt, y: 8pt),
+    inset: (x: 10pt * s, y: 8pt * s),
   )[
     #set align(center + horizon)
-    #set text(size: 9pt, weight: "medium", fill: rgb(node.text))
+    #set text(size: 9pt * s, weight: "medium", fill: rgb(node.text))
     #node.label
   ],
 )
@@ -87,7 +89,7 @@
         width: node.width_pt * 1pt,
         height: node.height_pt * 1pt,
         inset: 0pt,
-        radius: if node.shape == "rounded" { 14pt } else { 4pt },
+        radius: if node.shape == "rounded" { 14pt * s } else { 4pt * s },
         fill: rgb(node.fill),
         stroke: 1pt + rgb(node.stroke),
       )[],
@@ -103,21 +105,22 @@
   }
 
   if edge.label != none {
-    place(
-      top + left,
-      dx: edge.label_x_pt * 1pt - 36pt,
-      dy: edge.label_y_pt * 1pt - 10pt,
-      block(
-        width: 72pt,
-        inset: (x: 6pt, y: 3pt),
-        radius: 6pt,
-        fill: white,
-      )[
-        #set align(center + horizon)
-        #set text(size: 8pt, fill: rgb(edge.stroke))
-        #edge.label
-      ],
+    let label = box(
+      inset: (x: 5pt * s, y: 2.5pt * s),
+      radius: 6pt * s,
+      fill: white,
+      text(size: 8pt * s, fill: rgb(edge.stroke), edge.label),
     )
+    // Center the label on its anchor point
+    context {
+      let size = measure(label)
+      place(
+        top + left,
+        dx: edge.label_x_pt * 1pt - size.width / 2,
+        dy: edge.label_y_pt * 1pt - size.height / 2,
+        label,
+      )
+    }
   }
 }
 
@@ -128,12 +131,12 @@
   block(
     width: zone.width_pt * 1pt,
     height: zone.height_pt * 1pt,
-    inset: (x: 10pt, y: 8pt),
-    radius: 10pt,
+    inset: (x: 10pt * s, y: 8pt * s),
+    radius: 10pt * s,
     fill: rgb(zone.fill),
     stroke: 0.8pt + rgb(zone.stroke),
   )[
-    #set text(size: 8pt, weight: "bold", fill: rgb(zone.text))
+    #set text(size: 8pt * s, weight: "bold", fill: rgb(zone.text))
     #zone.label
   ],
 )

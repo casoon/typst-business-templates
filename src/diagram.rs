@@ -8,7 +8,7 @@ const DEFAULT_PAGE_HEIGHT_PT: f64 = 540.0;
 const DEFAULT_MARGIN_PT: f64 = 28.0;
 const DEFAULT_HEADER_HEIGHT_PT: f64 = 64.0;
 const DEFAULT_NODE_GAP_PT: f64 = 28.0;
-const DEFAULT_LAYER_GAP_PT: f64 = 92.0;
+const DEFAULT_LAYER_GAP_PT: f64 = 64.0;
 const DEFAULT_RADIAL_STEP_PT: f64 = 128.0;
 
 #[derive(Debug, Clone, Deserialize)]
@@ -99,6 +99,8 @@ struct RenderDocument {
     margin_pt: f64,
     header_height_pt: f64,
     background: String,
+    /// Factor the layout was shrunk by to fit the page; the template scales text with it.
+    scale: f64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -288,7 +290,7 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
 
     let mut edges = build_edges(&spec.edges, &nodes, &layout)?;
     let mut zones = working_layout.zones;
-    normalize_to_page(&doc, &mut nodes, &mut edges, &mut zones);
+    let scale = normalize_to_page(&doc, &mut nodes, &mut edges, &mut zones);
     apply_direction(&direction, &doc, &mut nodes, &mut edges, &mut zones);
 
     let render_zones = zones
@@ -324,6 +326,13 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
         })
         .collect();
 
+    let mut in_degree: HashMap<&str, usize> = HashMap::new();
+    let mut out_degree: HashMap<&str, usize> = HashMap::new();
+    for edge in &spec.edges {
+        *in_degree.entry(edge.to.as_str()).or_default() += 1;
+        *out_degree.entry(edge.from.as_str()).or_default() += 1;
+    }
+
     let render_edges = edges
         .into_iter()
         .map(|edge| {
@@ -338,7 +347,14 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
                         edge.spec.to
                     )
                 })?;
-            let label_point = point_at_ratio(&edge.points, 0.5);
+            let label_point = label_anchor(
+                &edge.points,
+                in_degree.get(edge.spec.to.as_str()).copied().unwrap_or(0),
+                out_degree
+                    .get(edge.spec.from.as_str())
+                    .copied()
+                    .unwrap_or(0),
+            );
             let angle = (ey - sy).atan2(ex - sx).to_degrees();
             let segments = edge
                 .points
@@ -377,6 +393,7 @@ fn build_render_model(spec: DiagramSpec) -> Result<DiagramRenderModel> {
             margin_pt: doc.margin_pt,
             header_height_pt: doc.header_height_pt,
             background: doc.background,
+            scale,
         },
         diagram: RenderDiagramMeta {
             kind: spec.diagram.kind.unwrap_or_else(|| "diagram".to_string()),
@@ -1153,12 +1170,13 @@ fn build_edges(
         .collect()
 }
 
+/// Fits the layout into the page's content area and returns the scale factor applied.
 fn normalize_to_page(
     doc: &ResolvedDocument,
     nodes: &mut HashMap<String, PositionedNode>,
     edges: &mut [WorkingEdge],
     zones: &mut [WorkingZone],
-) {
+) -> f64 {
     let mut min_x = f64::MAX;
     let mut min_y = f64::MAX;
     let mut max_x = f64::MIN;
@@ -1218,6 +1236,8 @@ fn normalize_to_page(
         zone.width_pt *= scale;
         zone.height_pt *= scale;
     }
+
+    scale
 }
 
 fn apply_direction(
@@ -1300,9 +1320,11 @@ fn directed_children(nodes: &[MeasuredNode], edges: &[EdgeSpec]) -> HashMap<Stri
         }
     }
     for edge in edges {
-        map.entry(edge.from.clone())
-            .or_default()
-            .push(edge.to.clone());
+        let children = map.entry(edge.from.clone()).or_default();
+        // A child linked by both `parent` and an edge is still one child.
+        if !children.contains(&edge.to) {
+            children.push(edge.to.clone());
+        }
     }
     map
 }
@@ -1369,6 +1391,25 @@ fn find_root(nodes: &[MeasuredNode], edges: &[EdgeSpec]) -> Option<String> {
         .into_iter()
         .find(|(_, count)| *count == 0)
         .map(|(id, _)| id)
+}
+
+/// Where to put an edge label. Orthogonal edges (start, bend, bend, end) that share a node with
+/// other edges would all get their label at the same spot, so the label goes on the part of the
+/// edge that belongs to it alone: the segment into the target if nothing else enters the target,
+/// else the segment out of the source if nothing else leaves it, else the connecting segment.
+fn label_anchor(points: &[(f64, f64)], target_in: usize, source_out: usize) -> (f64, f64) {
+    let straight = points.len() == 4 && (points[0].0 - points[3].0).abs() < 0.5;
+    if points.len() != 4 || straight {
+        return point_at_ratio(points, 0.5);
+    }
+    let segment = if target_in <= 1 {
+        &points[2..4]
+    } else if source_out <= 1 {
+        &points[0..2]
+    } else {
+        &points[1..3]
+    };
+    point_at_ratio(segment, 0.5)
 }
 
 fn point_at_ratio(points: &[(f64, f64)], ratio: f64) -> (f64, f64) {
@@ -1467,6 +1508,38 @@ mod tests {
         let rendered: serde_json::Value = serde_json::from_slice(&output).unwrap();
         assert_eq!(rendered["nodes"].as_array().unwrap().len(), 3);
         assert_eq!(rendered["edges"].as_array().unwrap().len(), 2);
+    }
+
+    #[test]
+    fn parent_and_edge_count_as_one_child() {
+        let input = r#"
+        {
+          "diagram": { "kind": "tree" },
+          "nodes": [
+            { "id": "root", "label": "CEO" },
+            { "id": "a", "label": "Sales", "parent": "root" },
+            { "id": "b", "label": "Legal", "parent": "root" }
+          ],
+          "edges": [
+            { "from": "root", "to": "a" },
+            { "from": "root", "to": "b" }
+          ]
+        }"#;
+
+        let output = preprocess_diagram_data(input.as_bytes()).unwrap();
+        let rendered: serde_json::Value = serde_json::from_slice(&output).unwrap();
+        let x_of = |id: &str| {
+            let node = rendered["nodes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|node| node["id"] == id)
+                .unwrap();
+            node["x_pt"].as_f64().unwrap() + node["width_pt"].as_f64().unwrap() / 2.0
+        };
+        // The root sits centered above its two children.
+        let middle = (x_of("a") + x_of("b")) / 2.0;
+        assert!((x_of("root") - middle).abs() < 1.0);
     }
 
     #[test]

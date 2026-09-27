@@ -82,5 +82,18 @@
       "parent": "growth"
     }
   ],
-  "edges": []
+  "edges": [
+    { "from": "core", "to": "ux" },
+    { "from": "core", "to": "data" },
+    { "from": "core", "to": "ops" },
+    { "from": "core", "to": "growth" },
+    { "from": "ux", "to": "design-system" },
+    { "from": "ux", "to": "mobile" },
+    { "from": "data", "to": "tracking" },
+    { "from": "data", "to": "reporting" },
+    { "from": "ops", "to": "deploy" },
+    { "from": "ops", "to": "monitoring" },
+    { "from": "growth", "to": "seo" },
+    { "from": "growth", "to": "crm" }
+  ]
 }
