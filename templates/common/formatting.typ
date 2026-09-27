@@ -15,7 +15,8 @@
 /// // Output: 27.01.25
 /// ```
 #let format_german_date(date_obj) = {
-  let date_str = date_obj.date
+  // Accepts a date object (date: "YYYY-MM-DD") or a plain string, as the Rust types send it
+  let date_str = if type(date_obj) == dictionary { date_obj.date } else { str(date_obj) }
   let parts = date_str.split("-")
   if parts.len() == 3 {
     let year = parts.at(0).slice(2, 4)

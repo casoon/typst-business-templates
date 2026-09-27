@@ -55,7 +55,9 @@
       
       // VAT breakdown
       #for vat in vat_breakdown {
-        rows.push(([#l-vat (#vat.rate.percentage%):], [#format_money(vat.amount.amount) EUR]))
+        // rate is (percentage: 19) in JSON documents, a plain number from the Rust types
+        let pct = if type(vat.rate) == dictionary { vat.rate.percentage } else { vat.rate }
+        rows.push(([#l-vat (#pct%):], [#format_money(vat.amount.amount) EUR]))
       }
       
       // Total

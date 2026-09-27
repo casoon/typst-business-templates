@@ -6,8 +6,9 @@
 
 **Professional document generation for small businesses — as a Rust library or standalone CLI.**
 
-Generate invoices, offers, contracts and more as PDF without a running Typst installation.
-Templates, fonts and localization are embedded directly in the binary.
+Generate invoices, offers, contracts and more as PDF. The Rust library embeds the Typst
+compiler, templates, fonts and localization, so it needs no Typst installation. The `docgen`
+CLI calls the `typst` binary for every document except diagrams, so it needs Typst installed.
 
 Created by [casoon.de](https://www.casoon.de).
 
@@ -27,15 +28,25 @@ typst-business-templates = "0.1"
 ### Quick Start
 
 ```rust
-use typst_business_templates::{
-    DocgenCompiler, CompanyData, CompanyAddress, CompanyContact,
-    InvoiceData, InvoiceMetadata, InvoiceRecipient, InvoiceItem,
+use typst_business_templates::types::{
+    CompanyAddress, CompanyContact, InvoicePayment, InvoiceTotals, MoneyAmount,
+    RecipientAddress, VatBreakdownItem, VatRate,
 };
+use typst_business_templates::{
+    CompanyData, DocgenCompiler, InvoiceData, InvoiceItem, InvoiceMetadata, InvoiceRecipient,
+};
+
+fn eur(amount: f64) -> MoneyAmount {
+    MoneyAmount { amount, currency: None }
+}
 
 fn main() -> anyhow::Result<()> {
     let company = CompanyData {
         name: "Mustermann IT-Services".into(),
         language: "de".into(),
+        logo: None,
+        logo_width: None,
+        branding: Default::default(),
         address: CompanyAddress {
             street: "Musterstraße".into(),
             house_number: "1".into(),
@@ -47,7 +58,10 @@ fn main() -> anyhow::Result<()> {
             email: Some("info@example.com".into()),
             ..Default::default()
         },
-        ..Default::default()
+        tax_id: None,
+        vat_id: None,
+        business_owner: None,
+        bank_account: None,
     };
 
     let invoice = InvoiceData {
@@ -55,12 +69,15 @@ fn main() -> anyhow::Result<()> {
             invoice_number: "RE-2024-001".into(),
             invoice_date: "01.01.2024".into(),
             due_date: "15.01.2024".into(),
-            ..Default::default()
+            customer_number: None,
+            performance_period: None,
+            project_reference: None,
+            show_footer: None,
         },
         recipient: InvoiceRecipient {
             name: "Kunde GmbH".into(),
             company: Some("Kunde GmbH".into()),
-            address: typst_business_templates::types::RecipientAddress {
+            address: RecipientAddress {
                 street: "Kundenstraße".into(),
                 house_number: "42".into(),
                 postal_code: "10115".into(),
@@ -73,21 +90,21 @@ fn main() -> anyhow::Result<()> {
             description: "Webentwicklung".into(),
             quantity: 8.0,
             unit: "h".into(),
-            vat_rate: typst_business_templates::types::VatRate { percentage: 19 },
-            unit_price: typst_business_templates::types::MoneyAmount { amount: 90.0, currency: None },
-            total: typst_business_templates::types::MoneyAmount { amount: 720.0, currency: None },
+            vat_rate: VatRate { percentage: 19 },
+            unit_price: eur(90.0),
+            total: eur(720.0),
             sub_items: vec![],
         }],
-        totals: typst_business_templates::types::InvoiceTotals {
-            subtotal: typst_business_templates::types::MoneyAmount { amount: 720.0, currency: None },
-            vat_breakdown: vec![typst_business_templates::types::VatBreakdownItem {
+        totals: InvoiceTotals {
+            subtotal: eur(720.0),
+            vat_breakdown: vec![VatBreakdownItem {
                 rate: 19,
-                base: typst_business_templates::types::MoneyAmount { amount: 720.0, currency: None },
-                amount: typst_business_templates::types::MoneyAmount { amount: 136.80, currency: None },
+                base: eur(720.0),
+                amount: eur(136.80),
             }],
-            total: typst_business_templates::types::MoneyAmount { amount: 856.80, currency: None },
+            total: eur(856.80),
         },
-        payment: typst_business_templates::types::InvoicePayment {
+        payment: InvoicePayment {
             due_date: "15.01.2024".into(),
             bank_transfer_note: None,
         },
@@ -159,7 +176,7 @@ Stop paying for bloated invoice and document software. This open-source solution
 - **[Typst](https://typst.app/)** - Modern markup language for beautiful PDFs
 - **JSON Data Format** - Simple, human-readable data for your documents
 - **AI-Powered Creation** - Use Claude or other LLMs to generate content
-- **Interactive CLI** - Manage clients, projects, and documents from your terminal
+- **Simple CLI** - Compile documents and keep clients and projects in plain JSON from your terminal
 
 Perfect for freelancers, agencies, and small businesses who want full control over their documents.
 
