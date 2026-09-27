@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- **Example documents that did not compile:** The it-consultant order confirmation, time sheet and SLA fixtures used wrong field names or unescaped `#`/`@` in Typst content; the contract template referenced an undefined `status`; the SLA template built its party names and addresses as content instead of values; the title page failed on `tags: none` (protocol)
+- **Delivery note printed Typst code:** The address block call was missing its `#`, so the note showed the raw call instead of the address
+- **Optional fields:** The order confirmation no longer requires `order_number` or `terms`, and document footers leave out the status line when no status is set
+- **Diagrams:** Nodes linked by both `parent` and an edge are placed once (the org chart was shifted and doubled), edge labels no longer pile up where edges share a node, and text and padding scale with the layout so labels stay inside their nodes. The org chart and mind map examples now have edges, the architecture example uses a 4:3 page
+- **Typed invoice API:** `compile_invoice` failed on the plain date strings and numeric VAT rate of `InvoiceData`; the templates now accept both these and the date/rate objects of the JSON files
+- **`docgen init`:** `locale/` and `.gitignore` were written into a nested `<name>/<name>/` folder
+- **Starter files:** `cli/templates/invoice.json`, `offer.json`, `credentials.json` and `concept.json` now match the template schemas and compile
+
+### Changed
+- **README:** The library needs no Typst installation, the `docgen` CLI does (all documents except diagrams); the library example compiles as written
+- **`CompanyContact`** implements `Default`
+- **CLI help:** Removed the references to the SQLite database and the interactive mode, which no longer exist; `docgen init` suggests `docgen build` as next step
+- **Crate homepage:** now https://casoon.github.io/typst-business-templates/
+
 ## [0.7.2] - 2026-05-07
 
 ### Changed
