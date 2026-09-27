@@ -89,7 +89,7 @@
     "created": "¡Proyecto creado!",
     "next_steps": "Próximos pasos:",
     "edit_company": "Editar datos de empresa:",
-    "start_interactive": "Iniciar modo interactivo:"
+    "build_documents": "Compilar todos los documentos:"
   },
   "status": {
     "draft": "Borrador",

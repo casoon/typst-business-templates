@@ -1,9 +1,10 @@
 {
   "metadata": {
     "invoice_number": "DOCUMENT_ID",
-    "invoice_date": "01.01.2025",
-    "due_date": "15.01.2025",
-    "customer_number": null
+    "invoice_date": { "date": "2025-01-01" },
+    "due_date": { "date": "2025-01-15" },
+    "customer_number": null,
+    "project_reference": null
   },
   "recipient": {
     "name": "Kundenname",
@@ -17,19 +18,28 @@
   },
   "items": [
     {
+      "position": 1,
       "description": "Leistungsbeschreibung",
+      "sub_items": [],
       "quantity": 1,
       "unit": "Stück",
-      "unit_price": "0,00 EUR",
-      "total_price": "0,00 EUR"
+      "unit_price": { "amount": 0, "currency": "EUR" },
+      "vat_rate": { "percentage": 19 },
+      "total": { "amount": 0, "currency": "EUR" }
     }
   ],
   "totals": {
-    "subtotal": "0,00 EUR",
-    "tax_rate": "19%",
-    "tax_amount": "0,00 EUR",
-    "total": "0,00 EUR"
+    "subtotal": { "amount": 0, "currency": "EUR" },
+    "vat_breakdown": [
+      {
+        "rate": { "percentage": 19 },
+        "base": { "amount": 0, "currency": "EUR" },
+        "amount": { "amount": 0, "currency": "EUR" }
+      }
+    ],
+    "total": { "amount": 0, "currency": "EUR" }
   },
-  "notes": null,
-  "terms": null
+  "payment": {
+    "due_date": { "date": "2025-01-15" }
+  }
 }

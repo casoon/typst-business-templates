@@ -1,9 +1,10 @@
 {
   "metadata": {
     "offer_number": "DOCUMENT_ID",
-    "offer_date": "01.01.2025",
-    "valid_until": "31.01.2025",
-    "version": "1.0"
+    "offer_date": { "date": "2025-01-01" },
+    "valid_until": { "date": "2025-01-31" },
+    "customer_number": null,
+    "project_reference": null
   },
   "recipient": {
     "name": "Kundenname",
@@ -20,16 +21,23 @@
       "position": 1,
       "title": "Leistung",
       "description": "Beschreibung der Leistung",
+      "sub_items": [],
       "quantity": 1,
       "unit": "Pauschal",
-      "unit_price": "0,00 EUR",
-      "total": "0,00 EUR",
-      "sub_items": []
+      "unit_price": { "amount": 0, "currency": "EUR" },
+      "total": { "amount": 0, "currency": "EUR" }
     }
   ],
   "totals": {
-    "subtotal": "0,00 EUR",
-    "total": "0,00 EUR"
+    "subtotal": { "amount": 0, "currency": "EUR" },
+    "vat_breakdown": [
+      {
+        "rate": { "percentage": 19 },
+        "base": { "amount": 0, "currency": "EUR" },
+        "amount": { "amount": 0, "currency": "EUR" }
+      }
+    ],
+    "total": { "amount": 0, "currency": "EUR" }
   },
   "terms": {
     "validity": "30 Tage",

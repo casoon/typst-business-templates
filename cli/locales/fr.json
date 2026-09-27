@@ -89,7 +89,7 @@
     "created": "Projet créé !",
     "next_steps": "Prochaines étapes :",
     "edit_company": "Modifier les données de l'entreprise :",
-    "start_interactive": "Démarrer le mode interactif :"
+    "build_documents": "Compiler tous les documents :"
   },
   "status": {
     "draft": "Brouillon",

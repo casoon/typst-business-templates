@@ -33,7 +33,7 @@ Features:
   • Multi-language support: de, en, es, fr, it, nl, pt
   • Concept and documentation templates with package system
   • Custom branding (colors, fonts, logo)
-  • SQLite database for client/project management
+  • Client and project registry (JSON files in data/)
   • Watch mode for auto-rebuild
   • PDF encryption for sensitive documents
 
@@ -123,23 +123,25 @@ enum Commands {
         #[arg(default_value = "documents")]
         path: PathBuf,
     },
-    /// Client management (SQLite database)
+    /// Client management (stored in data/clients.json)
     ///
-    /// Manage clients in the local database:
+    /// Manage the clients of the project:
     ///   - list: Show all clients
     ///   - add: Add new client
     ///   - show: Display client details
+    ///   - delete: Remove a client
     ///
     /// Example: docgen client list
     Client {
         #[command(subcommand)]
         action: ClientAction,
     },
-    /// Project management (SQLite database)
+    /// Project management (stored in data/projects.json)
     ///
     /// Manage projects linked to clients:
     ///   - list: Show projects for a client
     ///   - add: Create new project
+    ///   - delete: Remove a project
     ///
     /// Example: docgen project list K-001
     Project {
@@ -181,22 +183,19 @@ enum Commands {
 
 #[derive(Subcommand)]
 enum ClientAction {
-    /// List all clients from database
+    /// List all clients
     ///
     /// Displays a table with client number, name, city, and email.
     ///
     /// Example: docgen client list
     List,
-    /// Add a new client to database
+    /// Add a new client
     ///
-    /// Interactively prompts for client information if --name not provided.
     /// Automatically assigns next client number (K-001, K-002, etc.).
     ///
-    /// Examples:
-    ///   docgen client add
-    ///   docgen client add --name "Acme Corp"
+    /// Example: docgen client add --name "Acme Corp"
     Add {
-        /// Client name (optional, will prompt if not provided)
+        /// Client name (required)
         #[arg(short, long)]
         name: Option<String>,
     },
@@ -213,7 +212,7 @@ enum ClientAction {
     },
     /// Delete a client
     ///
-    /// Removes a client from the database. Warning: This cannot be undone.
+    /// Removes a client from data/clients.json. Warning: This cannot be undone.
     ///
     /// Examples:
     ///   docgen client delete K-001
@@ -251,7 +250,7 @@ enum ProjectAction {
     },
     /// Delete a project
     ///
-    /// Removes a project from the database. Warning: This cannot be undone.
+    /// Removes a project from data/projects.json. Warning: This cannot be undone.
     ///
     /// Examples:
     ///   docgen project delete P-001-01
@@ -310,7 +309,7 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        // No command = show help (interactive mode removed for simplification)
+        // No command = short overview
         None => {
             println!("docgen - Document generation tool\n");
             println!("Usage: docgen <command>\n");
@@ -441,10 +440,6 @@ fn init_project(name: &str) -> Result<()> {
 }"##;
     std::fs::write(base.join("data/company.json"), company)?;
 
-    // Initialize templates using the new v0.5.0 system
-    std::env::set_current_dir(&base)?;
-    local_templates::init_project()?;
-
     // Write embedded locales
     let locale_dir = base.join("locale");
     std::fs::create_dir_all(&locale_dir)?;
@@ -452,18 +447,22 @@ fn init_project(name: &str) -> Result<()> {
         std::fs::write(locale_dir.join(locale.path), locale.content)?;
     }
 
-    // Create .gitignore
-    std::fs::write(base.join(".gitignore"), "output/*.pdf\ndata/docgen.db\n")?;
+    // Create .gitignore (template init below appends .docgen/)
+    std::fs::write(base.join(".gitignore"), "output/*.pdf\n")?;
+
+    // Initialize templates. Paths from here on are relative to the project directory.
+    std::env::set_current_dir(base)?;
+    local_templates::init_project()?;
 
     println!("{} {}", "✓".green(), t("init", "created"));
 
     println!();
-    println!("{}:", t("init", "next_steps"));
+    println!("{}", t("init", "next_steps"));
     println!("  cd {}", name);
     println!("  # {}", t("init", "edit_company"));
     println!("  nano data/company.json");
-    println!("  # {}", t("init", "start_interactive"));
-    println!("  docgen");
+    println!("  # {}", t("init", "build_documents"));
+    println!("  docgen build");
 
     Ok(())
 }
@@ -838,8 +837,9 @@ When you run `docgen init my-business`, it creates:
 ```
 my-business/
 ├── data/
-│   ├── docgen.db          # SQLite database (auto-created)
-│   └── company.json       # Company data & branding
+│   ├── company.json       # Company data & branding
+│   ├── clients.json       # Client registry (docgen client ...)
+│   └── projects.json      # Project registry (docgen project ...)
 ├── documents/
 │   ├── invoices/2025/     # Invoice JSON files
 │   ├── offers/2025/       # Offer JSON files

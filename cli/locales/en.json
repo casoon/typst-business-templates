@@ -89,7 +89,7 @@
     "created": "Project created!",
     "next_steps": "Next steps:",
     "edit_company": "Edit company data:",
-    "start_interactive": "Start interactive mode:"
+    "build_documents": "Build all documents:"
   },
   "status": {
     "draft": "Draft",
