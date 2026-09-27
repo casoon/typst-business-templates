@@ -11,6 +11,8 @@ Templates, fonts and localization are embedded directly in the binary.
 
 Created by [casoon.de](https://www.casoon.de).
 
+**Website and documentation:** [casoon.github.io/typst-business-templates](https://casoon.github.io/typst-business-templates/)
+
 ---
 
 ## Rust Library

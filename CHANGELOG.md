@@ -127,13 +127,9 @@ All notable changes to this project will be documented in this file.
   - `parties-title-page()` now accepts both array and dictionary metadata
   - Fixes compilation errors in credentials and contract templates
   - Error: `type array has no method pairs` when using array-based metadata
-
-### Technical Details
-All three title-page functions now include type checking to handle both data formats:
-- **Array format:** `[(key1, value1), (key2, value2)]` (used by some templates)
-- **Dictionary format:** `(key1: value1, key2: value2)` (used by other templates)
-
-This ensures 100% compatibility across all templates using title-page components.
+- **Type checking in all three title-page functions** handles both data formats, so every template using title-page components works with either:
+  - **Array format:** `[(key1, value1), (key2, value2)]` (used by some templates)
+  - **Dictionary format:** `(key1: value1, key2: value2)` (used by other templates)
 
 ## [0.6.1] - 2026-01-27
 
@@ -144,11 +140,8 @@ This ensures 100% compatibility across all templates using title-page components
 
 ## [0.6.0] - 2026-01-27
 
-### 🎉 Major: Simplification & Code Consolidation
-
-**Breaking Changes:** Complete architectural simplification following Unix philosophy.
-
-**Philosophy:** Do one thing well. Plain text over binary. Composable tools. DRY (Don't Repeat Yourself).
+### Breaking
+- **Simplification & code consolidation:** complete architectural simplification following Unix philosophy — do one thing well, plain text over binary, composable tools, DRY (Don't Repeat Yourself)
 
 ### Removed
 - **SQLite database** → Replaced with JSON files (`data/clients.json`, `data/projects.json`, `data/counters.json`)
@@ -187,8 +180,7 @@ This ensures 100% compatibility across all templates using title-page components
   - ~425 lines (title pages)
 - **CLI refactoring:** Commands moved to `cli/src/commands/` module, main.rs reduced by 333 lines (-23%)
 
-### Migration from v0.5.x
-**Note:** No migration tool needed - v0.6.0 had no production users.
+**Migration from v0.5.x:** No migration tool needed - v0.6.0 had no production users.
 
 If you used v0.5.x locally:
 1. Backup your data: `cp -r data/ data.backup/`
@@ -225,9 +217,8 @@ JSON format:
 
 ## [0.5.0] - 2026-01-25
 
-### 🎉 Major: Project-Local Template System
-
-**Breaking Change:** Complete redesign of template architecture for portability and simplicity.
+### Breaking
+- **Project-local template system:** complete redesign of template architecture for portability and simplicity (see the migration guide below)
 
 **Old System (≤ 0.4.x):**
 - Templates installed globally in `~/Library/Application Support/typst/packages/`
@@ -262,9 +253,7 @@ JSON format:
 - ~~Global package management~~ - All templates are project-local now
 - ~~Version pinning in imports~~ - Standard templates always current
 
-### Migration Guide (0.4.x → 0.5.0)
-
-**For existing projects:**
+**Migration guide (0.4.x → 0.5.0)** for existing projects:
 
 1. Run `docgen template init` in your project
 2. Update .typ files to use new import paths:
@@ -281,11 +270,7 @@ JSON format:
    # Then copy your customizations to templates/my-concept/
    ```
 
-**Benefits:**
-- ✅ Clone project → works immediately (no setup)
-- ✅ Upgrade docgen → templates auto-update
-- ✅ Custom templates protected from updates
-- ✅ Everything in Git → full version control
+Benefits: clone project → works immediately (no setup); upgrade docgen → templates auto-update; custom templates protected from updates; everything in Git → full version control.
 
 ## [0.4.12] - 2025-01-25
 
@@ -411,6 +396,11 @@ JSON format:
   - `proposal` - Projektvorschlag für Agenturen/Beratung
   - `sla` - Service Level Agreement
   - `quotation-request` - Angebotsanfrage an Lieferanten
+- Neue Datei `DOCUMENT-TYPES.md` mit vollständiger Übersicht aller Templates
+- Umfangreiche Examples für IT-Consultant Szenario hinzugefügt:
+  - 12 vollständige JSON-Beispieldateien
+  - README mit Verwendungsbeispielen und Szenarien
+  - Realistische Projekt-Workflows (API-Migration, Cloud-Migration)
 
 ### Fixed
 - **Footer-Position** in `concept` und `documentation` Templates von 100pt auf 80pt korrigiert
@@ -419,13 +409,6 @@ JSON format:
 ### Changed
 - Alle Templates verwenden jetzt konsistente Margins und Footer-Position (80pt)
 - Templates folgen durchgängig Accounting-Layout oder Document-Layout Standards
-
-### Documentation
-- Neue Datei `DOCUMENT-TYPES.md` mit vollständiger Übersicht aller Templates
-- Umfangreiche Examples für IT-Consultant Szenario hinzugefügt:
-  - 12 vollständige JSON-Beispieldateien
-  - README mit Verwendungsbeispielen und Szenarien
-  - Realistische Projekt-Workflows (API-Migration, Cloud-Migration)
 
 ## [0.4.5] - 2025-01-24
 

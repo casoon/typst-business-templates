@@ -25,6 +25,7 @@ exclude = [
     ".claude/",
     ".gitguardian.yaml",
     "docs/",
+    "site/",
     "examples/",
     "data/",
     "schema/",
