@@ -4,11 +4,7 @@ use std::process::Command;
 use tempfile::TempDir;
 
 fn docgen_binary() -> PathBuf {
-    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("target");
-    path.push("debug");
-    path.push("docgen");
-    path
+    PathBuf::from(env!("CARGO_BIN_EXE_docgen"))
 }
 
 fn setup_test_project() -> TempDir {
