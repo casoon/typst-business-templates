@@ -149,6 +149,43 @@ let compiler = DocgenCompiler::new()
 
 ---
 
+## Typst package (for typstgen)
+
+`templates/` is also a Typst package, `business-templates` 0.1.0, so the documents can be compiled
+with [typstgen](https://github.com/casoon/typstgen) (or the typst CLI) without docgen. Copy or link
+`templates/` into your package directory as `local/business-templates/0.1.0/`:
+
+```toml
+# typstgen.toml
+template_paths = ["."]                                     # project root for absolute paths
+package_path = "packages"                                  # contains local/business-templates/0.1.0
+font_paths = ["path/to/typst-business-templates/fonts"]    # fonts used by the font presets
+```
+
+Accounting documents take the docgen JSON data and `company.json` as dictionaries:
+
+```typst
+#import "@local/business-templates:0.1.0": invoice
+
+#invoice(
+  data: json("/invoices/2026/RE-2026-001.json"),
+  company: json("/data/company.json"),
+)
+```
+
+| Kind | Functions | Arguments |
+| --- | --- | --- |
+| Accounting | `invoice`, `offer`, `credit-note`, `reminder`, `delivery-note`, `order-confirmation`, `quotation-request`, `time-sheet`, `letter` | `data:`, `company:` |
+| Accounting | `credentials` | `data:`, `company:`, `locale:` |
+| Documents | `concept`, `contract`, `documentation`, `proposal`, `protocol`, `sla`, `specification`, `task-list`, `handout` | named parameters plus the body as content, e.g. `#proposal(title: [..], company: company)[= Einleitung ..]` |
+
+- Labels of the documents come from `locale:` (a dictionary like [`cli/locales/de.json`](cli/locales/de.json));
+  without it, English fallbacks are used. Accounting documents are German.
+- A logo goes into the company dictionary as an image: `company.insert("_logo_image", image("logo.png", width: 150pt))`.
+- `diagram` is not part of the package: its data is prepared by docgen in Rust.
+
+---
+
 ## CLI (`docgen`)
 
 **Professional document generation for small businesses without expensive software.**

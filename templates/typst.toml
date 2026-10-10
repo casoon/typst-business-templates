@@ -1,0 +1,10 @@
+[package]
+name = "business-templates"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Casoon"]
+license = "MIT"
+description = "Business documents for small companies: invoices, offers, letters, contracts, concepts, SLAs, protocols and more. German layout (DIN 5008 address block)."
+repository = "https://github.com/casoon/typst-business-templates"
+compiler = "0.15.0"
+exclude = ["**/*.pdf", "**/*.backup", "diagram"]

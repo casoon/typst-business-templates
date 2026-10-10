@@ -1,16 +1,14 @@
 // Reminder Template (Zahlungserinnerung/Mahnung) - CASOON Layout
 // Multi-level payment reminder system
 
-// Load data from JSON input
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, reminder-metadata
-#let data = json(sys.inputs.data)
 
-// Load company data
-#let company = json("/data/company.json")
-
+/// Renders the document. `data` has the shape of the docgen JSON file,
+/// `company` that of company.json.
+#let reminder(data: none, company: none) = [
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -149,3 +147,9 @@
     #company.name
   ]
 ]
+]
+
+// docgen: the CLI passes the path of the JSON file in sys.inputs.
+#if "data" in sys.inputs {
+  reminder(data: json(sys.inputs.data), company: json("/data/company.json"))
+}

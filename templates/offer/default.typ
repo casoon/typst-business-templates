@@ -8,12 +8,9 @@
 #import "../common/unit-formatter.typ": format-unit
 #import "../common/totals-summary.typ": invoice-totals
 
-// Load data from input parameter
-#let data = json(sys.inputs.data)
-
-// Load company data
-#let company = json("/data/company.json")
-
+/// Renders the document. `data` has the shape of the docgen JSON file,
+/// `company` that of company.json.
+#let offer(data: none, company: none) = [
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -223,3 +220,9 @@
     #v(8pt)
   ]
 ]
+]
+
+// docgen: the CLI passes the path of the JSON file in sys.inputs.
+#if "data" in sys.inputs {
+  offer(data: json(sys.inputs.data), company: json("/data/company.json"))
+}

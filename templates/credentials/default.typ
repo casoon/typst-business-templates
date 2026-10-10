@@ -4,33 +4,10 @@
 #import "../common/styles.typ": *
 #import "../common/title-page.typ": standard-title-page
 
-// Load data from JSON input (only if available)
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-// Load company and locale from sys.inputs (passed by docgen CLI)
-// Only when in JSON workflow (data != none)
-#let company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  // Load logo image if logo path is specified
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
-  }
-  c
-} else {
-  (:)
-}
-
-#let locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  (common: (:), credentials: (:))
-}
-
+/// Renders the document. `data` has the shape of the docgen JSON file,
+/// `company` that of company.json (a logo goes in `_logo_image` as an image),
+/// `locale` that of locale/<lang>.json.
+#let credentials(data: none, company: (:), locale: (common: (:), credentials: (:))) = [
 // Get branding from company data
 #let accent-color = get-accent-color(company)
 #let fonts = get-font-preset(company)
@@ -59,8 +36,6 @@
 #let l-hint4 = if "credentials" in locale and "security_hint_4" in locale.credentials { locale.credentials.security_hint_4 } else { "Use a password manager." }
 #let l-hint5 = if "credentials" in locale and "security_hint_5" in locale.credentials { locale.credentials.security_hint_5 } else { "Delete this document after use." }
 
-// Note: Credentials template is CLI-only (requires JSON data via docgen)
-// If data is none, the template will fail gracefully when accessing data.metadata
 
 #set page(
   paper: "a4",
@@ -312,3 +287,16 @@
     ]
   ]
 ]
+]
+
+// docgen: the CLI passes the paths of the JSON files in sys.inputs.
+#if "data" in sys.inputs {
+  let company = json(sys.inputs.company)
+  // Load logo image if logo path is specified
+  if "logo" in company and company.logo != none {
+    let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
+    company.insert("_logo_image", image("/" + company.logo, width: logo-width))
+  }
+  let locale = if "locale" in sys.inputs { json(sys.inputs.locale) } else { (common: (:), credentials: (:)) }
+  credentials(data: json(sys.inputs.data), company: company, locale: locale)
+}

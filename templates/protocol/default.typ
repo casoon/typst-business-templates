@@ -134,7 +134,7 @@
       document-number: document_number,
       accent-color: accent-color,
       metadata: title-metadata,
-      tags: none,
+      tags: (),
       custom-content: participants-content,
     )
 

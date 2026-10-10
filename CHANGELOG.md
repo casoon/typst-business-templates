@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- **Typst package:** `templates/` is the Typst package `business-templates` 0.1.0 (`typst.toml`,
+  `lib.typ`), usable with typstgen or the typst CLI. Accounting templates are now functions
+  (`invoice(data:, company:)` …) with a small adapter for docgen; their output is unchanged.
+
+### Fixed
+- **contract:** the footer used an undefined `status`; it is now a parameter (default "Entwurf").
+- **protocol:** the title page received `tags: none` and failed.
+- **sla:** party names and addresses were built as markup instead of code, so the title page
+  printed the field names and failed on the address.
+- **Examples:** order-confirmation and time-sheet data used field names the templates do not read;
+  the SLA example contained an unescaped `#` and `@` in its markup.
+
 ## [0.7.2] - 2026-05-07
 
 ### Changed
