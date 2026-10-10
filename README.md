@@ -226,7 +226,9 @@ An AI assistant (we recommend [Claude](https://claude.ai)) generates the JSON, y
 
 ### Prerequisites
 
-None: Typst is embedded in docgen (Typst 0.13).
+The `docgen` CLI calls the [Typst](https://github.com/typst/typst#installation) binary to compile
+documents (diagrams excepted), so install Typst. The Rust library embeds Typst 0.13 and needs no
+installation.
 
 ### Installation
 
@@ -755,7 +757,7 @@ Create an invoice JSON for client "Acme Corp" (K-001) for the following work:
 
 ## Requirements
 
-- No Typst installation: Typst 0.13 is embedded.
+- [Typst](https://typst.app/) for the CLI (tested with 0.15.1); the library embeds Typst 0.13.
 - [Rust](https://rustup.rs/) >= 1.70 (for building CLI)
 
 ## Philosophy
