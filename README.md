@@ -11,6 +11,15 @@ Templates, fonts and localization are embedded directly in the binary.
 
 Created by [casoon.de](https://www.casoon.de).
 
+> [!IMPORTANT]
+> **Maintenance mode — the successor is [typstgen](https://github.com/casoon/typstgen).**
+> docgen only receives fixes. For new projects use typstgen: it compiles `.typ` files with an
+> embedded, current Typst engine, enforces PDF/A and PDF/UA, resolves Typst packages and ships an
+> MCP server for AI agents. The templates in [`templates/`](templates/) are plain Typst and keep
+> working: load the JSON data in a thin `.typ` file and compile that with typstgen.
+> Not carried over: client and project management, automatic numbering, watch mode and
+> `--encrypt`.
+
 ---
 
 ## Rust Library
@@ -217,7 +226,7 @@ An AI assistant (we recommend [Claude](https://claude.ai)) generates the JSON, y
 
 ### Prerequisites
 
-Install [Typst](https://github.com/typst/typst#installation) (required for PDF generation)
+None: Typst is embedded in docgen (Typst 0.13).
 
 ### Installation
 
@@ -746,7 +755,7 @@ Create an invoice JSON for client "Acme Corp" (K-001) for the following work:
 
 ## Requirements
 
-- [Typst](https://typst.app/) >= 0.11
+- No Typst installation: Typst 0.13 is embedded.
 - [Rust](https://rustup.rs/) >= 1.70 (for building CLI)
 
 ## Philosophy
