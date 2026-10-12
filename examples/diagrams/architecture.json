@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "type": "architecture",
+  "title": "Plattform-Architektur",
+  "source": "Frontend, APIs, Services und Datenhaltung",
+  "width": 1160,
+  "architecture": {
+    "boundaries": [
+      {
+        "id": "backend",
+        "label": "Backend"
+      },
+      {
+        "id": "data",
+        "label": "Datenhaltung",
+        "in": "backend"
+      }
+    ],
+    "components": [
+      {
+        "id": "web-app",
+        "label": "Web App",
+        "kind": "frontend"
+      },
+      {
+        "id": "mobile-app",
+        "label": "Mobile App",
+        "kind": "frontend"
+      },
+      {
+        "id": "api-gateway",
+        "label": "API Gateway",
+        "in": "backend"
+      },
+      {
+        "id": "auth-service",
+        "label": "Auth Service",
+        "kind": "security",
+        "in": "backend"
+      },
+      {
+        "id": "project-service",
+        "label": "Project Service",
+        "in": "backend"
+      },
+      {
+        "id": "billing-service",
+        "label": "Billing Service",
+        "in": "backend"
+      },
+      {
+        "id": "queue",
+        "label": "Job Queue",
+        "kind": "queue",
+        "in": "backend"
+      },
+      {
+        "id": "postgres",
+        "label": "PostgreSQL",
+        "kind": "database",
+        "in": "data"
+      },
+      {
+        "id": "storage",
+        "label": "Object Storage",
+        "kind": "storage",
+        "in": "data"
+      }
+    ],
+    "connections": [
+      {
+        "from": "web-app",
+        "to": "api-gateway",
+        "technology": "HTTPS"
+      },
+      {
+        "from": "mobile-app",
+        "to": "api-gateway",
+        "technology": "HTTPS"
+      },
+      {
+        "from": "api-gateway",
+        "to": "auth-service",
+        "technology": "JWT"
+      },
+      {
+        "from": "api-gateway",
+        "to": "project-service",
+        "technology": "REST"
+      },
+      {
+        "from": "api-gateway",
+        "to": "billing-service",
+        "technology": "REST"
+      },
+      {
+        "from": "project-service",
+        "to": "queue",
+        "label": "Events"
+      },
+      {
+        "from": "auth-service",
+        "to": "postgres",
+        "label": "Users"
+      },
+      {
+        "from": "project-service",
+        "to": "postgres",
+        "label": "Projects"
+      },
+      {
+        "from": "billing-service",
+        "to": "postgres",
+        "label": "Invoices"
+      },
+      {
+        "from": "project-service",
+        "to": "storage",
+        "label": "Files"
+      },
+      {
+        "from": "queue",
+        "to": "storage",
+        "label": "Exports"
+      }
+    ]
+  }
+}

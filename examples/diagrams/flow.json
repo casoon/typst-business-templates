@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "type": "flow",
+  "title": "Projektfreigabe",
+  "source": "Von der Anfrage bis zur Auslieferung",
+  "height": 640,
+  "flow": {
+    "nodes": [
+      {
+        "id": "anfrage",
+        "label": "Anfrage",
+        "kind": "start"
+      },
+      {
+        "id": "analyse",
+        "label": "Analyse"
+      },
+      {
+        "id": "entscheidung",
+        "label": "Freigabe?",
+        "kind": "decision"
+      },
+      {
+        "id": "umsetzung",
+        "label": "Umsetzung"
+      },
+      {
+        "id": "qa",
+        "label": "QA & Abnahme"
+      },
+      {
+        "id": "go-live",
+        "label": "Go-Live",
+        "kind": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "anfrage",
+        "to": "analyse",
+        "label": "Briefing"
+      },
+      {
+        "from": "analyse",
+        "to": "entscheidung",
+        "label": "Konzept"
+      },
+      {
+        "from": "entscheidung",
+        "to": "umsetzung",
+        "label": "Ja"
+      },
+      {
+        "from": "entscheidung",
+        "to": "analyse",
+        "label": "Nein",
+        "dash": "dashed"
+      },
+      {
+        "from": "umsetzung",
+        "to": "qa",
+        "label": "Build"
+      },
+      {
+        "from": "qa",
+        "to": "go-live",
+        "label": "Freigabe"
+      }
+    ],
+    "mainPath": [
+      "anfrage",
+      "analyse",
+      "entscheidung",
+      "umsetzung",
+      "qa",
+      "go-live"
+    ]
+  }
+}

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Checks the package with typstgen: every document of the example projects compiles, the example
-# invoices build as ZUGFeRD e-invoices, every example JSON matches the schema named in its
-# "$schema", and every locale has the same keys as de.json.
+# invoices build as ZUGFeRD e-invoices, the chartlet diagrams compile and their SVGs match their
+# specs (if chartlet is installed), every example JSON matches the schema named in its "$schema",
+# and every locale has the same keys as de.json.
 # Runs locally and in CI (.github/workflows/check.yml). Needs typstgen and python3 with
 # jsonschema (pip install jsonschema).
 set -uo pipefail
@@ -35,6 +36,27 @@ for project in it-consultant digitalagentur freelance-designer; do
     fail "$project/$invoice.typ (ZUGFeRD)"
   fi
 done
+
+cd "$repo/examples/diagrams"
+for source in *.typ; do
+  if typstgen compile "$source" -o "$tmp/out.pdf" >/dev/null 2>"$tmp/err"; then
+    echo "ok   diagrams/$source"
+  else
+    fail "diagrams/$source"
+  fi
+done
+# The committed SVGs must match their specs; checked only where chartlet is installed.
+if command -v chartlet >/dev/null; then
+  for spec in *.json; do
+    chartlet render "$spec" --variant print -o "$tmp/out.svg" 2>/dev/null
+    if cmp -s "$tmp/out.svg" "${spec%.json}.svg"; then
+      echo "ok   diagrams/${spec%.json}.svg is up to date"
+    else
+      echo "diagrams/${spec%.json}.svg differs from chartlet render $spec; run examples/diagrams/build.sh" >"$tmp/err"
+      fail "diagrams/${spec%.json}.svg"
+    fi
+  done
+fi
 
 python3 - "$repo" <<'PY' 2>"$tmp/err" || fail "schema/"
 import json, pathlib, sys

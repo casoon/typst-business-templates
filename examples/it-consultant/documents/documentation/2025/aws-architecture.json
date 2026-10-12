@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "type": "architecture",
+  "title": "AWS-Architektur MedTech Solutions",
+  "source": "Stand nach der Migration",
+  "width": 1360,
+  "height": 300,
+  "architecture": {
+    "boundaries": [
+      { "id": "vpc", "label": "VPC 10.0.0.0/16" },
+      { "id": "public", "label": "Public Subnets", "in": "vpc" },
+      { "id": "private", "label": "Private Subnets", "in": "vpc" },
+      { "id": "ecs", "label": "ECS Cluster (Fargate)", "in": "private" }
+    ],
+    "components": [
+      { "id": "users", "label": "Nutzer", "kind": "person" },
+      { "id": "dns", "label": "Route 53", "sublabel": "DNS", "kind": "external" },
+      { "id": "cdn", "label": "CloudFront", "sublabel": "CDN / WAF", "kind": "security" },
+      { "id": "alb", "label": "Load Balancer", "sublabel": "ALB", "in": "public" },
+      { "id": "api", "label": "API Gateway", "sublabel": "Service", "in": "ecs" },
+      { "id": "patient", "label": "Patient Service", "in": "ecs" },
+      { "id": "billing", "label": "Billing Service", "in": "ecs" },
+      { "id": "db", "label": "RDS PostgreSQL", "sublabel": "Multi-AZ", "kind": "database", "in": "private" }
+    ],
+    "connections": [
+      { "from": "users", "to": "dns", "label": "löst auf" },
+      { "from": "dns", "to": "cdn" },
+      { "from": "cdn", "to": "alb", "technology": "HTTPS" },
+      { "from": "alb", "to": "api" },
+      { "from": "api", "to": "patient" },
+      { "from": "api", "to": "billing" },
+      { "from": "patient", "to": "db", "technology": "SQL" },
+      { "from": "billing", "to": "db", "technology": "SQL" }
+    ],
+    "mainPath": ["users", "dns", "cdn", "alb", "api", "patient", "db"]
+  }
+}

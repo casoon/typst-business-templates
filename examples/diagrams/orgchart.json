@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "type": "tree",
+  "title": "Organigramm",
+  "source": "Beispielstruktur einer Agentur",
+  "tree": {
+    "nodes": [
+      {
+        "id": "ceo",
+        "label": "Geschäftsführung"
+      },
+      {
+        "id": "strategy",
+        "label": "Strategie",
+        "parent": "ceo"
+      },
+      {
+        "id": "design",
+        "label": "Design",
+        "parent": "ceo"
+      },
+      {
+        "id": "engineering",
+        "label": "Engineering",
+        "parent": "ceo"
+      },
+      {
+        "id": "client-services",
+        "label": "Client Services",
+        "parent": "ceo"
+      },
+      {
+        "id": "research",
+        "label": "Research",
+        "parent": "strategy"
+      },
+      {
+        "id": "brand",
+        "label": "Brand Design",
+        "parent": "design"
+      },
+      {
+        "id": "product",
+        "label": "Product Design",
+        "parent": "design"
+      },
+      {
+        "id": "frontend",
+        "label": "Frontend",
+        "parent": "engineering"
+      },
+      {
+        "id": "backend",
+        "label": "Backend",
+        "parent": "engineering"
+      },
+      {
+        "id": "pm",
+        "label": "Projektleitung",
+        "parent": "client-services"
+      }
+    ]
+  }
+}

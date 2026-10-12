@@ -3,7 +3,7 @@
 # WebP preview of its first page. PDFs are written to a temporary folder, so examples/ stays
 # untouched.
 #
-# Needs: typstgen, pdftoppm (poppler), cwebp (libwebp); cargo for the diagrams (still docgen).
+# Needs: typstgen, chartlet, pdftoppm (poppler), cwebp (libwebp).
 # Run from anywhere: site/scripts/render-showcase.sh
 set -euo pipefail
 
@@ -35,10 +35,10 @@ for entry in "${sources[@]}"; do
   pdfs+=("$slug=$slug.pdf")
 done
 
-# Diagrams are still laid out by docgen's Rust code.
-cargo build --release -p docgen --manifest-path "$repo/Cargo.toml"
+# Diagrams: chartlet specs, rendered by examples/diagrams/build.sh.
+"$repo/examples/diagrams/build.sh"
 for name in flow timeline swimlane quadrant roadmap; do
-  "$repo/target/release/docgen" compile "$repo/examples/diagram-$name/diagram.json" -o "$tmp/diagram-$name.pdf"
+  cp "$repo/examples/diagrams/$name.pdf" "$tmp/diagram-$name.pdf"
   pdfs+=("diagram-$name=diagram-$name.pdf")
 done
 

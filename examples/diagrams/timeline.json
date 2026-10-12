@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "type": "timeline",
+  "title": "Produkt-Rollout",
+  "source": "Phasen vom Kickoff bis zum Launch",
+  "timeline": {
+    "items": [
+      {
+        "id": "kickoff",
+        "label": "Kickoff",
+        "at": "2026-01-12"
+      },
+      {
+        "id": "wireframes",
+        "label": "Wireframes",
+        "start": "2026-01-12",
+        "end": "2026-02-27",
+        "after": [
+          "kickoff"
+        ]
+      },
+      {
+        "id": "implementation",
+        "label": "Implementierung",
+        "start": "2026-03-02",
+        "end": "2026-05-29",
+        "after": [
+          "wireframes"
+        ]
+      },
+      {
+        "id": "launch",
+        "label": "Launch",
+        "at": "2026-06-08",
+        "after": [
+          "implementation"
+        ]
+      }
+    ]
+  }
+}
