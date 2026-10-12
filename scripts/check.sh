@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Checks the package with typstgen: every document of the example projects compiles, the example
+# invoices build as ZUGFeRD e-invoices, and every locale has the same keys as de.json.
+# Runs locally and in CI (.github/workflows/check.yml). Needs typstgen and python3.
+set -uo pipefail
+
+repo="$(cd "$(dirname "$0")/.." && pwd)"
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+failed=0
+
+fail() {
+  echo "FAIL $1" >&2
+  sed 's/^/     /' "$tmp/err" >&2
+  failed=$((failed + 1))
+}
+
+for project in it-consultant digitalagentur freelance-designer; do
+  cd "$repo/examples/$project"
+  while IFS= read -r source; do
+    if typstgen compile "$source" -o "$tmp/out.pdf" >/dev/null 2>"$tmp/err"; then
+      echo "ok   $project/$source"
+    else
+      fail "$project/$source"
+    fi
+  done < <(find documents -name '*.typ' | sort)
+
+  invoice=documents/invoices/2025/invoice
+  if typstgen compile "$invoice.typ" -o "$tmp/out.pdf" --zugferd "$invoice.json" \
+    --company data/company.json --pdf-standard a-3b --creation-timestamp 0 >/dev/null 2>"$tmp/err"; then
+    echo "ok   $project/$invoice.typ (ZUGFeRD)"
+  else
+    fail "$project/$invoice.typ (ZUGFeRD)"
+  fi
+done
+
+python3 - "$repo/templates/locale" <<'PY' 2>"$tmp/err" || fail "templates/locale"
+import json, pathlib, sys
+
+def paths(value, prefix=""):
+    if isinstance(value, dict):
+        for key, sub in value.items():
+            yield from paths(sub, f"{prefix}.{key}" if prefix else key)
+    else:
+        yield prefix, value
+
+locales = pathlib.Path(sys.argv[1])
+expected = {p for p, _ in paths(json.loads((locales / "de.json").read_text()))}
+problems = []
+for path in sorted(locales.glob("*.json")):
+    actual = dict(paths(json.loads(path.read_text())))
+    problems += [f"{path.name}: missing {p}" for p in sorted(expected - actual.keys())]
+    problems += [f"{path.name}: unknown {p}" for p in sorted(actual.keys() - expected)]
+    problems += [f"{path.name}: empty {p}" for p, v in actual.items() if v in ("", None)]
+if problems:
+    sys.exit("\n".join(problems))
+PY
+[ -s "$tmp/err" ] || echo "ok   templates/locale (same keys as de.json)"
+
+if [ "$failed" -gt 0 ]; then
+  echo "$failed check(s) failed" >&2
+  exit 1
+fi

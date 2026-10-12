@@ -1,0 +1,29 @@
+name: check
+
+# Public repository: runs on every pull request and on main.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/typstgen
+          key: typstgen-0.4.1
+      - name: Install typstgen
+        run: command -v typstgen || cargo install typstgen --version 0.4.1 --locked
+      - name: Compile examples, ZUGFeRD invoices, locales
+        run: scripts/check.sh
