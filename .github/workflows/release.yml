@@ -17,9 +17,6 @@ jobs:
       matrix:
         include:
           # macOS
-          - target: x86_64-apple-darwin
-            os: macos-latest
-            name: docgen-x86_64-apple-darwin
           - target: aarch64-apple-darwin
             os: macos-latest
             name: docgen-aarch64-apple-darwin

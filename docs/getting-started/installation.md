@@ -24,7 +24,6 @@ prebuilt binaries and a `checksums.txt`:
 | Platform | Archive |
 | --- | --- |
 | macOS, Apple Silicon | `docgen-aarch64-apple-darwin.tar.gz` |
-| macOS, Intel | `docgen-x86_64-apple-darwin.tar.gz` |
 | Linux, x86_64 | `docgen-x86_64-unknown-linux-gnu.tar.gz` |
 | Linux, ARM64 | `docgen-aarch64-unknown-linux-gnu.tar.gz` |
 | Windows, x86_64 | `docgen-x86_64-pc-windows-msvc.exe.zip` |

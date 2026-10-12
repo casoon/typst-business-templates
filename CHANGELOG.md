@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - **Starter files:** `cli/templates/invoice.json`, `offer.json`, `credentials.json` and `concept.json` now match the template schemas and compile
 
 ### Changed
+- **Release binaries:** No more prebuilt binary for Intel Macs; `install.sh` stops there with a hint to build from source, and its error messages are now shown (they went to stdout and were swallowed)
 - **README:** The library needs no Typst installation, the `docgen` CLI does (all documents except diagrams); the library example compiles as written
 - **`CompanyContact`** implements `Default`
 - **CLI help:** Removed the references to the SQLite database and the interactive mode, which no longer exist; `docgen init` suggests `docgen build` as next step

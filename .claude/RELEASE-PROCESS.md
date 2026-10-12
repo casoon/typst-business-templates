@@ -2,7 +2,7 @@
 
 ## ⚠️ WICHTIG: Nutze IMMER den GitHub Actions Workflow!
 
-Dieser Workflow baut automatisch für **alle Plattformen** (macOS ARM/Intel, Linux ARM/Intel, Windows) und erstellt das Release.
+Dieser Workflow baut automatisch für **alle Plattformen** (macOS ARM, Linux ARM/Intel, Windows) und erstellt das Release.
 
 **NIEMALS manuell Binaries bauen und hochladen!**
 
@@ -13,7 +13,7 @@ Es gibt zwei Repositories:
 2. **Homebrew Tap**: `casoon/homebrew-tap` - Homebrew Formula
 
 Der GitHub Actions Workflow (`.github/workflows/release.yml`) automatisiert:
-- ✅ Cross-Platform Builds (macOS ARM + Intel, Linux ARM + Intel, Windows)
+- ✅ Cross-Platform Builds (macOS ARM, Linux ARM + Intel, Windows)
 - ✅ Tarball-Erstellung mit korrekten Namen
 - ✅ Checksum-Generierung
 - ✅ GitHub Release Erstellung
@@ -91,7 +91,6 @@ gh release view v0.4.x --json assets --jq '.assets[].name'
 
 Erwartete Assets:
 - `docgen-aarch64-apple-darwin.tar.gz` (macOS ARM)
-- `docgen-x86_64-apple-darwin.tar.gz` (macOS Intel)
 - `docgen-aarch64-unknown-linux-gnu.tar.gz` (Linux ARM)
 - `docgen-x86_64-unknown-linux-gnu.tar.gz` (Linux Intel)
 - `docgen-x86_64-pc-windows-msvc.exe.zip` (Windows)

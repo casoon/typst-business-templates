@@ -23,7 +23,7 @@ warn() {
 }
 
 error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1" >&2
     exit 1
 }
 
@@ -51,7 +51,7 @@ detect_platform() {
         darwin)
             case "$arch" in
                 x86_64|amd64)
-                    echo "x86_64-apple-darwin"
+                    error "No prebuilt binary for Intel Macs. Build from source: cargo install --git https://github.com/$REPO docgen"
                     ;;
                 aarch64|arm64)
                     echo "aarch64-apple-darwin"
