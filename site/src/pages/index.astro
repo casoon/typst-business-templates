@@ -1,0 +1,179 @@
+---
+import {
+  Badge,
+  Badges,
+  BuildOutput,
+  CodeBlock,
+  Facts,
+  Features,
+  Hero,
+  Install,
+  Quickstart,
+} from '@casoon/pages-theme/components';
+import Base from '@casoon/pages-theme/layouts/Base.astro';
+import { url } from '@casoon/pages-theme/lib/url.ts';
+import { example } from '../showcase';
+
+const hero = example('invoice');
+const gallery = ['offer', 'reminder', 'letter', 'credentials', 'concept', 'diagram-roadmap'].map(example);
+
+const quickstart = `docgen init my-business
+cd my-business
+# edit data/company.json, then add a document:
+#   documents/invoices/2026/invoice.json
+docgen compile documents/invoices/2026/invoice.json
+# → documents/invoices/2026/invoice.pdf`;
+---
+
+<Base>
+  <Hero
+    title="Business documents from JSON, typeset by Typst."
+    lead="Templates for invoices, offers, reminders, letters, credentials, concepts, diagrams and more. Keep each document as a JSON or .typ file, and docgen compiles it to PDF with your company data, branding and language."
+  >
+    <Install
+      label="Install"
+      commands={[
+        {
+          label: 'script',
+          command:
+            'curl -fsSL https://raw.githubusercontent.com/casoon/typst-business-templates/main/install.sh | bash',
+        },
+        { label: 'source', command: 'cargo install --git https://github.com/casoon/typst-business-templates docgen' },
+        { label: 'library', command: 'cargo add typst-business-templates' },
+      ]}
+    />
+    <Badges>
+      <Badge>MIT</Badge>
+      <Badge>docgen 0.7.2</Badge>
+      <Badge>crates.io 0.1.5</Badge>
+      <Badge>macOS · Linux · Windows</Badge>
+    </Badges>
+    <figure slot="output" class="hero-doc">
+      <a href={url(`showcase/${hero.slug}/`)}>
+        <img
+          src={url(`showcase/${hero.slug}.webp`)}
+          width={hero.size.width}
+          height={hero.size.height}
+          alt={hero.alt}
+          fetchpriority="high"
+        />
+      </a>
+      <figcaption>
+        First page of <code>{hero.file.replace('examples/', '')}</code>, compiled by docgen 0.7.2.
+      </figcaption>
+    </figure>
+  </Hero>
+
+  <Facts
+    items={[
+      { value: '20', label: 'document templates' },
+      { value: '7', label: 'languages for labels and CLI' },
+      { value: '10', label: 'font presets, fonts in the repository' },
+      { value: '8', label: 'diagram layouts, no coordinates needed' },
+    ]}
+  />
+
+  <Features
+    items={[
+      {
+        title: 'Your documents are plain files',
+        body: 'Invoices and offers are JSON, long documents are Typst markup. Company data, clients and number counters are JSON as well. Everything diffs and versions in Git.',
+      },
+      {
+        title: 'German business conventions built in',
+        body: 'DIN 5008 address block, VAT breakdown, dunning levels and a company footer with tax and bank data. One example project invoices as Kleinunternehmer (§ 19 UStG) without VAT.',
+      },
+      {
+        title: 'Templates that stay current, forks that stay put',
+        body: 'Standard templates are extracted into .docgen/templates/ and updated with docgen. docgen template fork copies one into templates/, where updates never touch it.',
+      },
+      {
+        title: 'CLI or Rust library',
+        body: 'docgen compiles single files, whole folders or on change. The typst-business-templates crate embeds templates, locales and fonts and returns the PDF bytes without a typst binary.',
+      },
+    ]}
+  />
+
+  <BuildOutput
+    heading="Compiled by docgen"
+    caption="First pages of documents from the example projects, compiled by docgen 0.7.2. Each links to its source file and the full PDF."
+    file="examples/"
+  >
+    <ul class="gallery">
+      {
+        gallery.map((doc) => (
+          <li>
+            <a href={url(`showcase/${doc.slug}/`)}>
+              <img
+                src={url(`showcase/${doc.slug}.webp`)}
+                width={doc.size.width}
+                height={doc.size.height}
+                alt={doc.alt}
+                loading="lazy"
+                decoding="async"
+              />
+              <span>{doc.title}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </BuildOutput>
+
+  <Quickstart
+    lead="From an empty folder to a PDF. docgen calls the typst CLI for invoices and other documents, so install Typst first. The documentation covers the JSON format, templates and diagrams."
+    steps={[
+      'Install <code>docgen</code> and <a href="https://github.com/typst/typst#installation" style="text-decoration:underline">Typst</a>.',
+      'Create a project with <code>docgen init</code> and fill in <code>data/company.json</code>.',
+      'Add a JSON document and run <code>docgen compile</code> — or <code>docgen build</code> for all of them.',
+    ]}
+  >
+    <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
+  </Quickstart>
+</Base>
+
+<style>
+  .hero-doc {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  .hero-doc img,
+  .gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .hero-doc figcaption {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+    align-items: start;
+    gap: 24px;
+    margin: 0;
+    padding: 24px;
+    list-style: none;
+  }
+  .gallery a {
+    display: block;
+    color: var(--heading);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .gallery span {
+    display: block;
+    margin-top: 10px;
+  }
+  .gallery a:hover span {
+    text-decoration: underline;
+  }
+</style>

@@ -10,5 +10,5 @@
     "tags": ["Konzept"],
     "show_toc": false
   },
-  "content": "# Einleitung\n\nHier beginnt der Inhalt des Konzepts.\n\n# Analyse\n\n## Ist-Zustand\n\nBeschreibung des aktuellen Zustands.\n\n## Soll-Zustand\n\nBeschreibung des Zielzustands.\n\n# Umsetzung\n\nBeschreibung der geplanten Umsetzung."
+  "content": "= Einleitung\n\nHier beginnt der Inhalt des Konzepts.\n\n= Analyse\n\n== Ist-Zustand\n\nBeschreibung des aktuellen Zustands.\n\n== Soll-Zustand\n\nBeschreibung des Zielzustands.\n\n= Umsetzung\n\nBeschreibung der geplanten Umsetzung."
 }

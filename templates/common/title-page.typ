@@ -109,7 +109,7 @@
 /// - document-number: Optional document number
 /// - accent-color: Color for document type and accents
 /// - metadata: Dictionary with metadata entries
-/// - tags: Array of tag strings to display as pills at bottom
+/// - tags: Array of tag strings to display as pills at bottom (none or empty: no pills)
 /// - custom-content: Optional custom content to insert before tags
 #let document-title-page(
   company: none,
@@ -190,7 +190,7 @@
   ]
   
   // Tags/Pills at bottom
-  if tags.len() > 0 [
+  if tags != none and tags.len() > 0 [
     #align(center)[
       #for tag in tags [
         #box(
@@ -452,7 +452,7 @@
   ]
   
   // Tags at bottom
-  if tags.len() > 0 [
+  if tags != none and tags.len() > 0 [
     #align(center)[
       #for tag in tags [
         #box(

@@ -151,11 +151,13 @@
     "Erstellt am" 
   }
 
-  // Extract party names and addresses
+  // Extract party names and addresses (a party is a dictionary or a plain name string)
   let party-name(party) = if type(party) == dictionary {
-    if "company" in party and party.company != none { party.company } else if "name" in party { party.name } else { none }
-  } else { party }
-  let party-address(party) = if type(party) == dictionary and "address" in party { party.address } else { none }
+    if "company" in party and party.company != none { party.company } else { party.at("name", default: none) }
+  } else {
+    party
+  }
+  let party-address(party) = if type(party) == dictionary { party.at("address", default: none) } else { none }
 
   let party1-name = party-name(service_provider)
   let party1-address = party-address(service_provider)

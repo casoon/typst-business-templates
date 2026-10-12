@@ -136,3 +136,92 @@ impl DocgenCompiler {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::*;
+
+    fn eur(amount: f64) -> MoneyAmount {
+        MoneyAmount {
+            amount,
+            currency: None,
+        }
+    }
+
+    /// The typed API (plain date strings, numeric VAT rate) must render with the invoice template.
+    #[test]
+    fn compiles_typed_invoice() {
+        let company = CompanyData {
+            name: "Mustermann IT-Services".into(),
+            language: "de".into(),
+            logo: None,
+            logo_width: None,
+            branding: Default::default(),
+            address: CompanyAddress {
+                street: "Musterstraße".into(),
+                house_number: "1".into(),
+                postal_code: "12345".into(),
+                city: "Berlin".into(),
+                country: None,
+            },
+            contact: CompanyContact::default(),
+            tax_id: None,
+            vat_id: None,
+            business_owner: None,
+            bank_account: None,
+        };
+        let invoice = InvoiceData {
+            metadata: InvoiceMetadata {
+                invoice_number: "RE-2024-001".into(),
+                invoice_date: "2024-01-01".into(),
+                due_date: "2024-01-15".into(),
+                customer_number: None,
+                performance_period: None,
+                project_reference: None,
+                show_footer: None,
+            },
+            recipient: InvoiceRecipient {
+                name: "Kunde GmbH".into(),
+                company: None,
+                address: RecipientAddress {
+                    street: "Kundenstraße".into(),
+                    house_number: "42".into(),
+                    postal_code: "10115".into(),
+                    city: "Berlin".into(),
+                    country: None,
+                },
+            },
+            salutation: None,
+            items: vec![InvoiceItem {
+                position: 1,
+                description: "Webentwicklung".into(),
+                quantity: 8.0,
+                unit: "h".into(),
+                vat_rate: VatRate { percentage: 19 },
+                unit_price: eur(90.0),
+                total: eur(720.0),
+                sub_items: vec![],
+            }],
+            totals: InvoiceTotals {
+                subtotal: eur(720.0),
+                vat_breakdown: vec![VatBreakdownItem {
+                    rate: 19,
+                    base: eur(720.0),
+                    amount: eur(136.8),
+                }],
+                total: eur(856.8),
+            },
+            payment: InvoicePayment {
+                due_date: "2024-01-15".into(),
+                bank_transfer_note: None,
+            },
+            closing: None,
+        };
+
+        let pdf = DocgenCompiler::new()
+            .compile_invoice(&invoice, &company)
+            .unwrap();
+        assert!(pdf.starts_with(b"%PDF"));
+    }
+}
