@@ -222,6 +222,20 @@
             #text(size: size-small, fill: color-text-light, style: "italic")[#task.description]
           ]
           
+          // Tags
+          if "tags" in task and task.tags != none [
+            #v(0.2em)
+            #for tag in task.tags [
+              #box(
+                fill: gray.lighten(90%),
+                inset: (x: 4pt, y: 1pt),
+                radius: 2pt,
+                text(size: size-xs)[#tag]
+              )
+              #h(0.3em)
+            ]
+          ]
+          
           // Dependencies / Conditions
           if "depends-on" in task and task.depends-on != none [
             #v(0.2em)

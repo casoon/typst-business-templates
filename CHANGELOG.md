@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
   recipient's company is not printed twice when it repeats the name; the offer prints the company
   above the contact person, its project reference, and "Gesamtbetrag (netto)" without VAT; units
   `tag`, `monat`, `jahr` take the plural for quantities other than 1
+- **Task list tags** are shown again below each task (removed in 0.6.10)
 - **`scripts/check.sh`** and a CI workflow on pull requests: compiles all examples and diagrams,
   builds the e-invoices, validates the JSON and compares the locale keys
 
