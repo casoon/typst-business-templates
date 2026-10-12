@@ -116,7 +116,7 @@
         #upper(l-confidential)
       ]
       #v(0.3em)
-      #text(size: size-small, fill: color-text-light)[
+      #text(size: size-small)[
         #l-confidential-notice
       ]
     ]

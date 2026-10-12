@@ -84,13 +84,13 @@
     ]
   ]
   
-  // Custom content area (for additional elements)
-  if custom-content != none [
-    #v(20pt)
-    #custom-content
-  ]
-  
   v(1fr)
+  
+  // Custom content area at the bottom (e.g. the confidentiality notice of credentials)
+  if custom-content != none [
+    #custom-content
+    #v(30pt)
+  ]
 }
 
 /// Renders a document title page with tags/pills support
