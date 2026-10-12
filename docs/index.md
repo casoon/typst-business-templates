@@ -1,59 +1,59 @@
 ---
 title: Overview
-description: What typst-business-templates contains, how the CLI and the library differ, and how this documentation is organised.
+description: What the business-templates Typst package contains, which tools it works with, and how this documentation is organised.
 order: 0
 ---
 
-typst-business-templates is a set of [Typst](https://typst.app/) templates for business
-documents — invoices, offers, credit notes, reminders, letters, credentials, concepts,
-documentation, diagrams and more — plus two ways to fill them with data:
+typst-business-templates is the [Typst](https://typst.app/) package `business-templates`: 19
+templates for business documents — invoices, offers, credit notes, reminders, letters,
+credentials, concepts, contracts, documentation and more. Two tools from the same author go with
+it:
 
-- **`docgen`**, a command-line tool. You keep your documents as JSON files (or write them directly
-  in Typst), and `docgen` compiles them to PDF with your company data, branding and language.
-- **`typst-business-templates`**, a Rust library on
-  [crates.io](https://crates.io/crates/typst-business-templates). Templates, locales and fonts are
-  embedded in the crate and Typst runs in-process, so an application can produce the same PDFs
-  without any external tool.
+- **[typstgen](https://casoon.github.io/typstgen/)** compiles the documents to PDF and, for
+  invoices, embeds ZUGFeRD / Factur-X data. Any Typst compiler works for plain PDFs; the examples
+  and this documentation use typstgen.
+- **[chartlet](https://casoon.github.io/chartlet/)** renders diagrams from a JSON spec to SVG,
+  which the documents embed as images.
 
 ## What it covers
 
-- 20 document templates in two layouts: an accounting layout with a DIN 5008 address block and a
-  four-column company footer, and a document layout with a title page. See
-  [Document types](reference/document-types/).
-- Labels in seven languages (`de`, `en`, `es`, `fr`, `it`, `nl`, `pt`), selected by `language`
-  in `company.json`.
-- Branding from `company.json`: accent and primary colour, logo and one of ten font presets.
-- Diagrams from JSON without coordinates: flow, tree, mindmap, architecture, timeline, swimlane,
-  quadrant and roadmap layouts.
-- Project-local templates: standard templates are extracted into `.docgen/templates/` and kept in
-  sync with the `docgen` version; forks in `templates/` stay as you left them.
+- Ten accounting documents with a DIN 5008 address block and a four-column company footer. Their
+  data lives in JSON files, described by [JSON schemas](reference/package/#json-schemas).
+- Nine documents written in Typst, with a title page and optional table of contents.
+  See [Document types](reference/document-types/).
+- Totals check: invoice, offer, credit note and order confirmation refuse to compile if the
+  amounts in the JSON do not add up.
+- E-invoices: typstgen turns an invoice into a PDF/A-3 with `factur-x.xml` (EN 16931) from the
+  same JSON.
+- Company data, colours, logo and one of eleven font presets from `company.json`; labels of the
+  running-text documents in seven languages.
 
 ## Where it stops
 
-| docgen does | docgen does not |
+| The package does | The package does not |
 | --- | --- |
-| Compile JSON or `.typ` files to PDF | Calculate totals or VAT for you — the JSON carries the numbers |
-| Keep clients, projects and counters in plain JSON files | Send documents, track payments or book anything |
-| Password-protect a PDF with `--encrypt` (via `qpdf`) | Produce e-invoices (ZUGFeRD / XRechnung) |
+| Lay out the document from the data you give it | Calculate totals or VAT — the JSON carries the numbers, the templates only check them |
+| Stop the build when totals do not add up | Assign document numbers or keep counters, clients or projects |
+| Produce a ZUGFeRD invoice together with typstgen | Fully validate it — typstgen's checks are not an EN 16931 validator; use one such as [Mustang](https://www.mustangproject.org/) before sending |
+| | Send documents, track payments or book anything |
+| | Produce XRechnung or ZUGFeRD credit notes |
 
 ## How the docs are organised
 
-- **Getting started**: [install](getting-started/installation/) `docgen` and create a
-  [first document](getting-started/quickstart/).
-- **Guides**: [JSON documents](guides/json-documents/), [documents written in
-  Typst](guides/typst-documents/), [diagrams](guides/diagrams/) and
-  [branding and languages](guides/branding/).
-- **Reference**: [CLI commands](reference/cli/), [document types](reference/document-types/) and
-  the [Rust library](reference/library/). Item-level API documentation lives on
-  [docs.rs](https://docs.rs/typst-business-templates).
+- **Getting started**: [install](getting-started/installation/) typstgen and the package, then
+  compile a [first invoice](getting-started/quickstart/).
+- **Guides**: [accounting documents from JSON](guides/json-documents/),
+  [documents written in Typst](guides/typst-documents/), [diagrams with chartlet](guides/diagrams/)
+  and [branding and languages](guides/branding/).
+- **Reference**: the [package](reference/package/) (functions, parameters, schemas) and the
+  [document types](reference/document-types/).
 
-Every document in the [showcase](../showcase/) was compiled by `docgen` from the example file
-shown next to it. A product overview is at
-[typst-business-templates.casoon.de](https://typst-business-templates.casoon.de).
+Every document in the [showcase](../showcase/) was compiled from the example file shown next to
+it. The example projects are in
+[`examples/`](https://github.com/casoon/typst-business-templates/tree/main/examples).
 
-## Project notes
+## docgen and the Rust crate
 
-The files `PROJECT.md`, `ROADMAP.md`, `SIMPLIFICATION-PLAN.md`, `REVIEW-2026-01.md` and
-`DATABASE.md` in this folder are internal planning notes (partly in German, partly outdated) and
-are not part of this site. They remain in the
-[repository](https://github.com/casoon/typst-business-templates/tree/main/docs).
+Earlier versions shipped `docgen`, a CLI with project scaffolding, numbering and client
+management, and a Rust library crate. Both are discontinued: the templates are now a plain Typst
+package, and compiling and e-invoices are done by typstgen.

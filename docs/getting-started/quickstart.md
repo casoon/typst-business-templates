@@ -1,67 +1,160 @@
 ---
 title: Quickstart
-description: Create a project, set your company data and compile a first invoice.
+description: Set up a project folder, enter your company data and compile a first invoice — as a plain PDF and as a ZUGFeRD e-invoice.
 order: 2
 ---
 
-## 1. Create a project
+This assumes typstgen and the package are [installed](../installation/).
 
-```sh
-docgen init my-business
-cd my-business
-```
-
-`init` creates:
+## 1. Project layout
 
 ```
 my-business/
-├── data/company.json       # company, bank, branding, numbering, default terms
-├── documents/<type>/<year>/ # one folder per document type
-├── output/<year>/
-├── templates/              # your forked templates
-└── .docgen/templates/      # standard templates, kept in sync with docgen
+├── typstgen.toml
+├── data/
+│   └── company.json
+└── invoices/
+    ├── RE-2026-001.json
+    └── RE-2026-001.typ
 ```
 
-## 2. Enter your company data
+## 2. typstgen.toml
 
-Edit `data/company.json`: name, address, contact, tax and VAT ID, bank account, `language`,
-and the `branding` block. [Branding and languages](../../guides/branding/) lists the options.
+```toml
+# This folder is the root for absolute paths such as /data/company.json.
+template_paths = ["."]
+# Only needed if the package is not in the Typst package directory.
+# package_path = "/path/to/packages"
+font_paths = ["fonts"]
+```
 
-## 3. Write a document
+Paths in `typstgen.toml` are relative to the working directory, so run typstgen from the project
+folder.
 
-Start from the invoice of the IT consultancy example and adjust it:
+## 3. Company data
+
+`data/company.json` holds everything that is the same on every document: name, address, contact,
+tax data, bank account, language and branding. [Branding and languages](../../guides/branding/)
+lists all fields.
+
+```json
+{
+  "$schema": "https://casoon.github.io/typst-business-templates/schema/company.schema.json",
+  "name": "Muster IT GmbH",
+  "language": "de",
+  "business_owner": "Anna Muster",
+  "address": { "street": "Hauptstraße", "house_number": "1", "postal_code": "10115", "city": "Berlin", "country": "Deutschland" },
+  "contact": { "phone": "+49 30 1234567", "email": "info@muster-it.de", "website": "www.muster-it.de" },
+  "tax_id": "27/123/45678",
+  "vat_id": "DE123456789",
+  "bank_account": { "bank_name": "Musterbank", "account_holder": "Muster IT GmbH", "iban": "DE89 3704 0044 0532 0130 00", "bic": "COBADEFFXXX" },
+  "branding": { "accent_color": "#E94B3C", "primary_color": "#2c3e50", "font_preset": "inter" }
+}
+```
+
+The `$schema` line gives you completion and validation in editors that support JSON Schema
+(VS Code, JetBrains IDEs). The templates ignore it.
+
+## 4. The invoice data
+
+`invoices/RE-2026-001.json`:
+
+```json
+{
+  "$schema": "https://casoon.github.io/typst-business-templates/schema/invoice.schema.json",
+  "metadata": {
+    "invoice_number": "RE-2026-001",
+    "invoice_date": "2026-03-02",
+    "due_date": "2026-03-16",
+    "performance_period": "02/2026"
+  },
+  "recipient": {
+    "company": "Beispiel AG",
+    "name": "Max Beispiel",
+    "address": { "street": "Marktplatz", "house_number": "5", "postal_code": "50667", "city": "Köln", "country": "Deutschland" }
+  },
+  "items": [
+    {
+      "position": 1, "description": "Beratung", "quantity": "3", "unit": "Tage",
+      "unit_price": { "amount": "800" }, "total": { "amount": "2400" },
+      "vat_rate": { "code": "Standard", "percentage": "19" }
+    },
+    {
+      "position": 2, "description": "Einrichtung Server", "quantity": "1", "unit": "Pauschal",
+      "unit_price": { "amount": "500" }, "total": { "amount": "500" },
+      "vat_rate": { "code": "Standard", "percentage": "19" }
+    }
+  ],
+  "totals": {
+    "subtotal": { "amount": "2900" },
+    "vat_breakdown": [
+      { "rate": { "code": "Standard", "percentage": "19" }, "base": { "amount": "2900" }, "amount": { "amount": "551" } }
+    ],
+    "vat_total": { "amount": "551" },
+    "total": { "amount": "3451" }
+  },
+  "payment": {
+    "payment_terms": "Zahlbar innerhalb von 14 Tagen ohne Abzug",
+    "due_date": "2026-03-16"
+  }
+}
+```
+
+The template prints these numbers; it does not compute them. It does check them: if a line total,
+the subtotal, the VAT or the total does not add up, the build stops with the offending field.
+
+## 5. The Typst file
+
+`invoices/RE-2026-001.typ` passes both files to the template:
+
+```typst
+#import "@local/business-templates:0.1.0": invoice
+
+#invoice(
+  data: json("RE-2026-001.json"),
+  company: json("/data/company.json"),
+)
+```
+
+`json("RE-2026-001.json")` is relative to the `.typ` file; `/data/company.json` is relative to the
+project folder.
+
+## 6. Compile
 
 ```sh
-curl -fsSL -o documents/invoices/2026/invoice.json \
-  https://raw.githubusercontent.com/casoon/typst-business-templates/main/examples/it-consultant/documents/invoices/2025/invoice.json
+typstgen compile invoices/RE-2026-001.typ
+# → invoices/RE-2026-001.pdf
 ```
 
-The file holds `metadata` (number, dates, project), `recipient`, `items` with optional
-`sub_items`, `totals` with the VAT breakdown, and `payment`. It is the
-[invoice in the showcase](../../../showcase/invoice/). [JSON documents](../../guides/json-documents/)
-explains the structure and where to find examples for the other types.
+The PDF lands next to its source; `-o` writes it elsewhere. Its metadata carries the invoice
+number as title, the company name as author and the invoice date as date.
 
-## 4. Compile
+## 7. As an e-invoice
+
+The same files produce a ZUGFeRD / Factur-X invoice, a PDF/A-3 with the invoice data embedded as
+`factur-x.xml` (EN 16931):
 
 ```sh
-docgen compile documents/invoices/2026/invoice.json
-# → documents/invoices/2026/invoice.pdf
-
-docgen compile documents/invoices/2026/invoice.json -o output/2026/invoice.pdf
+typstgen compile invoices/RE-2026-001.typ \
+  --zugferd invoices/RE-2026-001.json --company data/company.json \
+  --pdf-standard a-3b
 ```
 
-`docgen` detects the document type from the path (`invoices/` → `invoice` template). To compile
-every document at once, run `docgen build`; `docgen watch` rebuilds on every change.
+The template sets the invoice date as document date, which PDF/A-3 needs, so no
+`--creation-timestamp` is required. Field mapping, VAT codes and validation are covered in the
+[typstgen e-invoice guide](https://casoon.github.io/typstgen/docs/guides/e-invoices/).
 
 ## Try the examples
 
-The repository contains three complete example projects — a web agency, a freelance designer
-without VAT (Kleinunternehmer, § 19 UStG) and an IT consultancy:
+The repository has three complete example projects — an IT consultancy with every document type,
+a web agency and a freelance designer without VAT (Kleinunternehmer, § 19 UStG):
 
 ```sh
 git clone https://github.com/casoon/typst-business-templates.git
-cd typst-business-templates/examples/digitalagentur
-docgen build
+cd typst-business-templates/examples/it-consultant
+typstgen compile documents/invoices/2025/invoice.typ
 ```
 
-The [showcase](../../../showcase/) shows documents from these projects as `docgen` renders them.
+Their `typstgen.toml` points `package_path` at the repository, so they work without installing the
+package. Next: [accounting documents](../../guides/json-documents/) and
+[documents written in Typst](../../guides/typst-documents/).

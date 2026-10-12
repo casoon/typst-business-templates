@@ -143,7 +143,7 @@
         },
         "vat_breakdown": {
           "type": "array",
-          "description": "VAT per rate. The totals block (subtotal, VAT, total) is only rendered when this array is non-empty.",
+          "description": "VAT per rate. Empty without VAT (e.g. Kleinunternehmer): then only the total is printed.",
           "items": {
             "type": "object",
             "required": [

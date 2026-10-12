@@ -1,6 +1,5 @@
 // Contract Template (Vertrag) - Document Layout
 // Based on concept/documentation structure
-// Supports both JSON input and direct .typ content files
 
 #import "../common/styles.typ": *
 #import "../common/footers.typ": document-footer

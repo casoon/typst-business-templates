@@ -3,11 +3,13 @@
 
 #import "../common/styles.typ": *
 #import "../common/title-page.typ": standard-title-page
+#import "../common/formatting.typ": document-metadata
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
-/// `company` that of company.json (a logo goes in `_logo_image` as an image),
+/// Renders the document. `data` is described by schema/credentials.schema.json,
+/// `company` that of company.json,
 /// `locale` that of locale/<lang>.json.
 #let credentials(data: none, company: (:), locale: none) = [
+#set document(..document-metadata(company, data.metadata.at("document_number", default: none), data.metadata.at("created_at", default: none)))
 #let locale = load-locale(locale, company)
 // Get branding from company data
 #let accent-color = get-accent-color(company)

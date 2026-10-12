@@ -47,32 +47,35 @@
   align(right)[
     #set text(size: 10pt, font: "Helvetica")
     
-    #if vat_breakdown.len() > 0 [
-      #let rows = ()
+    // Without VAT (e.g. Kleinunternehmer) only the total is shown
+    #{
+      let rows = ()
       
       // Subtotal
-      #rows.push(([#l-subtotal:], [#format_money(subtotal.amount) EUR]))
+      if vat_breakdown.len() > 0 {
+        rows.push(([#l-subtotal:], [#format_money(subtotal.amount) EUR]))
+      }
       
       // VAT breakdown
-      #for vat in vat_breakdown {
-        // rate is (percentage: 19) in JSON documents, a plain number from the Rust types
+      for vat in vat_breakdown {
+        // rate is (percentage: 19) or a plain number
         let pct = if type(vat.rate) == dictionary { vat.rate.percentage } else { vat.rate }
         rows.push(([#l-vat (#pct%):], [#format_money(vat.amount.amount) EUR]))
       }
       
       // Total
-      #rows.push((
+      rows.push((
         [#text(weight: "bold", size: 11pt)[#l-total:]],
         [#text(weight: "bold", size: 11pt)[#format_money(total.amount) EUR]]
       ))
       
-      #grid(
+      grid(
         columns: (100pt, 80pt),
         align: (right, right),
         row-gutter: 10pt,
         ..rows.flatten()
       )
-    ]
+    }
   ]
 }
 

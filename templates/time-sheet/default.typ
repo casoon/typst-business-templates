@@ -6,7 +6,7 @@
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, timesheet-metadata
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/time-sheet.schema.json,
 /// `company` that of company.json.
 #let time-sheet(data: none, company: none) = [
 #set document(..document-metadata(company, data.metadata.at("timesheet_number", default: none), none))

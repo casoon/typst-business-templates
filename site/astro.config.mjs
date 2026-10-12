@@ -10,15 +10,13 @@ export default defineConfig({
     casoonPages({
       name: 'typst-business-templates',
       description:
-        'Typst templates for invoices, offers, credentials, concepts and more, compiled to PDF from JSON by the docgen CLI or the Rust library.',
+        'A Typst package with templates for invoices, offers, credentials, concepts and more, compiled to PDF and ZUGFeRD e-invoices by typstgen.',
       repo: 'casoon/typst-business-templates',
-      version: '0.7.2',
+      version: '0.1.0',
       license: 'MIT',
       packages: [
-        { label: 'GitHub releases', href: 'https://github.com/casoon/typst-business-templates/releases' },
-        { label: 'crates.io', href: 'https://crates.io/crates/typst-business-templates' },
-        { label: 'docs.rs', href: 'https://docs.rs/typst-business-templates' },
-        { label: 'Product page', href: 'https://typst-business-templates.casoon.de' },
+        { label: 'typstgen', href: 'https://github.com/casoon/typstgen' },
+        { label: 'chartlet', href: 'https://github.com/casoon/chartlet' },
       ],
       docsGroups: {
         'getting-started': 'Getting started',

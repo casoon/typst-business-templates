@@ -7,6 +7,7 @@ on:
       - site/**
       - docs/**
       - examples/**
+      - schema/**
       - CHANGELOG.md
       - .github/workflows/pages.yml
   workflow_dispatch:
@@ -48,6 +49,8 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm build
+          # The JSON schemas are served at their $id, …/typst-business-templates/schema/<name>.schema.json
+          cp -R ../schema dist/schema
 
       - uses: actions/upload-pages-artifact@v5
         with:

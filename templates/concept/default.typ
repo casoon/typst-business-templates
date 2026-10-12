@@ -1,16 +1,13 @@
 // Concept/Design Document Template (Konzept)
 // Based on casoon-documents structure
-// Supports both JSON input and direct .typ content files
 //
 // USAGE (Package Import):
-//   #import "@local/docgen-concept:0.4.2": concept
+//   #import "@local/business-templates:0.1.0": concept
 //   #let company = json("/data/company.json")
-//   #let locale = json("/locale/de.json")
 //   #show: concept.with(
 //     title: "My Concept",
 //     company: company,
-//     locale: locale,
-//     logo: image("/data/logo.png"),  // Logo as image, not path
+//     logo: image("/data/logo.png"),  // optional, overrides company.logo
 //   )
 
 #import "../common/styles.typ": *

@@ -1,17 +1,14 @@
 // Documentation Template (Dokumentation)
 // Technical documentation for projects, APIs, systems, etc.
 // Based on casoon-documents structure
-// Supports both JSON input and direct .typ content files
 //
 // USAGE (Package Import):
-//   #import "@local/docgen-documentation:0.4.2": documentation
+//   #import "@local/business-templates:0.1.0": documentation
 //   #let company = json("/data/company.json")
-//   #let locale = json("/locale/de.json")
 //   #show: documentation.with(
 //     title: "My Documentation",
 //     company: company,
-//     locale: locale,
-//     logo: image("/data/logo.png"),  // Logo as image, not path
+//     logo: image("/data/logo.png"),  // optional, overrides company.logo
 //   )
 
 #import "../common/styles.typ": *

@@ -1,63 +1,79 @@
 ---
 title: Installation
-description: Install the docgen CLI from a release, with the install script or from source, or add the Rust library to a project.
+description: Install typstgen (and chartlet for diagrams), make the business-templates package available to Typst, and add the fonts.
 order: 1
 ---
 
-## docgen CLI
-
-### Install script (macOS, Linux)
+## typstgen
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/casoon/typst-business-templates/main/install.sh | bash
+cargo install typstgen
 ```
 
-The script picks the release archive for your platform, verifies it against the published
-`checksums.txt` (SHA-256) and installs `docgen` to `~/.local/bin`. Set `INSTALL_DIR` to install
-elsewhere. If that directory is not on your `PATH`, the script prints the line to add.
+typstgen embeds the Typst compiler, so no separate `typst` binary is needed. Other install options
+are in the [typstgen documentation](https://casoon.github.io/typstgen/).
 
-### Release binaries
+## chartlet (optional)
 
-Every [GitHub release](https://github.com/casoon/typst-business-templates/releases) carries
-prebuilt binaries and a `checksums.txt`:
+Only needed if you draw [diagrams](../../guides/diagrams/):
 
-| Platform | Archive |
-| --- | --- |
-| macOS, Apple Silicon | `docgen-aarch64-apple-darwin.tar.gz` |
-| macOS, Intel | `docgen-x86_64-apple-darwin.tar.gz` |
-| Linux, x86_64 | `docgen-x86_64-unknown-linux-gnu.tar.gz` |
-| Linux, ARM64 | `docgen-aarch64-unknown-linux-gnu.tar.gz` |
-| Windows, x86_64 | `docgen-x86_64-pc-windows-msvc.exe.zip` |
+```sh
+cargo install chartlet
+```
 
-### From source
+## The package
+
+The package is the `templates/` folder of the repository (`templates/typst.toml`, entry point
+`templates/lib.typ`). It is not on Typst Universe; install it as a local package under the name
+`business-templates`, version `0.1.0`:
 
 ```sh
 git clone https://github.com/casoon/typst-business-templates.git
-cd typst-business-templates
-cargo build --release -p docgen
-# binary: target/release/docgen
 ```
 
-### Requirements
-
-- **Typst CLI.** `docgen compile` and `docgen build` call `typst compile` for JSON and `.typ`
-  documents, so the [`typst` binary](https://github.com/typst/typst#installation) must be on your
-  `PATH`. Diagrams are the exception: they are rendered by the Typst engine built into `docgen`.
-- **qpdf**, only for `docgen compile --encrypt`.
-- **Fonts.** `docgen` passes `--font-path fonts` to Typst, relative to the project folder. The
-  font presets use the fonts in the repository's
-  [`fonts/`](https://github.com/casoon/typst-business-templates/tree/main/fonts) folder; copy it
-  into your project to use them. Without it, Typst falls back to system fonts.
-
-The PDFs on this site were compiled with docgen 0.7.2 and typst 0.15.1.
-
-## Rust library
+Then either copy or symlink `templates/` into your Typst package directory:
 
 ```sh
-cargo add typst-business-templates
+# macOS
+mkdir -p ~/Library/Application\ Support/typst/packages/local/business-templates
+ln -s "$PWD/typst-business-templates/templates" \
+  ~/Library/Application\ Support/typst/packages/local/business-templates/0.1.0
+
+# Linux: ~/.local/share/typst/packages/local/business-templates/0.1.0
+# Windows: %APPDATA%\typst\packages\local\business-templates\0.1.0
 ```
 
-The crate embeds templates, locales and the bundled fonts and runs Typst as a library. It needs
-neither the `typst` binary nor `docgen`. See the [library reference](../../reference/library/).
+or point typstgen at any folder that contains `local/business-templates/0.1.0` with
+`package_path` in your project's `typstgen.toml`:
+
+```toml
+package_path = "/path/to/packages"
+```
+
+The repository does the latter for its examples: `packages/local/business-templates/0.1.0` is a
+link to `templates/`, and the example projects set `package_path = "../../packages"`.
+
+Documents then import from the package:
+
+```typst
+#import "@local/business-templates:0.1.0": invoice
+```
+
+The package needs Typst 0.15 or later (`compiler = "0.15.0"` in `typst.toml`).
+
+## Fonts
+
+The running-text documents and the credentials sheet use the font preset from `company.json`
+(Inter, Roboto, Source Sans 3 …, see [Branding](../../guides/branding/#font-presets)). The font
+files are in the repository's
+[`fonts/`](https://github.com/casoon/typst-business-templates/tree/main/fonts) folder. Copy the
+families you use into your project and list the folder in `typstgen.toml`:
+
+```toml
+font_paths = ["fonts"]
+```
+
+The accounting documents use Helvetica. Without it, Typst falls back to an installed sans-serif
+font and prints a warning.
 
 Continue with the [Quickstart](../quickstart/).

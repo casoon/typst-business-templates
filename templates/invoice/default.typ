@@ -8,7 +8,7 @@
 #import "../common/unit-formatter.typ": format-unit
 #import "../common/totals-summary.typ": invoice-totals, vat-exemption-note, check-totals
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/invoice.schema.json,
 /// `company` that of company.json.
 #let invoice(data: none, company: none) = [
 #check-totals(data)

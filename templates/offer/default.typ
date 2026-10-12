@@ -8,7 +8,7 @@
 #import "../common/unit-formatter.typ": format-unit
 #import "../common/totals-summary.typ": invoice-totals, check-totals
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/offer.schema.json,
 /// `company` that of company.json.
 #let offer(data: none, company: none) = [
 #check-totals(data)
