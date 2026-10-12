@@ -2,16 +2,14 @@
 // Based on invoice template layout with DIN 5008 compliance
 // Supports both JSON input and direct .typ content files
 
-// Load data from JSON input
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, letter-metadata
-#let data = json(sys.inputs.data)
 
-// Load company data
-#let company = json("/data/company.json")
-
+/// Renders the document. `data` has the shape of the docgen JSON file,
+/// `company` that of company.json.
+#let letter(data: none, company: none) = [
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -113,3 +111,9 @@
     - #attachment
   ]
 ]
+]
+
+// docgen: the CLI passes the path of the JSON file in sys.inputs.
+#if "data" in sys.inputs {
+  letter(data: json(sys.inputs.data), company: json("/data/company.json"))
+}

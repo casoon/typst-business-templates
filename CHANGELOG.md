@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Typst package:** `templates/` is the Typst package `business-templates` 0.1.0 (`typst.toml`,
+  `lib.typ`), usable with typstgen or the typst CLI. Accounting templates are now functions
+  (`invoice(data:, company:)` …) with a small adapter for docgen; their output is unchanged.
+
 ### Fixed
 - **Example documents that did not compile:** The it-consultant order confirmation, time sheet and SLA fixtures used wrong field names or unescaped `#`/`@` in Typst content; the contract template referenced an undefined `status`; the SLA template built its party names and addresses as content instead of values; the title page failed on `tags: none` (protocol)
 - **Delivery note printed Typst code:** The address block call was missing its `#`, so the note showed the raw call instead of the address
