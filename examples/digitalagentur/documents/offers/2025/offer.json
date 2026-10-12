@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/offer.schema.json",
   "metadata": {
     "offer_number": "AN-2025-008",
     "offer_date": {

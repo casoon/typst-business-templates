@@ -25,5 +25,7 @@ jobs:
           key: typstgen-0.4.1
       - name: Install typstgen
         run: command -v typstgen || cargo install typstgen --version 0.4.1 --locked
-      - name: Compile examples, ZUGFeRD invoices, locales
+      - name: Install jsonschema
+        run: pip install jsonschema
+      - name: Compile examples, ZUGFeRD invoices, schemas, locales
         run: scripts/check.sh

@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/credit-note.schema.json",
   "metadata": {
     "credit_note_number": "GS-2025-001",
     "invoice_reference": "RE-2024-156",

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/time-sheet.schema.json",
+  "title": "Time sheet",
+  "description": "Data for the time sheet template (Stundenzettel).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "entries",
+    "totals"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL or path of this schema, for editor support."
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "timesheet_number",
+        "period_start",
+        "period_end"
+      ],
+      "description": "Document metadata shown in the header box.",
+      "properties": {
+        "timesheet_number": {
+          "type": "string",
+          "description": "Time sheet number."
+        },
+        "period_start": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "First day of the period."
+        },
+        "period_end": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Last day of the period."
+        },
+        "employee": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Employee name."
+        },
+        "project_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Project name shown below the title."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Render the company footer (default true)."
+        }
+      }
+    },
+    "client": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Client the time sheet is addressed to; the address window stays empty if omitted."
+    },
+    "entries": {
+      "type": "array",
+      "description": "Time entries, one table row each.",
+      "items": {
+        "type": "object",
+        "required": [
+          "date",
+          "description",
+          "hours"
+        ],
+        "properties": {
+          "date": {
+            "$ref": "common.schema.json#/$defs/date",
+            "description": "Day of work."
+          },
+          "description": {
+            "type": "string",
+            "description": "Activity."
+          },
+          "time_start": {
+            "type": "string",
+            "description": "Start time, e.g. \"09:00\"."
+          },
+          "time_end": {
+            "type": "string",
+            "description": "End time, e.g. \"17:00\"."
+          },
+          "hours": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Hours worked."
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "total_hours"
+      ],
+      "description": "Hour totals.",
+      "properties": {
+        "total_hours": {
+          "$ref": "common.schema.json#/$defs/decimal",
+          "description": "Total hours."
+        },
+        "billable_hours": {
+          "$ref": "common.schema.json#/$defs/decimal",
+          "description": "Billable hours."
+        },
+        "non_billable_hours": {
+          "$ref": "common.schema.json#/$defs/decimal",
+          "description": "Non-billable hours."
+        }
+      }
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Remarks printed at the end."
+    }
+  }
+}

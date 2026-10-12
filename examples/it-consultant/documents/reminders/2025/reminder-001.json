@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/reminder.schema.json",
   "metadata": {
     "reminder_number": "M1-2025-001",
     "reminder_level": "1",

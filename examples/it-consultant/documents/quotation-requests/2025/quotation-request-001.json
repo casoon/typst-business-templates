@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/quotation-request.schema.json",
   "metadata": {
     "request_number": "ANF-2025-001",
     "date": {

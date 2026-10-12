@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Checks the package with typstgen: every document of the example projects compiles, the example
-# invoices build as ZUGFeRD e-invoices, and every locale has the same keys as de.json.
-# Runs locally and in CI (.github/workflows/check.yml). Needs typstgen and python3.
+# invoices build as ZUGFeRD e-invoices, every example JSON matches the schema named in its
+# "$schema", and every locale has the same keys as de.json.
+# Runs locally and in CI (.github/workflows/check.yml). Needs typstgen and python3 with
+# jsonschema (pip install jsonschema).
 set -uo pipefail
 
 repo="$(cd "$(dirname "$0")/.." && pwd)"
@@ -33,6 +35,29 @@ for project in it-consultant digitalagentur freelance-designer; do
     fail "$project/$invoice.typ (ZUGFeRD)"
   fi
 done
+
+python3 - "$repo" <<'PY' 2>"$tmp/err" || fail "schema/"
+import json, pathlib, sys
+from jsonschema import Draft202012Validator
+from referencing import Registry, Resource
+
+repo = pathlib.Path(sys.argv[1])
+schemas = [json.loads(p.read_text()) for p in sorted((repo / "schema").glob("*.json"))]
+registry = Registry().with_resources((s["$id"], Resource.from_contents(s)) for s in schemas)
+problems = []
+for path in sorted((repo / "examples").rglob("*.json")):
+    data = json.loads(path.read_text())
+    if "$schema" not in data:
+        continue
+    schema = json.loads((path.parent / data["$schema"]).resolve().read_text())
+    validator = Draft202012Validator(schema, registry=registry)
+    for error in validator.iter_errors(data):
+        location = "/".join(map(str, error.absolute_path)) or "(root)"
+        problems.append(f"{path.relative_to(repo)}: {location}: {error.message}")
+if problems:
+    sys.exit("\n".join(problems))
+PY
+[ -s "$tmp/err" ] || echo "ok   examples match their schemas"
 
 python3 - "$repo/templates/locale" <<'PY' 2>"$tmp/err" || fail "templates/locale"
 import json, pathlib, sys

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/common.schema.json",
+  "title": "Shared definitions",
+  "description": "Building blocks referenced by the document schemas.",
+  "$defs": {
+    "date": {
+      "description": "A date as an ISO string (YYYY-MM-DD), a preformatted string, or an object { \"date\": \"YYYY-MM-DD\" }.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["date"],
+          "properties": { "date": { "type": "string", "format": "date" } }
+        }
+      ]
+    },
+    "decimal": {
+      "description": "A number, or a number as a string with a dot as decimal separator (\"1400\", \"71.5\").",
+      "oneOf": [
+        { "type": "number" },
+        { "type": "string", "pattern": "^-?[0-9]+(\\.[0-9]+)?$" }
+      ]
+    },
+    "money": {
+      "description": "An amount, either plain or as { \"amount\": \"1400\", \"currency\": \"EUR\" }.",
+      "oneOf": [
+        { "$ref": "#/$defs/decimal" },
+        {
+          "type": "object",
+          "required": ["amount"],
+          "properties": {
+            "amount": { "$ref": "#/$defs/decimal" },
+            "currency": { "type": "string", "description": "ISO 4217 code, EUR if omitted" }
+          }
+        }
+      ]
+    },
+    "vat_rate": {
+      "description": "VAT rate of an item. `code` selects the EN 16931 category for ZUGFeRD: Standard/Reduced (S), Zero (Z), Exempt or SmallBusiness (E, needs exemption_reason or exemption_reason_code), ReverseCharge (AE, needs recipient.vat_id).",
+      "oneOf": [
+        { "$ref": "#/$defs/decimal" },
+        {
+          "type": "object",
+          "required": ["percentage"],
+          "properties": {
+            "code": {
+              "type": "string",
+              "examples": ["Standard", "Reduced", "Zero", "Exempt", "SmallBusiness", "ReverseCharge"]
+            },
+            "percentage": { "$ref": "#/$defs/decimal" },
+            "exemption_reason": { "type": "string" },
+            "exemption_reason_code": { "type": "string", "description": "VATEX code, e.g. VATEX-EU-132" }
+          }
+        }
+      ]
+    },
+    "address": {
+      "type": "object",
+      "required": ["street", "postal_code", "city"],
+      "properties": {
+        "street": { "type": "string" },
+        "house_number": { "type": "string" },
+        "postal_code": { "type": "string" },
+        "city": { "type": "string" },
+        "country": { "type": "string", "description": "Country name, e.g. Deutschland" },
+        "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2, e.g. DE" }
+      }
+    },
+    "recipient": {
+      "type": "object",
+      "required": ["name", "address"],
+      "properties": {
+        "name": { "type": "string" },
+        "company": { "type": ["string", "null"] },
+        "address": { "$ref": "#/$defs/address" },
+        "vat_id": { "type": "string", "description": "Buyer's VAT ID, needed for reverse charge" }
+      }
+    },
+    "bank_account": {
+      "type": "object",
+      "required": ["iban"],
+      "properties": {
+        "bank_name": { "type": "string" },
+        "account_holder": { "type": "string" },
+        "iban": { "type": "string" },
+        "bic": { "type": "string" }
+      }
+    }
+  }
+}

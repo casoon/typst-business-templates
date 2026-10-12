@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/invoice.schema.json",
   "metadata": {
     "invoice_number": "RE-2025-042",
     "invoice_date": {

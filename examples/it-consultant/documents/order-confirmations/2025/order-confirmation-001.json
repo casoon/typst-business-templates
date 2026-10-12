@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/order-confirmation.schema.json",
   "metadata": {
     "confirmation_number": "AB-2025-001",
     "order_number": "BE-2025-015",

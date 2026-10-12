@@ -1,64 +1,251 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/casoon/typst-business-templates/schema/invoice.schema.json",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/invoice.schema.json",
   "title": "Invoice",
-  "description": "Schema for invoice documents",
+  "description": "Data for the invoice template (templates/invoice/default.typ). typstgen also reads this file to embed a ZUGFeRD/Factur-X e-invoice.",
   "type": "object",
-  "required": ["metadata", "recipient", "items", "totals"],
+  "required": [
+    "metadata",
+    "recipient",
+    "items",
+    "totals",
+    "payment"
+  ],
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URI of this schema, for editor support. Ignored by the templates."
+    },
     "metadata": {
       "type": "object",
-      "required": ["invoice_number", "invoice_date", "due_date"],
+      "description": "Invoice header data.",
+      "required": [
+        "invoice_number",
+        "invoice_date"
+      ],
       "properties": {
-        "invoice_number": { "type": "string", "description": "Unique invoice number" },
-        "invoice_date": { "type": "string", "description": "Invoice date (DD.MM.YYYY)" },
-        "due_date": { "type": "string", "description": "Payment due date (DD.MM.YYYY)" },
-        "customer_number": { "type": ["string", "null"], "description": "Customer reference number" }
+        "invoice_number": {
+          "type": "string",
+          "description": "Unique invoice number."
+        },
+        "invoice_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Invoice date."
+        },
+        "customer_number": {
+          "type": "string",
+          "description": "Customer number shown in the header."
+        },
+        "due_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Due date shown in the header. The closing sentence uses payment.due_date."
+        },
+        "delivery_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Delivery date. Not rendered; typstgen uses it for the ZUGFeRD e-invoice."
+        },
+        "performance_period": {
+          "type": "string",
+          "description": "Service period shown in the header. typstgen reads it as \"MM/YYYY\" for the ZUGFeRD e-invoice."
+        },
+        "project_reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Project reference shown above the salutation."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Set to false to hide the company footer. Default: true."
+        }
       }
     },
     "recipient": {
-      "type": "object",
-      "required": ["name", "address"],
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Recipient shown in the DIN 5008 address window."
+    },
+    "salutation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Opening of the letter. Omitted if absent or null.",
+      "required": [
+        "greeting"
+      ],
       "properties": {
-        "name": { "type": "string" },
-        "company": { "type": ["string", "null"] },
-        "address": {
-          "type": "object",
-          "required": ["street", "house_number", "postal_code", "city"],
-          "properties": {
-            "street": { "type": "string" },
-            "house_number": { "type": "string" },
-            "postal_code": { "type": "string" },
-            "city": { "type": "string" }
-          }
+        "greeting": {
+          "type": "string",
+          "description": "Greeting line, e.g. \"Sehr geehrte Frau Schmidt,\"."
+        },
+        "introduction": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Introductory sentence below the greeting."
         }
       }
     },
     "items": {
       "type": "array",
+      "description": "Invoice line items.",
       "items": {
         "type": "object",
-        "required": ["description", "quantity", "unit", "unit_price", "total_price"],
+        "required": [
+          "position",
+          "description",
+          "quantity",
+          "unit",
+          "vat_rate",
+          "unit_price",
+          "total"
+        ],
         "properties": {
-          "description": { "type": "string" },
-          "quantity": { "type": ["number", "string"] },
-          "unit": { "type": "string" },
-          "unit_price": { "type": "string" },
-          "total_price": { "type": "string" }
+          "position": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Position number shown in the first column."
+          },
+          "description": {
+            "type": "string",
+            "description": "Item description."
+          },
+          "quantity": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Quantity, printed as given."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit. The codes stueck, stunde, tag, monat, jahr, pauschale, kg, meter, kilometer, liter, karton, palette are abbreviated; any other text is printed as is."
+          },
+          "vat_rate": {
+            "$ref": "#/$defs/vat_rate_object",
+            "description": "VAT rate of the item, printed in the MwSt. column."
+          },
+          "unit_price": {
+            "$ref": "#/$defs/amount",
+            "description": "Net price per unit."
+          },
+          "total": {
+            "$ref": "#/$defs/amount",
+            "description": "Net line total. The build stops if it differs from quantity × unit price by a cent or more."
+          },
+          "sub_items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Detail lines printed below the description, joined with bullets. A leading \"- \" is stripped."
+          },
+          "unit_code": {
+            "type": "string",
+            "description": "UN/ECE Recommendation 20 unit code (e.g. HUR, C62, DAY) used by typstgen for the ZUGFeRD e-invoice. Not rendered."
+          }
         }
       }
     },
     "totals": {
       "type": "object",
-      "required": ["subtotal", "tax_rate", "tax_amount", "total"],
+      "description": "Precomputed totals; the template does not calculate them.",
+      "required": [
+        "subtotal",
+        "vat_breakdown",
+        "total"
+      ],
       "properties": {
-        "subtotal": { "type": "string" },
-        "tax_rate": { "type": "string" },
-        "tax_amount": { "type": "string" },
-        "total": { "type": "string" }
+        "subtotal": {
+          "$ref": "#/$defs/amount",
+          "description": "Net total."
+        },
+        "vat_breakdown": {
+          "type": "array",
+          "description": "VAT per rate. The totals block (subtotal, VAT, total) is only rendered when this array is non-empty.",
+          "items": {
+            "type": "object",
+            "required": [
+              "rate",
+              "amount"
+            ],
+            "properties": {
+              "rate": {
+                "$ref": "common.schema.json#/$defs/vat_rate",
+                "description": "The VAT rate of this group."
+              },
+              "base": {
+                "$ref": "common.schema.json#/$defs/money",
+                "description": "Net amount this rate applies to. Not rendered."
+              },
+              "amount": {
+                "$ref": "#/$defs/amount",
+                "description": "VAT amount for this rate."
+              }
+            }
+          }
+        },
+        "vat_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Sum of all VAT amounts. Not rendered."
+        },
+        "total": {
+          "$ref": "#/$defs/amount",
+          "description": "Gross total."
+        }
       }
     },
-    "notes": { "type": ["string", "null"] },
-    "terms": { "type": ["string", "null"] }
+    "payment": {
+      "type": "object",
+      "description": "Payment information.",
+      "required": [
+        "due_date"
+      ],
+      "properties": {
+        "due_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Payment due date, printed in the closing sentence and used by typstgen for the ZUGFeRD e-invoice."
+        },
+        "payment_terms": {
+          "type": "string",
+          "description": "Payment terms text. Not rendered; typstgen uses it for the ZUGFeRD e-invoice."
+        },
+        "bank_account": {
+          "$ref": "common.schema.json#/$defs/bank_account",
+          "description": "Account to pay into. Not rendered (the footer uses company.json); typstgen uses it for the ZUGFeRD e-invoice."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "amount": {
+      "description": "An amount in object form. The templates read `.amount`, so a plain number is not accepted here.",
+      "allOf": [
+        {
+          "$ref": "common.schema.json#/$defs/money"
+        },
+        {
+          "type": "object",
+          "required": [
+            "amount"
+          ]
+        }
+      ]
+    },
+    "vat_rate_object": {
+      "description": "VAT rate in object form. The templates print `.percentage`, so a plain number is not accepted here.",
+      "allOf": [
+        {
+          "$ref": "common.schema.json#/$defs/vat_rate"
+        },
+        {
+          "type": "object",
+          "required": [
+            "percentage"
+          ]
+        }
+      ]
+    }
   }
 }
