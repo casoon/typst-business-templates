@@ -6,11 +6,12 @@
 #import "../common/accounting-header.typ": accounting-header, offer-metadata
 #import "../common/footers.typ": accounting-footer
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, check-totals
 
 /// Renders the document. `data` has the shape of the docgen JSON file,
 /// `company` that of company.json.
 #let offer(data: none, company: none) = [
+#check-totals(data)
 #set document(..document-metadata(company, data.metadata.at("offer_number", default: none), data.metadata.at("offer_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 

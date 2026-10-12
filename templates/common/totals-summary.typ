@@ -210,3 +210,51 @@
   let terms = company.at("default_terms", default: (:))
   if terms.at("vat_exempt", default: false) { terms.at("vat_note", default: none) }
 }
+
+// An amount from JSON ("1400", 1400 or (amount: "1400", currency: "EUR")) as decimal, or none.
+#let _decimal(value) = {
+  let v = if type(value) == dictionary { value.at("amount", default: none) } else { value }
+  if v == none or str(v).match(regex("^-?\d+(\.\d+)?$")) == none { none } else { decimal(str(v)) }
+}
+
+/// Stops the build if the totals in `data` do not add up: each item's total against
+/// quantity × unit price, the subtotal against the item totals, the VAT total against the VAT
+/// breakdown and the total against subtotal plus VAT. Amounts are compared to the cent; fields
+/// that are missing are not checked.
+#let check-totals(data) = {
+  let round2(x) = calc.round(x, digits: 2)
+  let problems = ()
+  let items = data.at("items", default: ())
+  let item-totals = ()
+  for (i, item) in items.enumerate() {
+    let quantity = _decimal(item.at("quantity", default: none))
+    let price = _decimal(item.at("unit_price", default: none))
+    let total = _decimal(item.at("total", default: none))
+    if total != none { item-totals.push(total) }
+    if quantity != none and price != none and total != none and round2(quantity * price) != round2(total) {
+      problems.push("items[" + str(i) + "]: total " + str(total) + " ≠ quantity × unit price = " + str(round2(quantity * price)))
+    }
+  }
+  let totals = data.at("totals", default: (:))
+  let subtotal = _decimal(totals.at("subtotal", default: none))
+  if subtotal != none and items.len() > 0 and item-totals.len() == items.len() {
+    let sum = item-totals.sum()
+    if round2(sum) != round2(subtotal) {
+      problems.push("totals.subtotal: " + str(subtotal) + " ≠ sum of item totals = " + str(round2(sum)))
+    }
+  }
+  let breakdown = totals.at("vat_breakdown", default: ()).map(group => _decimal(group.at("amount", default: none)))
+  let vat-total = _decimal(totals.at("vat_total", default: none))
+  if vat-total == none and breakdown.len() > 0 and none not in breakdown { vat-total = breakdown.sum() }
+  if vat-total != none and breakdown.len() > 0 and none not in breakdown and round2(breakdown.sum()) != round2(vat-total) {
+    problems.push("totals.vat_total: " + str(vat-total) + " ≠ sum of vat_breakdown = " + str(round2(breakdown.sum())))
+  }
+  let total = _decimal(totals.at("total", default: none))
+  if total != none and subtotal != none {
+    let expected = subtotal + if vat-total != none { vat-total } else { decimal("0") }
+    if round2(expected) != round2(total) {
+      problems.push("totals.total: " + str(total) + " ≠ subtotal + VAT = " + str(round2(expected)))
+    }
+  }
+  if problems.len() > 0 { panic("totals do not add up:\n" + problems.join("\n")) }
+}

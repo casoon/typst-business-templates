@@ -6,11 +6,12 @@
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, order-confirmation-metadata
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, check-totals
 
 /// Renders the document. `data` has the shape of the docgen JSON file,
 /// `company` that of company.json.
 #let order-confirmation(data: none, company: none) = [
+#check-totals(data)
 #set document(..document-metadata(company, data.metadata.at("confirmation_number", default: none), data.metadata.at("confirmation_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
