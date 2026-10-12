@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "type": "flow",
+  "title": "Support-Prozess",
+  "source": "Ablauf über mehrere Rollen",
+  "width": 1060,
+  "flow": {
+    "lanes": [
+      {
+        "id": "kunde",
+        "label": "Kunde"
+      },
+      {
+        "id": "support",
+        "label": "Support"
+      },
+      {
+        "id": "engineering",
+        "label": "Engineering"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "request",
+        "label": "Anfrage senden",
+        "kind": "start",
+        "lane": "kunde"
+      },
+      {
+        "id": "triage",
+        "label": "Ticket triagieren",
+        "lane": "support"
+      },
+      {
+        "id": "bug",
+        "label": "Bug?",
+        "kind": "decision",
+        "lane": "support"
+      },
+      {
+        "id": "fix",
+        "label": "Bug fixen",
+        "lane": "engineering"
+      },
+      {
+        "id": "reply",
+        "label": "Rückmeldung",
+        "lane": "support"
+      },
+      {
+        "id": "done",
+        "label": "Gelöst",
+        "kind": "end",
+        "lane": "kunde"
+      }
+    ],
+    "edges": [
+      {
+        "from": "request",
+        "to": "triage"
+      },
+      {
+        "from": "triage",
+        "to": "bug"
+      },
+      {
+        "from": "bug",
+        "to": "fix",
+        "label": "ja"
+      },
+      {
+        "from": "bug",
+        "to": "reply",
+        "label": "nein"
+      },
+      {
+        "from": "fix",
+        "to": "reply"
+      },
+      {
+        "from": "reply",
+        "to": "done"
+      }
+    ],
+    "mainPath": [
+      "request",
+      "triage",
+      "bug",
+      "fix",
+      "reply",
+      "done"
+    ]
+  }
+}

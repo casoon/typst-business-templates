@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Rebuilds the showcase files in site/public/showcase/ from examples/ with the docgen CLI of
-# this checkout: PDF plus a WebP preview of its first page. The example projects are copied to
-# a temporary folder first, so the committed PDFs in examples/ stay untouched.
+# Rebuilds the showcase files in site/public/showcase/ from examples/ with typstgen: PDF plus a
+# WebP preview of its first page. PDFs are written to a temporary folder, so examples/ stays
+# untouched.
 #
-# Needs: cargo, typst (docgen compile calls it), pdftoppm (poppler), cwebp (libwebp).
+# Needs: typstgen, chartlet, pdftoppm (poppler), cwebp (libwebp).
 # Run from anywhere: site/scripts/render-showcase.sh
 set -euo pipefail
 
@@ -12,29 +12,33 @@ out="$repo/site/public/showcase"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
-cargo build --release -p docgen --manifest-path "$repo/Cargo.toml"
-docgen="$repo/target/release/docgen"
-
-cp -R "$repo/examples/it-consultant" "$repo/examples/digitalagentur" "$tmp/"
-(cd "$tmp/it-consultant" && "$docgen" build)
-(cd "$tmp/digitalagentur" && "$docgen" build)
-
-# slug=source PDF (relative to $tmp)
-pdfs=(
-  invoice=it-consultant/output/invoice.pdf
-  offer=it-consultant/output/offer.pdf
-  credit-note=it-consultant/output/credit-note-001.pdf
-  reminder=it-consultant/output/reminder-001.pdf
-  letter=it-consultant/output/letter-001.pdf
-  quotation-request=it-consultant/output/quotation-request-001.pdf
-  credentials=it-consultant/output/credentials.pdf
-  proposal=it-consultant/output/proposal-001.pdf
-  specification=it-consultant/output/specification-001.pdf
-  concept=digitalagentur/output/concept.pdf
-  documentation=digitalagentur/output/documentation.pdf
+# slug=project/source (relative to examples/)
+sources=(
+  invoice=it-consultant/documents/invoices/2025/invoice.typ
+  offer=it-consultant/documents/offers/2025/offer.typ
+  credit-note=it-consultant/documents/credit-notes/2025/credit-note-001.typ
+  reminder=it-consultant/documents/reminders/2025/reminder-001.typ
+  letter=it-consultant/documents/letters/2025/letter-001.typ
+  quotation-request=it-consultant/documents/quotation-requests/2025/quotation-request-001.typ
+  credentials=it-consultant/documents/credentials/2025/credentials.typ
+  proposal=it-consultant/documents/proposals/2025/proposal-001.typ
+  specification=it-consultant/documents/specifications/2025/specification-001.typ
+  concept=digitalagentur/documents/concepts/2025/concept.typ
+  documentation=digitalagentur/documents/documentation/2025/documentation.typ
 )
+pdfs=()
+for entry in "${sources[@]}"; do
+  slug="${entry%%=*}"
+  src="${entry#*=}"
+  project="${src%%/*}"
+  (cd "$repo/examples/$project" && typstgen compile "${src#*/}" -o "$tmp/$slug.pdf" >/dev/null)
+  pdfs+=("$slug=$slug.pdf")
+done
+
+# Diagrams: chartlet specs, rendered by examples/diagrams/build.sh.
+"$repo/examples/diagrams/build.sh"
 for name in flow timeline swimlane quadrant roadmap; do
-  "$docgen" compile "$repo/examples/diagram-$name/diagram.json" -o "$tmp/diagram-$name.pdf"
+  cp "$repo/examples/diagrams/$name.pdf" "$tmp/diagram-$name.pdf"
   pdfs+=("diagram-$name=diagram-$name.pdf")
 done
 

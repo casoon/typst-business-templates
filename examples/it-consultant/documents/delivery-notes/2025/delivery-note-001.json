@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/delivery-note.schema.json",
   "metadata": {
     "delivery_note_number": "LS-2025-001",
     "order_reference": "PO-2024-892",

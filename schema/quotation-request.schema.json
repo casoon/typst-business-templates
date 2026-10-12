@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/quotation-request.schema.json",
+  "title": "Quotation request",
+  "description": "Data for the quotation request template (Angebotsanfrage) sent to a supplier.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "items",
+    "terms"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL or path of this schema, for editor support."
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "request_number",
+        "date"
+      ],
+      "description": "Document metadata shown in the header box.",
+      "properties": {
+        "request_number": {
+          "type": "string",
+          "description": "Request number."
+        },
+        "date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Request date."
+        },
+        "response_deadline": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Date by which the offer is requested."
+        },
+        "project_reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Project name shown in the header box."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Render the company footer (default true)."
+        }
+      }
+    },
+    "supplier": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Supplier the request is addressed to; the address window stays empty if omitted."
+    },
+    "salutation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "greeting"
+      ],
+      "description": "Greeting and introduction; a default German text is used if omitted.",
+      "properties": {
+        "greeting": {
+          "type": "string",
+          "description": "Greeting line, e.g. \"Sehr geehrte Frau Schmidt,\"."
+        },
+        "introduction": {
+          "type": "string",
+          "description": "Introductory sentence below the greeting."
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "Requested products or services.",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "quantity",
+          "unit"
+        ],
+        "properties": {
+          "position": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Position number shown in the first column."
+          },
+          "title": {
+            "type": "string",
+            "description": "Item title (bold)."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Item description."
+          },
+          "quantity": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Quantity."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit code (stueck, stunde, tag, monat, kg, liter) or free text."
+          },
+          "specification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Specification column text."
+          },
+          "requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Detailed requirements listed below the item."
+          }
+        }
+      }
+    },
+    "terms": {
+      "type": "object",
+      "description": "Requested conditions. Required as an object (may be empty).",
+      "properties": {
+        "delivery_terms": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Delivery terms."
+        },
+        "delivery_deadline": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Requested delivery date."
+        },
+        "payment_terms": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Payment terms."
+        },
+        "quality_requirements": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Quality requirements."
+        }
+      }
+    },
+    "additional_notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Further notes."
+    },
+    "response_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What the offer should contain; a default list is used if omitted or empty."
+    },
+    "custom_closing": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Closing sentence replacing the default one."
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Names of enclosed attachments."
+    }
+  }
+}

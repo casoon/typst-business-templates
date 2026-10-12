@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../schema/company.schema.json",
   "language": "de",
   "name": "TechVision Consulting",
   "branding": {

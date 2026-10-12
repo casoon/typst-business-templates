@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/letter.schema.json",
+  "title": "Letter",
+  "description": "Data for the business letter template (Geschäftsbrief, DIN 5008).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "recipient"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL or path of this schema, for editor support."
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "date"
+      ],
+      "description": "Document metadata shown in the header box.",
+      "properties": {
+        "date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Letter date."
+        },
+        "reference_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Our reference (Unser Zeichen)."
+        },
+        "your_reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Recipient's reference (Ihr Zeichen)."
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Subject line printed in bold above the salutation."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Render the company footer (default true)."
+        }
+      }
+    },
+    "recipient": {
+      "description": "Recipient of the letter: name, optional company and address, or the address as free lines.",
+      "oneOf": [
+        {
+          "$ref": "common.schema.json#/$defs/recipient"
+        },
+        {
+          "type": "object",
+          "required": [
+            "lines"
+          ],
+          "properties": {
+            "lines": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Address lines as printed, e.g. company, contact person, street, postal code and city."
+            }
+          }
+        }
+      ]
+    },
+    "salutation": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Salutation line, e.g. \"Sehr geehrter Herr Weber,\"."
+    },
+    "content": {
+      "type": "string",
+      "description": "Letter text as plain text. For headings, lists and tables pass the text as Typst content: letter(data: …, company: …)[…]."
+    },
+    "closing": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Closing phrase; defaults to \"Mit freundlichen Grüßen\"."
+    },
+    "signature_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Name below the closing; only used together with closing. Falls back to company.business_owner or company.name."
+    },
+    "attachments": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Names of enclosed attachments."
+    },
+    "final": {
+      "description": "Last paragraph, kept on one page with the closing and signature. In Typst it may be content.",
+      "type": "string"
+    }
+  }
+}

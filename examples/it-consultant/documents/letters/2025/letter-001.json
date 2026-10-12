@@ -1,6 +1,7 @@
 {
+  "$schema": "../../../../../schema/letter.schema.json",
   "metadata": {
-    "title": "Projektanfrage Web-Plattform",
+    "subject": "Anfrage zur Entwicklung einer Web-Plattform",
     "reference_number": "BR-2025-001",
     "your_reference": "WP-2025-042",
     "date": {
@@ -17,7 +18,6 @@
       "city": "München"
     }
   },
-  "subject": "Anfrage zur Entwicklung einer Web-Plattform",
   "salutation": "Sehr geehrter Herr Weber,",
   "content": "vielen Dank für Ihr Interesse an unseren Dienstleistungen im Bereich Web-Entwicklung.\n\nWie telefonisch besprochen, möchten wir Ihnen gerne ein unverbindliches Angebot für die Entwicklung Ihrer Web-Plattform unterbreiten. Um ein präzises Angebot erstellen zu können, benötigen wir noch folgende Informationen:\n\n- Detaillierte Anforderungsliste der gewünschten Features\n- Anzahl der erwarteten gleichzeitigen Nutzer\n- Gewünschter Zeitrahmen für die Umsetzung\n- Bestehende Systeme, an die die Plattform angebunden werden soll\n- Budget-Rahmen für das Projekt\n\nSobald wir diese Informationen von Ihnen erhalten haben, können wir Ihnen innerhalb von 5 Werktagen ein detailliertes Angebot zukommen lassen.\n\nFür ein persönliches Gespräch stehe ich Ihnen gerne zur Verfügung. Sie erreichen mich unter den unten angegebenen Kontaktdaten.",
   "closing": "Mit freundlichen Grüßen",

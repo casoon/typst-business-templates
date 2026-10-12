@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/reminder.schema.json",
+  "title": "Payment reminder",
+  "description": "Data for the payment reminder template (templates/reminder/default.typ).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "recipient",
+    "outstanding_invoices",
+    "totals"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URI of this schema, for editor support. Ignored by the templates."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Reminder header data.",
+      "required": [
+        "reminder_number",
+        "date"
+      ],
+      "properties": {
+        "reminder_number": {
+          "type": "string",
+          "description": "Unique reminder number."
+        },
+        "date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Reminder date."
+        },
+        "reminder_level": {
+          "type": [
+            "string",
+            "integer"
+          ],
+          "description": "Reminder level, 1 if omitted: 1 gives the title \"Zahlungserinnerung\", any other value \"<level>. Mahnung\"."
+        },
+        "payment_deadline": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "New payment deadline, printed in the payment request."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Set to false to hide the company footer. Default: true."
+        }
+      }
+    },
+    "recipient": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Recipient shown in the DIN 5008 address window."
+    },
+    "salutation": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Greeting line. Default: \"Sehr geehrte Damen und Herren,\"."
+    },
+    "introduction": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Introductory text above the invoice table. A default text is used if absent."
+    },
+    "outstanding_invoices": {
+      "type": "array",
+      "description": "Invoices that are still unpaid.",
+      "items": {
+        "type": "object",
+        "required": [
+          "invoice_number",
+          "invoice_date",
+          "due_date",
+          "amount",
+          "outstanding"
+        ],
+        "properties": {
+          "invoice_number": {
+            "type": "string",
+            "description": "Invoice number."
+          },
+          "invoice_date": {
+            "$ref": "common.schema.json#/$defs/date",
+            "description": "Invoice date."
+          },
+          "due_date": {
+            "$ref": "common.schema.json#/$defs/date",
+            "description": "Original due date."
+          },
+          "amount": {
+            "$ref": "#/$defs/amount",
+            "description": "Invoice total."
+          },
+          "outstanding": {
+            "$ref": "#/$defs/amount",
+            "description": "Amount still open."
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "description": "Precomputed totals; the template does not calculate them.",
+      "required": [
+        "total_outstanding"
+      ],
+      "dependentRequired": {
+        "reminder_fee": [
+          "total_due"
+        ]
+      },
+      "properties": {
+        "total_outstanding": {
+          "$ref": "#/$defs/amount",
+          "description": "Sum of all outstanding amounts."
+        },
+        "reminder_fee": {
+          "type": "object",
+          "description": "Reminder fee; the fee rows are shown only when it is greater than 0.",
+          "required": [
+            "amount"
+          ],
+          "properties": {
+            "amount": {
+              "$ref": "common.schema.json#/$defs/decimal",
+              "description": "Fee amount."
+            },
+            "currency": {
+              "type": "string",
+              "description": "ISO 4217 code, EUR if omitted."
+            }
+          }
+        },
+        "total_due": {
+          "$ref": "#/$defs/amount",
+          "description": "Outstanding amount plus fee. Required with reminder_fee; shown only when the fee is greater than 0."
+        }
+      }
+    },
+    "custom_text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Additional paragraph after the payment request."
+    }
+  },
+  "$defs": {
+    "amount": {
+      "description": "An amount in object form. The templates read `.amount`, so a plain number is not accepted here.",
+      "allOf": [
+        {
+          "$ref": "common.schema.json#/$defs/money"
+        },
+        {
+          "type": "object",
+          "required": [
+            "amount"
+          ]
+        }
+      ]
+    }
+  }
+}

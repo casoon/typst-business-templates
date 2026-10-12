@@ -1,16 +1,19 @@
 // Order Confirmation Template (Auftragsbestätigung) - CASOON Layout
 // Confirmation of received orders
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
-#import "../common/formatting.typ": format_german_date, format_money
+#import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, order-confirmation-metadata
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, check-totals
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/order-confirmation.schema.json,
 /// `company` that of company.json.
 #let order-confirmation(data: none, company: none) = [
+#check-totals(data)
+#set document(..document-metadata(company, data.metadata.at("confirmation_number", default: none), data.metadata.at("confirmation_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -20,7 +23,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and metadata
 #accounting-header(
@@ -104,7 +107,7 @@
         #item.description
       ],
       [#item.quantity],
-      [#format-unit(item.unit)],
+      [#format-unit(item.unit, quantity: item.quantity)],
       [#format_money(item.unit_price.amount) EUR],
       [#text(weight: "bold")[#format_money(item.total.amount) EUR]],
     )
@@ -162,8 +165,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  order-confirmation(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

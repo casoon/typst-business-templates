@@ -11,6 +11,7 @@
 /// Parameters:
 /// - company: Company data dictionary with address and optional business_owner
 /// - recipient: Recipient data dictionary with name, optional company, and address
+/// - company-first: print recipient.company above recipient.name (offer) instead of below
 ///
 /// Example:
 /// ```typst
@@ -30,6 +31,7 @@
 #let din5008-address-block(
   company: none,
   recipient: none,
+  company-first: false,
 ) = {
   // DIN 5008 positioning: 45mm from top = 77.5pt
   v(77.5pt)
@@ -51,9 +53,15 @@
     #set text(size: 12pt, font: "Helvetica")
     
     #if recipient != none [
+      // The company line is left out when it repeats the name
+      #let firm = recipient.at("company", default: none)
+      #if firm == recipient.name { firm = none }
+      #if company-first and firm != none [
+        #firm\
+      ]
       #recipient.name\
-      #if "company" in recipient and recipient.company != none [
-        #recipient.company\
+      #if not company-first and firm != none [
+        #firm\
       ]
       #recipient.address.street #recipient.address.house_number\
       #recipient.address.postal_code #recipient.address.city

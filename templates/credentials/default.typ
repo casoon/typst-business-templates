@@ -3,11 +3,14 @@
 
 #import "../common/styles.typ": *
 #import "../common/title-page.typ": standard-title-page
+#import "../common/formatting.typ": document-metadata
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
-/// `company` that of company.json (a logo goes in `_logo_image` as an image),
+/// Renders the document. `data` is described by schema/credentials.schema.json,
+/// `company` that of company.json,
 /// `locale` that of locale/<lang>.json.
-#let credentials(data: none, company: (:), locale: (common: (:), credentials: (:))) = [
+#let credentials(data: none, company: (:), locale: none) = [
+#set document(..document-metadata(company, data.metadata.at("document_number", default: none), data.metadata.at("created_at", default: none)))
+#let locale = load-locale(locale, company)
 // Get branding from company data
 #let accent-color = get-accent-color(company)
 #let fonts = get-font-preset(company)
@@ -113,7 +116,7 @@
         #upper(l-confidential)
       ]
       #v(0.3em)
-      #text(size: size-small, fill: color-text-light)[
+      #text(size: size-small)[
         #l-confidential-notice
       ]
     ]
@@ -288,15 +291,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the paths of the JSON files in sys.inputs.
-#if "data" in sys.inputs {
-  let company = json(sys.inputs.company)
-  // Load logo image if logo path is specified
-  if "logo" in company and company.logo != none {
-    let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
-    company.insert("_logo_image", image("/" + company.logo, width: logo-width))
-  }
-  let locale = if "locale" in sys.inputs { json(sys.inputs.locale) } else { (common: (:), credentials: (:)) }
-  credentials(data: json(sys.inputs.data), company: company, locale: locale)
-}

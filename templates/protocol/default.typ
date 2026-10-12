@@ -26,7 +26,7 @@
   body
 ) = {
   let company = if company != none { company } else { (:) }
-  let locale = if locale != none { locale } else { (common: (:), protocol: (:)) }
+  let locale = load-locale(locale, company)
   
   let accent-color = get-accent-color(company)
   let fonts = get-font-preset(company)
@@ -126,17 +126,23 @@
   }
 
   if show-title-page {
-    document-title-page(
-      company: company,
-      logo: logo,
-      title: title,
-      document-type: "BESPRECHUNGSPROTOKOLL",
-      document-number: document_number,
-      accent-color: accent-color,
-      metadata: title-metadata,
-      tags: (),
-      custom-content: participants-content,
-    )
+    page(
+      margin: (left: 50pt, right: 45pt, top: 50pt, bottom: 50pt),
+      header: none,
+      footer: none,
+    )[
+      #document-title-page(
+        company: company,
+        logo: logo,
+        title: title,
+        document-type: "BESPRECHUNGSPROTOKOLL",
+        document-number: document_number,
+        accent-color: accent-color,
+        metadata: title-metadata,
+        tags: (),
+        custom-content: participants-content,
+      )
+    ]
 
     pagebreak()
   }
@@ -179,65 +185,4 @@
   text(size: size-small, fill: color-text-light)[
     Protokoll erstellt am #if created_at != none [#created_at]
   ]
-}
-
-// JSON workflow
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-#let _company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let _locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  none
-}
-
-#if data != none {
-  let created-date = if "created_at" in data.metadata {
-    if type(data.metadata.created_at) == dictionary and "date" in data.metadata.created_at {
-      data.metadata.created_at.date
-    } else {
-      data.metadata.created_at
-    }
-  } else {
-    none
-  }
-  
-  let content-body = if "content_file" in data {
-    include(data.content_file)
-  } else if "content" in data {
-    eval("[" + data.content + "]", mode: "code")
-  } else {
-    []
-  }
-  
-  protocol(
-    title: data.metadata.title,
-    document_number: data.metadata.document_number,
-    meeting_date: if "meeting_date" in data.metadata { data.metadata.meeting_date } else { none },
-    meeting_time: if "meeting_time" in data.metadata { data.metadata.meeting_time } else { none },
-    location: if "location" in data.metadata { data.metadata.location } else { none },
-    participants: if "participants" in data.metadata { data.metadata.participants } else { () },
-    absent: if "absent" in data.metadata { data.metadata.absent } else { () },
-    moderator: if "moderator" in data.metadata { data.metadata.moderator } else { none },
-    note_taker: if "note_taker" in data.metadata { data.metadata.note_taker } else { none },
-    created_at: created-date,
-    show_toc: if "show_toc" in data.metadata { data.metadata.show_toc } else { false },
-    company: _company,
-    locale: _locale,
-    content-body
-  )
 }

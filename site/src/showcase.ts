@@ -3,14 +3,15 @@ import { resolve } from 'node:path';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import type { ShowcaseExample } from '@casoon/pages-theme/showcase';
 
-// Input: the example files in examples/, exactly as committed. Output: the PDF that docgen
-// compiled from that file, with a WebP of its first page. site/scripts/render-showcase.sh
-// rebuilds public/showcase/ with the docgen CLI of this checkout.
+// Input: the example files in examples/, exactly as committed. Output: the PDF that typstgen
+// compiled from that file (diagrams: chartlet spec, rendered to SVG and placed on a page), with a
+// WebP of its first page. site/scripts/render-showcase.sh rebuilds public/showcase/.
 const sources = import.meta.glob<string>(
   [
     '../../examples/it-consultant/documents/**/*.json',
+    '../../examples/it-consultant/documents/**/*.typ',
     '../../examples/digitalagentur/documents/**/*.typ',
-    '../../examples/diagram-*/diagram.json',
+    '../../examples/diagrams/*.json',
   ],
   { query: '?raw', import: 'default', eager: true }
 );
@@ -25,7 +26,7 @@ function source(file: string): string {
 const publicDir = resolve(process.cwd(), 'public');
 
 const portrait = { width: 778, height: 1100 };
-const landscape = { width: 1100, height: 619 };
+
 
 interface Entry {
   slug: string;
@@ -43,7 +44,7 @@ export function preview(slug: string, alt: string, size: { width: number; height
   const kib = (statSync(resolve(publicDir, `showcase/${slug}.pdf`)).size / 1024).toFixed(0);
   return `<figure style="margin:0;padding:18px">
   <img src="${url(`showcase/${slug}.webp`)}" width="${size.width}" height="${size.height}" alt="${alt}" loading="lazy" decoding="async" style="display:block;width:100%;height:auto;border:1px solid var(--border);border-radius:6px;background:#fff" />
-  <figcaption style="margin:12px 0 0;font-size:14px">First page, compiled by docgen. <a href="${pdf}" style="text-decoration:underline">Open ${slug}.pdf</a> (${kib} KiB)</figcaption>
+  <figcaption style="margin:12px 0 0;font-size:14px">First page, compiled by typstgen. <a href="${pdf}" style="text-decoration:underline">Open ${slug}.pdf</a> (${kib} KiB)</figcaption>
 </figure>`;
 }
 
@@ -109,24 +110,24 @@ const entries: Entry[] = [
     file: 'examples/it-consultant/documents/credentials/2025/credentials.json',
     tags: ['credentials', 'title page', '6 pages'],
     description:
-      'Access data handover with a confidentiality notice on the title page. docgen compile --encrypt protects such a PDF with a password (needs qpdf).',
+      'Access data handover with a confidentiality notice on the title page, services with their accounts, URLs and ports.',
     alt: 'Title page of the credentials document ZD-2025-007 “AWS Cloud Infrastruktur Zugänge” for MedTech Solutions AG, with a boxed confidentiality notice and four tags.',
     size: portrait,
   },
   {
     slug: 'proposal',
     title: 'Project proposal',
-    file: 'examples/it-consultant/documents/proposals/2025/proposal-001.json',
-    tags: ['proposal', 'Typst markup in JSON', '9 pages'],
+    file: 'examples/it-consultant/documents/proposals/2025/proposal-001.typ',
+    tags: ['proposal', 'written in Typst', '9 pages'],
     description:
-      'The body is Typst markup inside the JSON content field: headings, lists and tables for phases, costs and risks.',
+      'Written in Typst on top of the proposal template: headings, lists and tables for phases, costs and risks.',
     alt: 'Title page of the project proposal PRO-2025-001 “Cloud Migration - Infrastructure Modernisierung” with a metadata box showing project, client, budget 45,000 to 65,000 EUR, timeline, status and validity.',
     size: portrait,
   },
   {
     slug: 'specification',
     title: 'Specification',
-    file: 'examples/it-consultant/documents/specifications/2025/specification-001.json',
+    file: 'examples/it-consultant/documents/specifications/2025/specification-001.typ',
     tags: ['specification', 'version history', '8 pages'],
     description: 'Technical specification with version, status, update date and authors on the title page.',
     alt: 'Title page of the specification SPEC-2025-001 “API Migration Spezifikation” with version 1.2, status review, creation and update dates and two authors.',
@@ -138,8 +139,8 @@ const entries: Entry[] = [
     file: 'examples/digitalagentur/documents/concepts/2025/concept.typ',
     tags: ['concept', '.typ workflow', '5 pages'],
     description:
-      'Written directly in Typst: the file imports the concept template from .docgen/templates/ and loads company.json and the locale.',
-    alt: 'Title page of the concept KO-2025-002 “Online-Shop Konzept Bio-Hofladen” by Pixelwerk Digitalagentur, with project, client, version, draft status and four tags in orange.',
+      'Written directly in Typst: the file imports the concept template from the package and loads company.json; labels follow its language.',
+    alt: 'Title page of the concept KO-2025-002 “Online-Shop Konzept Bio-Hofladen” by Pixelwerk Digitalagentur, with project, client, version, draft status and four outlined tags.',
     size: portrait,
   },
   {
@@ -147,54 +148,54 @@ const entries: Entry[] = [
     title: 'Documentation from a .typ file',
     file: 'examples/digitalagentur/documents/documentation/2025/documentation.typ',
     tags: ['documentation', '.typ workflow', '6 pages'],
-    description: 'A user manual in Typst markup on top of the documentation template, with footer on every page.',
-    alt: 'Title page of the documentation DOC-2025-002 “WordPress Benutzerhandbuch” for Zimmermann Schreinerei GmbH, status final, with a four-column company footer.',
+    description: 'A user manual in Typst markup on top of the documentation template, with the company footer on every page after the title page.',
+    alt: 'Title page of the documentation DOC-2025-002 “WordPress Benutzerhandbuch” for Zimmermann Schreinerei GmbH, with project, client, version and status final in bold labels.',
     size: portrait,
   },
   {
     slug: 'diagram-flow',
     title: 'Diagram: flow',
-    file: 'examples/diagram-flow/diagram.json',
-    tags: ['diagram', 'flow', 'no positioning'],
-    description: 'Nodes and edges only; docgen computes the layered layout. No coordinates in the JSON.',
-    alt: 'Vertical flow diagram “Projektfreigabe” from request through analysis, an approval decision diamond, implementation and QA to go-live, with labelled edges.',
-    size: landscape,
+    file: 'examples/diagrams/flow.json',
+    tags: ['diagram', 'flow', 'chartlet'],
+    description: 'Steps, a decision and a loop back as nodes and edges; chartlet computes the layout.',
+    alt: 'Vertical flow chart “Projektfreigabe” from request through analysis and an approval decision, with a dashed loop back on “Nein”, to implementation, QA and go-live; edges are labelled.',
+    size: { width: 1100, height: 903 },
   },
   {
     slug: 'diagram-timeline',
     title: 'Diagram: timeline',
-    file: 'examples/diagram-timeline/diagram.json',
-    tags: ['diagram', 'timeline'],
-    description: 'Four phases on a horizontal axis, milestones placed by phase.',
-    alt: 'Timeline diagram “Produkt-Rollout” with the phases kickoff, design, build and launch and one milestone in each.',
-    size: landscape,
+    file: 'examples/diagrams/timeline.json',
+    tags: ['diagram', 'timeline', 'chartlet'],
+    description: 'Two phases and two milestones with dependencies on a calendar axis.',
+    alt: 'Timeline “Produkt-Rollout” from January to June 2026 with the milestones kickoff and launch and the phases wireframes and implementation, linked by dependency arrows.',
+    size: { width: 1100, height: 668 },
   },
   {
     slug: 'diagram-swimlane',
     title: 'Diagram: swimlane',
-    file: 'examples/diagram-swimlane/diagram.json',
-    tags: ['diagram', 'swimlane'],
-    description: 'A process across three roles; each step sits in its lane, edges cross lanes.',
-    alt: 'Swimlane diagram “Support-Prozess” with lanes for customer, support and engineering: request, ticket triage, bug fix and feedback, connected by edges.',
-    size: landscape,
+    file: 'examples/diagrams/swimlane.json',
+    tags: ['diagram', 'swimlane', 'chartlet'],
+    description: 'A chartlet flow chart with lanes: each step sits in the lane of its role.',
+    alt: 'Flow chart “Support-Prozess” in three lanes for customer, support and engineering: request, ticket triage, a bug decision, bug fix, feedback and resolution.',
+    size: { width: 1100, height: 517 },
   },
   {
     slug: 'diagram-quadrant',
     title: 'Diagram: quadrant',
-    file: 'examples/diagram-quadrant/diagram.json',
-    tags: ['diagram', 'quadrant'],
-    description: 'Impact versus effort matrix with one item per quadrant.',
-    alt: 'Quadrant diagram “Feature-Priorisierung” with the quadrants strategic bets, quick wins, evaluate and backlog, each holding one feature.',
-    size: landscape,
+    file: 'examples/diagrams/quadrant.json',
+    tags: ['diagram', 'quadrant', 'chartlet'],
+    description: 'Impact versus effort as a scatter plot with lines at the middle of both axes.',
+    alt: 'Scatter plot “Feature-Priorisierung” with effort on the x axis and impact on the y axis, both from 0 to 10, dashed lines at 5 dividing four quadrants, and four labelled features: Analytics Dashboard, SSO Integration, Dark Mode, Legacy Import.',
+    size: { width: 1100, height: 668 },
   },
   {
     slug: 'diagram-roadmap',
     title: 'Diagram: roadmap',
-    file: 'examples/diagram-roadmap/diagram.json',
-    tags: ['diagram', 'roadmap'],
-    description: 'Three streams across four quarters, items connected within their stream.',
-    alt: 'Roadmap diagram “Roadmap 2026” with quarters Q1 to Q4 and the streams platform, growth and operations, two connected items per stream.',
-    size: landscape,
+    file: 'examples/diagrams/roadmap.json',
+    tags: ['diagram', 'roadmap', 'chartlet'],
+    description: 'Three streams across 2026 as a grouped timeline, items linked within their stream.',
+    alt: 'Timeline “Roadmap 2026” with three colour-coded groups Platform, Growth and Operations, two phases each across the quarters of 2026, linked by dependency arrows.',
+    size: { width: 1100, height: 668 },
   },
 ];
 

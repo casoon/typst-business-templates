@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "type": "tree",
+  "title": "Produktstrategie 2026",
+  "source": "Zentrale Themen und Maßnahmen",
+  "height": 500,
+  "tree": {
+    "nodes": [
+      {
+        "id": "core",
+        "label": "Plattform"
+      },
+      {
+        "id": "ux",
+        "label": "UX",
+        "parent": "core"
+      },
+      {
+        "id": "data",
+        "label": "Daten",
+        "parent": "core"
+      },
+      {
+        "id": "ops",
+        "label": "Operations",
+        "parent": "core"
+      },
+      {
+        "id": "growth",
+        "label": "Growth",
+        "parent": "core"
+      },
+      {
+        "id": "design-system",
+        "label": "Design System",
+        "parent": "ux"
+      },
+      {
+        "id": "mobile",
+        "label": "Mobile Optimierung",
+        "parent": "ux"
+      },
+      {
+        "id": "tracking",
+        "label": "Tracking",
+        "parent": "data"
+      },
+      {
+        "id": "reporting",
+        "label": "Reporting",
+        "parent": "data"
+      },
+      {
+        "id": "deploy",
+        "label": "Deployment",
+        "parent": "ops"
+      },
+      {
+        "id": "monitoring",
+        "label": "Monitoring",
+        "parent": "ops"
+      },
+      {
+        "id": "seo",
+        "label": "SEO",
+        "parent": "growth"
+      },
+      {
+        "id": "crm",
+        "label": "CRM-Automation",
+        "parent": "growth"
+      }
+    ]
+  }
+}

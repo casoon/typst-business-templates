@@ -1,6 +1,5 @@
 // Contract Template (Vertrag) - Document Layout
 // Based on concept/documentation structure
-// Supports both JSON input and direct .typ content files
 
 #import "../common/styles.typ": *
 #import "../common/footers.typ": document-footer
@@ -25,7 +24,7 @@
   body
 ) = {
   let company = if company != none { company } else { (:) }
-  let locale = if locale != none { locale } else { (common: (:), contract: (:)) }
+  let locale = load-locale(locale, company)
   
   let accent-color = get-accent-color(company)
   let primary-color = get-primary-color(company)
@@ -180,63 +179,4 @@
   )
 
   v(1fr)
-}
-
-// JSON workflow
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-#let _company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let _locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  none
-}
-
-#if data != none {
-  let created-date = if "created_at" in data.metadata {
-    if type(data.metadata.created_at) == dictionary and "date" in data.metadata.created_at {
-      data.metadata.created_at.date
-    } else {
-      data.metadata.created_at
-    }
-  } else {
-    none
-  }
-  
-  let content-body = if "content_file" in data {
-    include(data.content_file)
-  } else if "content" in data {
-    eval(data.content, mode: "markup")
-  } else {
-    []
-  }
-  
-  contract(
-    title: data.metadata.title,
-    document_number: data.metadata.document_number,
-    contract_type: if "contract_type" in data.metadata { data.metadata.contract_type } else { "Dienstleistungsvertrag" },
-    parties: if "parties" in data.metadata { data.metadata.parties } else { () },
-    effective_date: if "effective_date" in data.metadata { data.metadata.effective_date } else { none },
-    termination_date: if "termination_date" in data.metadata { data.metadata.termination_date } else { none },
-    created_at: created-date,
-    status: data.metadata.at("status", default: none),
-    show_toc: if "show_toc" in data.metadata { data.metadata.show_toc } else { true },
-    company: _company,
-    locale: _locale,
-    content-body
-  )
 }

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "type": "scatter",
+  "title": "Feature-Priorisierung",
+  "source": "Impact vs. Aufwand, Schätzung 1–10",
+  "scatter": {
+    "points": [
+      {
+        "x": 7,
+        "y": 8,
+        "label": "Analytics Dashboard"
+      },
+      {
+        "x": 3,
+        "y": 8,
+        "label": "SSO Integration"
+      },
+      {
+        "x": 7,
+        "y": 3,
+        "label": "Dark Mode"
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "label": "Legacy Import"
+      }
+    ],
+    "lines": [
+      {
+        "axis": "x",
+        "value": 5,
+        "label": "Aufwand"
+      },
+      {
+        "axis": "y",
+        "value": 5,
+        "label": "Impact"
+      }
+    ],
+    "xRange": [
+      0,
+      10
+    ],
+    "yRange": [
+      0,
+      10
+    ],
+    "xTitle": "Aufwand",
+    "yTitle": "Impact"
+  }
+}

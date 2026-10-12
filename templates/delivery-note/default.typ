@@ -1,14 +1,16 @@
 // Delivery Note Template (Lieferschein) - CASOON Layout
 // Document for tracking goods delivery
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
-#import "../common/formatting.typ": format_german_date
+#import "../common/formatting.typ": format_german_date, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block-with-delivery
 #import "../common/accounting-header.typ": accounting-header, delivery-note-metadata
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/delivery-note.schema.json,
 /// `company` that of company.json.
 #let delivery-note(data: none, company: none) = [
+#set document(..document-metadata(company, data.metadata.at("delivery_note_number", default: none), data.metadata.at("delivery_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -18,7 +20,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and metadata header
 #accounting-header(
@@ -161,8 +163,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  delivery-note(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

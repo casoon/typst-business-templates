@@ -1,0 +1,2 @@
+# The SVGs ask for Inter, which is in the repository's fonts/.
+font_paths = ["../../fonts"]

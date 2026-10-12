@@ -1,14 +1,16 @@
 // Reminder Template (Zahlungserinnerung/Mahnung) - CASOON Layout
 // Multi-level payment reminder system
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
-#import "../common/formatting.typ": format_german_date, format_money
+#import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, reminder-metadata
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/reminder.schema.json,
 /// `company` that of company.json.
 #let reminder(data: none, company: none) = [
+#set document(..document-metadata(company, data.metadata.at("reminder_number", default: none), data.metadata.at("date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -18,15 +20,18 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and Metadata
+// "1", 1 or missing: first reminder
+#let reminder-level = str(data.metadata.at("reminder_level", default: "1"))
+
 #accounting-header(
   company: company,
   metadata_content: reminder-metadata(
     reminder_number: data.metadata.reminder_number,
     reminder_date: data.metadata.date,
-    reminder_level: if "reminder_level" in data.metadata { data.metadata.reminder_level } else { none },
+    reminder_level: reminder-level,
   )
 )
 
@@ -41,10 +46,10 @@
   #set text(size: 10pt, font: "Helvetica")
 
   #text(weight: "bold", size: 12pt)[
-    #if data.metadata.reminder_level == "1" [
+    #if reminder-level == "1" [
       Zahlungserinnerung
     ] else [
-      #data.metadata.reminder_level. Mahnung
+      #reminder-level. Mahnung
     ]
   ]
 
@@ -103,7 +108,7 @@
     [#text(weight: "bold")[Offener Gesamtbetrag:]], 
     [#text(weight: "bold")[#format_money(data.totals.total_outstanding.amount) EUR]],
 
-    ..if "reminder_fee" in data.totals and data.totals.reminder_fee.amount > 0 {
+    ..if "reminder_fee" in data.totals and float(data.totals.reminder_fee.amount) > 0 {
       (
         [Mahngebühr:],
         [#format_money(data.totals.reminder_fee.amount) EUR],
@@ -148,8 +153,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  reminder(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

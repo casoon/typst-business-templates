@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/order-confirmation.schema.json",
+  "title": "Order confirmation",
+  "description": "Data for the order confirmation template (Auftragsbestätigung).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "recipient",
+    "items",
+    "totals"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL or path of this schema, for editor support."
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "confirmation_number",
+        "confirmation_date"
+      ],
+      "description": "Document metadata shown in the header box.",
+      "properties": {
+        "confirmation_number": {
+          "type": "string",
+          "description": "Order confirmation number."
+        },
+        "confirmation_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Confirmation date."
+        },
+        "order_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Customer's order number."
+        },
+        "expected_delivery": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Expected delivery date."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Render the company footer (default true)."
+        }
+      }
+    },
+    "recipient": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Customer the confirmation is addressed to."
+    },
+    "salutation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "greeting"
+      ],
+      "description": "Greeting and introduction; a default German text is used if omitted.",
+      "properties": {
+        "greeting": {
+          "type": "string",
+          "description": "Greeting line, e.g. \"Sehr geehrte Frau Schmidt,\"."
+        },
+        "introduction": {
+          "type": "string",
+          "description": "Introductory sentence below the greeting."
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "Confirmed line items.",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "description",
+          "quantity",
+          "unit",
+          "unit_price",
+          "total"
+        ],
+        "properties": {
+          "position": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Position number shown in the first column."
+          },
+          "article_number": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Article number."
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Bold item title above the description."
+          },
+          "description": {
+            "type": "string",
+            "description": "Item description."
+          },
+          "quantity": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Quantity."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit code (see unit-formatter.typ) or free text."
+          },
+          "unit_price": {
+            "allOf": [
+              {
+                "$ref": "common.schema.json#/$defs/money"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "amount"
+            ],
+            "description": "Net unit price. The template reads `.amount`, so the object form is required."
+          },
+          "total": {
+            "allOf": [
+              {
+                "$ref": "common.schema.json#/$defs/money"
+              }
+            ],
+            "type": "object",
+            "required": [
+              "amount"
+            ],
+            "description": "Net line total. The template reads `.amount`, so the object form is required."
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "subtotal",
+        "vat_breakdown",
+        "total"
+      ],
+      "description": "Totals block.",
+      "properties": {
+        "subtotal": {
+          "allOf": [
+            {
+              "$ref": "common.schema.json#/$defs/money"
+            }
+          ],
+          "type": "object",
+          "required": [
+            "amount"
+          ],
+          "description": "Net subtotal. The template reads `.amount`, so the object form is required."
+        },
+        "vat_breakdown": {
+          "type": "array",
+          "description": "One entry per VAT rate; the totals block is hidden if empty.",
+          "items": {
+            "type": "object",
+            "required": [
+              "rate",
+              "amount"
+            ],
+            "properties": {
+              "rate": {
+                "$ref": "common.schema.json#/$defs/vat_rate",
+                "description": "VAT rate; only the percentage is printed."
+              },
+              "amount": {
+                "allOf": [
+                  {
+                    "$ref": "common.schema.json#/$defs/money"
+                  }
+                ],
+                "type": "object",
+                "required": [
+                  "amount"
+                ],
+                "description": "VAT amount for this rate. The template reads `.amount`, so the object form is required."
+              }
+            }
+          }
+        },
+        "total": {
+          "allOf": [
+            {
+              "$ref": "common.schema.json#/$defs/money"
+            }
+          ],
+          "type": "object",
+          "required": [
+            "amount"
+          ],
+          "description": "Gross total. The template reads `.amount`, so the object form is required."
+        },
+        "discount_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Discount on the subtotal. Not printed; the total check expects total = subtotal − discount + VAT."
+        }
+      }
+    },
+    "terms": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Terms printed below the totals.",
+      "properties": {
+        "payment_terms": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Payment terms."
+        },
+        "delivery_terms": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Delivery terms."
+        }
+      }
+    },
+    "custom_text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Free text printed before the closing."
+    }
+  }
+}

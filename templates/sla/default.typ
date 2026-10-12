@@ -27,7 +27,7 @@
   body
 ) = {
   let company = if company != none { company } else { (:) }
-  let locale = if locale != none { locale } else { (common: (:), sla: (:)) }
+  let locale = load-locale(locale, company)
   
   let accent-color = get-accent-color(company)
   let primary-color = get-primary-color(company)
@@ -275,65 +275,4 @@
   )
 
   v(1fr)
-}
-
-// JSON workflow
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-#let _company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let _locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  none
-}
-
-#if data != none {
-  let created-date = if "created_at" in data.metadata {
-    if type(data.metadata.created_at) == dictionary and "date" in data.metadata.created_at {
-      data.metadata.created_at.date
-    } else {
-      data.metadata.created_at
-    }
-  } else {
-    none
-  }
-  
-  let content-body = if "content_file" in data {
-    include(data.content_file)
-  } else if "content" in data {
-    eval(data.content, mode: "markup")
-  } else {
-    []
-  }
-  
-  sla(
-    title: data.metadata.title,
-    document_number: data.metadata.document_number,
-    service_provider: if "service_provider" in data.metadata { data.metadata.service_provider } else { none },
-    customer: if "customer" in data.metadata { data.metadata.customer } else { none },
-    effective_date: if "effective_date" in data.metadata { data.metadata.effective_date } else { none },
-    termination_date: if "termination_date" in data.metadata { data.metadata.termination_date } else { none },
-    review_period: if "review_period" in data.metadata { data.metadata.review_period } else { none },
-    version: if "version" in data.metadata { data.metadata.version } else { "1.0" },
-    status: if "status" in data.metadata { data.metadata.status } else { "Aktiv" },
-    created_at: created-date,
-    show_toc: if "show_toc" in data.metadata { data.metadata.show_toc } else { true },
-    company: _company,
-    locale: _locale,
-    content-body
-  )
 }

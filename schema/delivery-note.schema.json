@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/delivery-note.schema.json",
+  "title": "Delivery note",
+  "description": "Data for the delivery note template (Lieferschein).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "recipient",
+    "items"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL or path of this schema, for editor support."
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "delivery_note_number",
+        "delivery_date"
+      ],
+      "description": "Document metadata shown in the header box.",
+      "properties": {
+        "delivery_note_number": {
+          "type": "string",
+          "description": "Delivery note number."
+        },
+        "delivery_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Delivery date."
+        },
+        "order_reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Customer order number this delivery refers to."
+        },
+        "delivery_time": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Delivery time window, e.g. \"14:00 - 16:00 Uhr\"."
+        },
+        "shipping_method": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Shipping method / carrier."
+        },
+        "tracking_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Tracking number; shown only together with shipping_method."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Render the company footer (default true)."
+        }
+      }
+    },
+    "recipient": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Recipient; its address is shown unless delivery_address is given."
+    },
+    "delivery_address": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "address"
+      ],
+      "description": "Delivery address shown in the address window instead of the recipient's.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Contact person or department."
+        },
+        "company": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Company name."
+        },
+        "address": {
+          "$ref": "common.schema.json#/$defs/address",
+          "description": "Postal address."
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "Delivered items.",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "description",
+          "quantity",
+          "unit"
+        ],
+        "properties": {
+          "position": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Position number shown in the first column."
+          },
+          "article_number": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Article number."
+          },
+          "description": {
+            "type": "string",
+            "description": "Article description."
+          },
+          "quantity": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Quantity."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit code (stueck, karton, palette, kg, meter) or free text."
+          },
+          "notes": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Remark for this item, e.g. serial numbers."
+          }
+        }
+      }
+    },
+    "special_notes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Notes printed below the signature section."
+    }
+  }
+}

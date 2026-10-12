@@ -77,3 +77,30 @@
 #let format_money_with_currency(amount, currency: "EUR") = {
   format_money(amount) + " " + currency
 }
+
+/// A date object (date: "YYYY-MM-DD"), an ISO string or a German date (DD.MM.YYYY) as datetime,
+/// or auto if it cannot be read.
+#let to-datetime(date_obj) = {
+  let s = if type(date_obj) == dictionary { date_obj.date } else { str(date_obj) }
+  let iso = s.match(regex("^(\d{4})-(\d{2})-(\d{2})$"))
+  let german = s.match(regex("^(\d{1,2})\.(\d{1,2})\.(\d{4})$"))
+  if iso != none {
+    let (y, m, d) = iso.captures.map(int)
+    datetime(year: y, month: m, day: d)
+  } else if german != none {
+    let (d, m, y) = german.captures.map(int)
+    datetime(year: y, month: m, day: d)
+  } else {
+    auto
+  }
+}
+
+/// Arguments for `set document`: the document number as title, the company as author and the
+/// document date, so PDF viewers and archives (PDF/A, ZUGFeRD) see them.
+#let document-metadata(company, number, date) = {
+  let args = (:)
+  if number != none { args.title = str(number) }
+  if company != none and "name" in company { args.author = company.name }
+  if date != none { args.date = to-datetime(date) }
+  args
+}

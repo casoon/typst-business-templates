@@ -24,8 +24,8 @@ Alle Beispiele basieren auf einem realistischen IT-Beratungs-Szenario mit folgen
 
 | Typ | Datei | Beschreibung |
 |-----|-------|--------------|
-| **Invoice** | `invoices/2025/invoice-*.json` | Rechnungen für erbrachte Leistungen |
-| **Offer** | `offers/2025/offer-*.json` | Angebote für IT-Dienstleistungen |
+| **Invoice** | `invoices/2025/invoice.json` | Rechnungen für erbrachte Leistungen |
+| **Offer** | `offers/2025/offer.json` | Angebote für IT-Dienstleistungen |
 | **Letter** | `letters/2025/letter-001.json` | Geschäftsbrief (Projektanfrage) |
 | **Credit Note** | `credit-notes/2025/credit-note-001.json` | Gutschrift für stornierte Leistungen |
 | **Reminder** | `reminders/2025/reminder-001.json` | 1. Mahnung für überfällige Rechnung |
@@ -37,92 +37,39 @@ Alle Beispiele basieren auf einem realistischen IT-Beratungs-Szenario mit folgen
 
 | Typ | Datei | Beschreibung |
 |-----|-------|--------------|
-| **Concept** | `concepts/2025/concept-*.typ` | Projektkonzepte |
-| **Documentation** | `documentation/2025/documentation-*.typ` | Technische Dokumentation |
-| **Contract** | `contracts/2025/contract-001.json` | Dienstleistungsvertrag (6 Monate) |
-| **Protocol** | `protocols/2025/protocol-001.json` | Kick-off Meeting Protokoll |
-| **Specification** | `specifications/2025/specification-001.json` | API Spezifikation mit OpenAPI |
-| **Proposal** | `proposals/2025/proposal-001.json` | Cloud Migration Projektvorschlag |
-| **SLA** | `slas/2025/sla-001.json` | Service Level Agreement (12 Monate) |
+| **Concept** | `concepts/2025/concept.typ` | Projektkonzepte |
+| **Documentation** | `documentation/2025/documentation.typ` | Technische Dokumentation |
+| **Contract** | `contracts/2025/contract-001.typ` | Dienstleistungsvertrag (6 Monate) |
+| **Protocol** | `protocols/2025/protocol-001.typ` | Kick-off Meeting Protokoll |
+| **Specification** | `specifications/2025/specification-001.typ` | API Spezifikation mit OpenAPI |
+| **Proposal** | `proposals/2025/proposal-001.typ` | Cloud Migration Projektvorschlag |
+| **SLA** | `slas/2025/sla-001.typ` | Service Level Agreement (12 Monate) |
 | **Quotation Request** | `quotation-requests/2025/quotation-request-001.json` | Angebotsanfrage für Tools |
 
 ### 🔒 Special-Layout
 
 | Typ | Datei | Beschreibung |
 |-----|-------|--------------|
-| **Credentials** | `credentials/2024/credentials-*.json` | Zugangsdaten für Systeme |
+| **Credentials** | `credentials/2025/credentials.json` | Zugangsdaten für Systeme |
 
 ## Verwendung
 
-### Mit docgen CLI
-
-```bash
-# Aus dem Projekt-Root
-cd examples/it-consultant
-
-# Einzelnes Dokument generieren
-docgen generate letter documents/letters/2025/letter-001.json
-
-# Alle Dokumente eines Typs generieren
-docgen generate contract documents/contracts/2025/*.json
-
-# Output anzeigen
-open output/letters/2025/letter-001.pdf
-```
-
-### Als Typst Package
-
-Die JSON-Dateien enthalten vollständige Metadaten und können direkt mit den Templates verwendet werden:
-
-```bash
-typst compile \\
-  --input data=documents/letters/2025/letter-001.json \\
-  --input company=data/company.json \\
-  --input locale=locale/de.json \\
-  ../../templates/letter/default.typ \\
-  output/letter-001.pdf
-```
-
-## Dateien-Struktur
-
-```
-it-consultant/
-├── data/
-│   ├── company.json              # Firmendaten
-│   ├── concept-content.typ       # Content für Konzept-Dokumente
-│   └── documentation-content.typ # Content für Dokumentation
-├── locale/
-│   └── de.json                   # Deutsche Übersetzungen
-├── documents/                    # Alle JSON-Dateien für Dokumente
-│   ├── letters/2025/
-│   ├── credit-notes/2025/
-│   ├── reminders/2025/
-│   ├── time-sheets/2025/
-│   ├── delivery-notes/2025/
-│   ├── order-confirmations/2025/
-│   ├── contracts/2025/
-│   ├── protocols/2025/
-│   ├── specifications/2025/
-│   ├── proposals/2025/
-│   ├── slas/2025/
-│   └── quotation-requests/2025/
-├── templates/                    # Branding-spezifische Templates
-└── output/                       # Generierte PDFs
-
-```
+Kompilieren: siehe [examples/README.md](../README.md). Jede JSON-Datei hat daneben eine
+gleichnamige `.typ`-Datei, die die Daten an das Template übergibt. Konzept, Dokumentation,
+Vertrag, Protokoll, Spezifikation, Projektvorschlag und SLA sind direkt in Typst geschrieben.
 
 ## Realistische Szenarien
 
 ### Szenario 1: Komplettes Projekt-Lifecycle
 
-1. **Proposal** (`proposals/2025/proposal-001.json`) - Projektvorschlag Cloud Migration
-2. **Contract** (`contracts/2025/contract-001.json`) - Unterschriebener Vertrag
-3. **Protocol** (`protocols/2025/protocol-001.json`) - Kick-off Meeting
-4. **Specification** (`specifications/2025/specification-001.json`) - API-Spezifikation
+1. **Proposal** (`proposals/2025/proposal-001.typ`) - Projektvorschlag Cloud Migration
+2. **Contract** (`contracts/2025/contract-001.typ`) - Unterschriebener Vertrag
+3. **Protocol** (`protocols/2025/protocol-001.typ`) - Kick-off Meeting
+4. **Specification** (`specifications/2025/specification-001.typ`) - API-Spezifikation
 5. **Time Sheet** (`time-sheets/2025/timesheet-001.json`) - Wöchentliche Zeiterfassung
 6. **Order Confirmation** (`order-confirmations/2025/order-confirmation-001.json`) - Auftragsbestätigung
-7. **Invoice** (`invoices/2025/invoice-*.json`) - Monatliche Abrechnung
-8. **SLA** (`slas/2025/sla-001.json`) - Ongoing Support nach Projekt
+7. **Invoice** (`invoices/2025/invoice.json`) - Monatliche Abrechnung
+8. **SLA** (`slas/2025/sla-001.typ`) - Ongoing Support nach Projekt
 
 ### Szenario 2: Zahlungs-Workflow
 
@@ -141,9 +88,8 @@ it-consultant/
 Um diese Examples für Ihr Unternehmen anzupassen:
 
 1. **Firmendaten ändern**: `data/company.json` editieren
-2. **Logo austauschen**: `data/logo.png` ersetzen
-3. **Texte anpassen**: JSON-Dateien in `documents/` editieren
-4. **Neue Beispiele**: JSON-Dateien kopieren und anpassen
+3. **Texte anpassen**: JSON- und `.typ`-Dateien in `documents/` editieren
+4. **Neue Dokumente**: JSON-Datei und `.typ`-Datei kopieren und anpassen
 
 ## Tipps
 
@@ -151,10 +97,3 @@ Um diese Examples für Ihr Unternehmen anzupassen:
 - Datumsformat: YYYY-MM-DD in JSON
 - MwSt.-Satz: 19% (Standard in Deutschland)
 - Zahlungsziel: Standard 14 Tage
-
-## Nächste Schritte
-
-1. Generieren Sie alle Beispiele: `docgen generate-all`
-2. Schauen Sie sich die PDFs im `output/` Verzeichnis an
-3. Passen Sie die JSON-Dateien an Ihre Bedürfnisse an
-4. Erstellen Sie eigene Dokumente basierend auf den Beispielen

@@ -17,36 +17,35 @@ import { example } from '../showcase';
 const hero = example('invoice');
 const gallery = ['offer', 'reminder', 'letter', 'credentials', 'concept', 'diagram-roadmap'].map(example);
 
-const quickstart = `docgen init my-business
-cd my-business
-# edit data/company.json, then add a document:
-#   documents/invoices/2026/invoice.json
-docgen compile documents/invoices/2026/invoice.json
-# → documents/invoices/2026/invoice.pdf`;
+const quickstart = `cargo install typstgen
+git clone https://github.com/casoon/typst-business-templates
+cd typst-business-templates/examples/it-consultant
+typstgen compile documents/invoices/2025/invoice.typ
+# → documents/invoices/2025/invoice.pdf
+typstgen compile documents/invoices/2025/invoice.typ \\
+  --zugferd documents/invoices/2025/invoice.json \\
+  --company data/company.json --pdf-standard a-3b
+# → the same PDF as ZUGFeRD e-invoice`;
 ---
 
 <Base>
   <Hero
-    title="Business documents from JSON, typeset by Typst."
-    lead="Templates for invoices, offers, reminders, letters, credentials, concepts, diagrams and more. Keep each document as a JSON or .typ file, and docgen compiles it to PDF with your company data, branding and language."
+    title="Business documents as a Typst package."
+    lead="Templates for invoices, offers, reminders, letters, credentials, concepts, contracts and more. Keep invoices as JSON and long documents as Typst markup; typstgen compiles them to PDF with your company data and turns invoices into ZUGFeRD e-invoices."
   >
     <Install
       label="Install"
       commands={[
-        {
-          label: 'script',
-          command:
-            'curl -fsSL https://raw.githubusercontent.com/casoon/typst-business-templates/main/install.sh | bash',
-        },
-        { label: 'source', command: 'cargo install --git https://github.com/casoon/typst-business-templates docgen' },
-        { label: 'library', command: 'cargo add typst-business-templates' },
+        { label: 'typstgen', command: 'cargo install typstgen' },
+        { label: 'package', command: 'git clone https://github.com/casoon/typst-business-templates' },
+        { label: 'diagrams', command: 'cargo install chartlet' },
       ]}
     />
     <Badges>
       <Badge>MIT</Badge>
-      <Badge>docgen 0.7.2</Badge>
-      <Badge>crates.io 0.1.5</Badge>
-      <Badge>macOS · Linux · Windows</Badge>
+      <Badge>business-templates 0.1.0</Badge>
+      <Badge>Typst 0.15</Badge>
+      <Badge>typstgen 0.4.1</Badge>
     </Badges>
     <figure slot="output" class="hero-doc">
       <a href={url(`showcase/${hero.slug}/`)}>
@@ -59,17 +58,17 @@ docgen compile documents/invoices/2026/invoice.json
         />
       </a>
       <figcaption>
-        First page of <code>{hero.file.replace('examples/', '')}</code>, compiled by docgen 0.7.2.
+        First page of <code>{hero.file.replace('examples/', '')}</code>, compiled by typstgen 0.4.1.
       </figcaption>
     </figure>
   </Hero>
 
   <Facts
     items={[
-      { value: '20', label: 'document templates' },
-      { value: '7', label: 'languages for labels and CLI' },
-      { value: '10', label: 'font presets, fonts in the repository' },
-      { value: '8', label: 'diagram layouts, no coordinates needed' },
+      { value: '19', label: 'document templates' },
+      { value: '7', label: 'languages for concepts, contracts and other documents' },
+      { value: 'EN 16931', label: 'e-invoices built by typstgen' },
+      { value: '11', label: 'JSON schemas for data files' },
     ]}
   />
 
@@ -77,26 +76,26 @@ docgen compile documents/invoices/2026/invoice.json
     items={[
       {
         title: 'Your documents are plain files',
-        body: 'Invoices and offers are JSON, long documents are Typst markup. Company data, clients and number counters are JSON as well. Everything diffs and versions in Git.',
+        body: 'Invoices and offers are JSON with a four-line Typst file next to them, long documents are Typst markup. Company data is one company.json. Everything diffs and versions in Git.',
       },
       {
         title: 'German business conventions built in',
-        body: 'DIN 5008 address block, VAT breakdown, dunning levels and a company footer with tax and bank data. One example project invoices as Kleinunternehmer (§ 19 UStG) without VAT.',
+        body: 'DIN 5008 address block, VAT breakdown, dunning levels and a company footer with tax and bank data. Kleinunternehmer invoices print the § 19 UStG note, and totals that do not add up stop the build.',
       },
       {
-        title: 'Templates that stay current, forks that stay put',
-        body: 'Standard templates are extracted into .docgen/templates/ and updated with docgen. docgen template fork copies one into templates/, where updates never touch it.',
+        title: 'E-invoices from the same data',
+        body: 'typstgen builds the ZUGFeRD / Factur-X XML (EN 16931) from the invoice JSON and embeds it in a PDF/A-3. The template sets the document date the standard requires.',
       },
       {
-        title: 'CLI or Rust library',
-        body: 'docgen compiles single files, whole folders or on change. The typst-business-templates crate embeds templates, locales and fonts and returns the PDF bytes without a typst binary.',
+        title: 'Diagrams with chartlet',
+        body: 'Flow charts, org charts, timelines and architecture diagrams come from a JSON spec, rendered to SVG by chartlet and placed in any document like an image.',
       },
     ]}
   />
 
   <BuildOutput
-    heading="Compiled by docgen"
-    caption="First pages of documents from the example projects, compiled by docgen 0.7.2. Each links to its source file and the full PDF."
+    heading="Compiled by typstgen"
+    caption="First pages of documents from the example projects, compiled by typstgen 0.4.1; diagrams rendered by chartlet 0.18. Each links to its source file and the full PDF."
     file="examples/"
   >
     <ul class="gallery">
@@ -121,11 +120,11 @@ docgen compile documents/invoices/2026/invoice.json
   </BuildOutput>
 
   <Quickstart
-    lead="From an empty folder to a PDF. docgen calls the typst CLI for invoices and other documents, so install Typst first. The documentation covers the JSON format, templates and diagrams."
+    lead="From a clone to a PDF and an e-invoice. The example projects point typstgen at the package and the fonts in the repository; the documentation shows how to set up your own project."
     steps={[
-      'Install <code>docgen</code> and <a href="https://github.com/typst/typst#installation" style="text-decoration:underline">Typst</a>.',
-      'Create a project with <code>docgen init</code> and fill in <code>data/company.json</code>.',
-      'Add a JSON document and run <code>docgen compile</code> — or <code>docgen build</code> for all of them.',
+      'Install <code>typstgen</code> with Cargo.',
+      'Clone the repository and open an example project, or set up your own with a <code>typstgen.toml</code> and <code>data/company.json</code>.',
+      'Run <code>typstgen compile</code> on a document; add <code>--zugferd</code> for an e-invoice.',
     ]}
   >
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />

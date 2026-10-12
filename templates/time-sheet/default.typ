@@ -1,14 +1,16 @@
 // Time Sheet Template (Stundenzettel) - Accounting Layout
 // For tracking work hours and billable time
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
-#import "../common/formatting.typ": format_german_date
+#import "../common/formatting.typ": format_german_date, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, timesheet-metadata
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/time-sheet.schema.json,
 /// `company` that of company.json.
 #let time-sheet(data: none, company: none) = [
+#set document(..document-metadata(company, data.metadata.at("timesheet_number", default: none), none))
 // Helper function to format hours
 #let format_hours(hours) = {
   let str_hours = str(hours)
@@ -37,7 +39,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Header with logo and metadata
 #accounting-header(
@@ -169,8 +171,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  time-sheet(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

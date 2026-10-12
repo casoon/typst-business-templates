@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/credit-note.schema.json",
+  "title": "Credit note",
+  "description": "Data for the credit note template (templates/credit-note/default.typ).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "recipient",
+    "items",
+    "totals"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URI of this schema, for editor support. Ignored by the templates."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Credit note header data.",
+      "required": [
+        "credit_note_number",
+        "date"
+      ],
+      "properties": {
+        "credit_note_number": {
+          "type": "string",
+          "description": "Unique credit note number."
+        },
+        "date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Credit note date."
+        },
+        "invoice_reference": {
+          "type": "string",
+          "description": "Number of the invoice this credit note refers to."
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Reason for the credit note, shown above the salutation."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Set to false to hide the company footer. Default: true."
+        }
+      }
+    },
+    "recipient": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Recipient shown in the DIN 5008 address window."
+    },
+    "salutation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Opening of the letter. Omitted if absent or null.",
+      "required": [
+        "greeting"
+      ],
+      "properties": {
+        "greeting": {
+          "type": "string",
+          "description": "Greeting line, e.g. \"Sehr geehrte Frau Schmidt,\"."
+        },
+        "introduction": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Introductory sentence below the greeting."
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "Credited line items.",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "description",
+          "quantity",
+          "unit",
+          "vat_rate",
+          "unit_price",
+          "total"
+        ],
+        "properties": {
+          "position": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Position number shown in the first column."
+          },
+          "description": {
+            "type": "string",
+            "description": "Item description."
+          },
+          "quantity": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Quantity, printed as given."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit. The codes stueck, stunde, tag, monat, jahr, pauschale, kg, meter, kilometer, liter, karton, palette are abbreviated; any other text is printed as is."
+          },
+          "vat_rate": {
+            "$ref": "#/$defs/vat_rate_object",
+            "description": "VAT rate of the item, printed in the MwSt. column."
+          },
+          "unit_price": {
+            "$ref": "#/$defs/amount",
+            "description": "Net price per unit."
+          },
+          "total": {
+            "$ref": "#/$defs/amount",
+            "description": "Net line total. The build stops if it differs from quantity × unit price by a cent or more."
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "description": "Precomputed totals; the template does not calculate them.",
+      "required": [
+        "subtotal",
+        "vat_breakdown",
+        "total"
+      ],
+      "properties": {
+        "subtotal": {
+          "$ref": "#/$defs/amount",
+          "description": "Net total."
+        },
+        "vat_breakdown": {
+          "type": "array",
+          "description": "VAT per rate. Empty without VAT (e.g. Kleinunternehmer): then only the total is printed.",
+          "items": {
+            "type": "object",
+            "required": [
+              "rate",
+              "amount"
+            ],
+            "properties": {
+              "rate": {
+                "$ref": "common.schema.json#/$defs/vat_rate",
+                "description": "The VAT rate of this group."
+              },
+              "base": {
+                "$ref": "common.schema.json#/$defs/money",
+                "description": "Net amount this rate applies to. Not rendered."
+              },
+              "amount": {
+                "$ref": "#/$defs/amount",
+                "description": "VAT amount for this rate."
+              }
+            }
+          }
+        },
+        "vat_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Sum of all VAT amounts. Not rendered."
+        },
+        "total": {
+          "$ref": "#/$defs/amount",
+          "description": "Gross total credited."
+        },
+        "discount_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Discount on the subtotal. Not printed; the total check expects total = subtotal − discount + VAT."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "amount": {
+      "description": "An amount in object form. The templates read `.amount`, so a plain number is not accepted here.",
+      "allOf": [
+        {
+          "$ref": "common.schema.json#/$defs/money"
+        },
+        {
+          "type": "object",
+          "required": [
+            "amount"
+          ]
+        }
+      ]
+    },
+    "vat_rate_object": {
+      "description": "VAT rate in object form. The templates print `.percentage`, so a plain number is not accepted here.",
+      "allOf": [
+        {
+          "$ref": "common.schema.json#/$defs/vat_rate"
+        },
+        {
+          "type": "object",
+          "required": [
+            "percentage"
+          ]
+        }
+      ]
+    }
+  }
+}

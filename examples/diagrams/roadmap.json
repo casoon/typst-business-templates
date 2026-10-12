@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "type": "timeline",
+  "title": "Roadmap 2026",
+  "source": "Streams und Quartale",
+  "timeline": {
+    "items": [
+      {
+        "id": "platform-core",
+        "label": "Core Refactor",
+        "start": "2026-01-05",
+        "end": "2026-03-27",
+        "group": "Platform"
+      },
+      {
+        "id": "api-version",
+        "label": "API v2",
+        "start": "2026-07-06",
+        "end": "2026-09-25",
+        "group": "Platform",
+        "after": [
+          "platform-core"
+        ]
+      },
+      {
+        "id": "seo",
+        "label": "SEO Sprint",
+        "start": "2026-04-06",
+        "end": "2026-06-26",
+        "group": "Growth"
+      },
+      {
+        "id": "crm",
+        "label": "CRM Automation",
+        "start": "2026-10-05",
+        "end": "2026-12-18",
+        "group": "Growth",
+        "after": [
+          "seo"
+        ]
+      },
+      {
+        "id": "backup",
+        "label": "Backup Redesign",
+        "start": "2026-04-06",
+        "end": "2026-06-26",
+        "group": "Operations"
+      },
+      {
+        "id": "monitoring",
+        "label": "Monitoring Refresh",
+        "start": "2026-07-06",
+        "end": "2026-09-25",
+        "group": "Operations",
+        "after": [
+          "backup"
+        ]
+      }
+    ],
+    "groupRows": true
+  }
+}

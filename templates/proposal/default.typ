@@ -29,7 +29,7 @@
   body
 ) = {
   let company = if company != none { company } else { (:) }
-  let locale = if locale != none { locale } else { (common: (:), proposal: (:)) }
+  let locale = load-locale(locale, company)
   
   let accent-color = get-accent-color(company)
   let primary-color = get-primary-color(company)
@@ -217,77 +217,4 @@
   ]
 
   v(1fr)
-}
-
-// JSON workflow
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-#let _company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let _locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  none
-}
-
-#if data != none {
-  let created-date = if "created_at" in data.metadata {
-    if type(data.metadata.created_at) == dictionary and "date" in data.metadata.created_at {
-      data.metadata.created_at.date
-    } else {
-      data.metadata.created_at
-    }
-  } else {
-    none
-  }
-
-  let valid-until-date = if "valid_until" in data.metadata {
-    if type(data.metadata.valid_until) == dictionary and "date" in data.metadata.valid_until {
-      data.metadata.valid_until.date
-    } else {
-      data.metadata.valid_until
-    }
-  } else {
-    none
-  }
-  
-  let content-body = if "content_file" in data {
-    include(data.content_file)
-  } else if "content" in data {
-    eval(data.content, mode: "markup")
-  } else {
-    []
-  }
-  
-  proposal(
-    title: data.metadata.title,
-    document_number: data.metadata.document_number,
-    client_name: if "client_name" in data.metadata { data.metadata.client_name } else { none },
-    project_name: if "project_name" in data.metadata { data.metadata.project_name } else { none },
-    budget: if "budget" in data.metadata { data.metadata.budget } else { none },
-    timeline: if "timeline" in data.metadata { data.metadata.timeline } else { none },
-    version: if "version" in data.metadata { data.metadata.version } else { "1.0" },
-    status: if "status" in data.metadata { data.metadata.status } else { "Angebot" },
-    tags: if "tags" in data.metadata { data.metadata.tags } else { () },
-    created_at: created-date,
-    valid_until: valid-until-date,
-    authors: if "authors" in data.metadata { data.metadata.authors } else { () },
-    show_toc: if "show_toc" in data.metadata { data.metadata.show_toc } else { true },
-    company: _company,
-    locale: _locale,
-    content-body
-  )
 }

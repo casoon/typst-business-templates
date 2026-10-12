@@ -1,16 +1,19 @@
 // Credit Note Template (Gutschrift) - CASOON Layout
 // Based on invoice template - for refunds and corrections
 
-#import "../common/formatting.typ": format_german_date, format_money
+#import "../common/styles.typ": get-language
+#import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, credit-note-metadata
 #import "../common/footers.typ": accounting-footer
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, vat-exemption-note, check-totals
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/credit-note.schema.json,
 /// `company` that of company.json.
 #let credit-note(data: none, company: none) = [
+#check-totals(data)
+#set document(..document-metadata(company, data.metadata.at("credit_note_number", default: none), data.metadata.at("date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -20,7 +23,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and metadata header
 #accounting-header(
@@ -54,7 +57,7 @@
   #if "salutation" in data and data.salutation != none [
     #data.salutation.greeting\
     #v(3pt)
-    #if "introduction" in data.salutation [
+    #if data.salutation.at("introduction", default: none) != none [
       #data.salutation.introduction
     ]
   ]
@@ -97,7 +100,7 @@
       [#item.position],
       [#item.description],
       [#item.quantity],
-      [#format-unit(item.unit)],
+      [#format-unit(item.unit, quantity: item.quantity)],
       [#item.vat_rate.percentage%],
       [#format_money(item.unit_price.amount)],
       [#text(weight: "bold")[#format_money(item.total.amount)]],
@@ -124,6 +127,13 @@
 #block[
   #set text(size: 10pt, font: "Helvetica")
 
+  #let vat-note = vat-exemption-note(company)
+  #if vat-note != none [
+    #vat-note
+
+    #v(8pt)
+  ]
+
   Der Gutschriftsbetrag wird Ihrem Konto gutgeschrieben.
 
   #v(12pt)
@@ -139,8 +149,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  credit-note(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

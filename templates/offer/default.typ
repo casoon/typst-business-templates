@@ -1,16 +1,19 @@
 // Offer Template (Angebot) - CASOON Layout
 // Based on invoice template layout
 
-#import "../common/formatting.typ": format_german_date, format_money
+#import "../common/styles.typ": get-language
+#import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, offer-metadata
 #import "../common/footers.typ": accounting-footer
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, check-totals
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/offer.schema.json,
 /// `company` that of company.json.
 #let offer(data: none, company: none) = [
+#check-totals(data)
+#set document(..document-metadata(company, data.metadata.at("offer_number", default: none), data.metadata.at("offer_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -22,7 +25,7 @@
 #set text(
   font: "Helvetica",
   size: 10pt,
-  lang: company.language
+  lang: get-language(company)
 )
 
 // ============================================================================
@@ -36,6 +39,7 @@
     offer_date: data.metadata.offer_date,
     valid_until: if "valid_until" in data.metadata { data.metadata.valid_until } else { none },
     customer_number: if "customer_number" in data.metadata { data.metadata.customer_number } else { none },
+    project_reference: data.metadata.at("project_reference", default: none),
   )
 )
 
@@ -46,6 +50,7 @@
 #din5008-address-block(
   company: company,
   recipient: data.recipient,
+  company-first: true,
 )
 
 // ============================================================================
@@ -112,7 +117,7 @@
         #item.description
       ],
       [#item.quantity],
-      [#format-unit(item.unit)],
+      [#format-unit(item.unit, quantity: item.quantity)],
       [#format_money(item.unit_price.amount) EUR],
       [#text(weight: "bold")[#format_money(item.total.amount) EUR]],
     )
@@ -153,6 +158,7 @@
   subtotal: data.totals.subtotal,
   vat_breakdown: if "vat_breakdown" in data.totals { data.totals.vat_breakdown } else { () },
   total: data.totals.total,
+  net: true,
 )
 
 #v(5pt)
@@ -221,8 +227,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  offer(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

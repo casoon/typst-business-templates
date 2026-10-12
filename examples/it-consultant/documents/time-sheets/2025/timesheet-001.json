@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../../../schema/time-sheet.schema.json",
   "metadata": {
     "timesheet_number": "TS-2025-001",
     "period_start": {

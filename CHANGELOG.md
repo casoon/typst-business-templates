@@ -4,25 +4,59 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Breaking
+- **docgen and the Rust crate are discontinued.** The repository is now the Typst package
+  `business-templates` 0.1.0 in `templates/`, compiled with
+  [typstgen](https://github.com/casoon/typstgen). `cli/`, `src/`, the install script, the release
+  binaries and the `sys.inputs` adapters for docgen are removed. Client and project management,
+  numbering and `--encrypt` are not carried over.
+- **Diagrams** come from [chartlet](https://github.com/casoon/chartlet) instead of docgen's layout
+  code: the examples in `examples/diagrams/` are chartlet specs, rendered as SVG. The `diagram`
+  template is removed; mind map and quadrant become a tree and a scatter plot.
+- **`locale/` moved into the package** (`templates/locale/`).
+
 ### Added
-- **Typst package:** `templates/` is the Typst package `business-templates` 0.1.0 (`typst.toml`,
-  `lib.typ`), usable with typstgen or the typst CLI. Accounting templates are now functions
-  (`invoice(data:, company:)` …) with a small adapter for docgen; their output is unchanged.
+- **Typst package:** `typst.toml` and `lib.typ`; accounting templates are functions
+  (`invoice(data:, company:)` …), running-text documents take named parameters and a body
+- **Language from `company.json`:** the running-text templates and credentials load the labels for
+  `company.language` when no `locale` is passed (before, they fell back to English labels)
+- **Totals check:** invoice, offer, credit note and order confirmation stop the build when an item
+  total, the subtotal, the VAT or the total does not add up, to the cent
+- **§ 19 UStG note:** invoice and credit note print `default_terms.vat_note` from `company.json`
+  when `vat_exempt` is set; the old README promised this, but no template did it
+- **PDF metadata:** accounting documents set the document number as title, the company as author
+  and the document date, which PDF/A-3 needs for ZUGFeRD e-invoices
+- **JSON schemas** for every accounting document and `company.json` in `schema/`; the example files
+  reference them with `$schema`
+- **Examples** for every template, compiled with typstgen, including a ZUGFeRD invoice, a task list,
+  a handout and an architecture diagram in the documentation
+- **From casoon-data:** the letter takes its text as Typst content (headings, lists, tables), free
+  address `lines`, a `final` paragraph kept with the closing and a page header from page 2; a
+  recipient's company is not printed twice when it repeats the name; the offer prints the company
+  above the contact person, its project reference, and "Gesamtbetrag (netto)" without VAT; units
+  `tag`, `monat`, `jahr` take the plural for quantities other than 1
+- **Task list tags** are shown again below each task (removed in 0.6.10)
+- **`scripts/check.sh`** and a CI workflow on pull requests: compiles all examples and diagrams,
+  builds the e-invoices, validates the JSON and compares the locale keys
 
 ### Fixed
-- **Example documents that did not compile:** The it-consultant order confirmation, time sheet and SLA fixtures used wrong field names or unescaped `#`/`@` in Typst content; the contract template referenced an undefined `status`; the SLA template built its party names and addresses as content instead of values; the title page failed on `tags: none` (protocol)
-- **Delivery note printed Typst code:** The address block call was missing its `#`, so the note showed the raw call instead of the address
-- **Optional fields:** The order confirmation no longer requires `order_number` or `terms`, and document footers leave out the status line when no status is set
-- **Diagrams:** Nodes linked by both `parent` and an edge are placed once (the org chart was shifted and doubled), edge labels no longer pile up where edges share a node, and text and padding scale with the layout so labels stay inside their nodes. The org chart and mind map examples now have edges, the architecture example uses a 4:3 page
-- **Typed invoice API:** `compile_invoice` failed on the plain date strings and numeric VAT rate of `InvoiceData`; the templates now accept both these and the date/rate objects of the JSON files
-- **`docgen init`:** `locale/` and `.gitignore` were written into a nested `<name>/<name>/` folder
-- **Starter files:** `cli/templates/invoice.json`, `offer.json`, `credentials.json` and `concept.json` now match the template schemas and compile
-
-### Changed
-- **README:** The library needs no Typst installation, the `docgen` CLI does (all documents except diagrams); the library example compiles as written
-- **`CompanyContact`** implements `Default`
-- **CLI help:** Removed the references to the SQLite database and the interactive mode, which no longer exist; `docgen init` suggests `docgen build` as next step
-- **Crate homepage:** now https://casoon.github.io/typst-business-templates/
+- **Templates checked against casoon-data**, the production user of the old template copy: the
+  title pages of concept, documentation and protocol look as before the refactoring of January
+  2026 again (own page without header and footer, bold labels with colon, outlined tags, 24 pt
+  title); accounting documents no longer fail without `language` in `company.json` (default `de`);
+  the totals check accepts `totals.discount_total`
+- **Logo with the package:** `company.logo` may be image bytes; a path pointed into the package
+- **Task list** ignored a `company` passed to it (colours, logo, language)
+- **Reminder** failed on a numeric or missing `reminder_level` and on a fee given as string;
+  **credit note** failed on a salutation without introduction
+- **Example documents that did not compile:** the it-consultant order confirmation, time sheet
+  and SLA used wrong field names or unescaped `#`/`@`; the contract template referenced an
+  undefined `status`; the SLA template built party names as content; the title page failed on
+  `tags: none`
+- **Delivery note printed Typst code:** the address block call was missing its `#`
+- **Optional fields:** the order confirmation no longer requires `order_number` or `terms`, and
+  document footers leave out the status line when no status is set
+- **Letter example:** the subject was outside `metadata`, where the template does not read it
 
 ## [0.7.2] - 2026-05-07
 

@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/offer.schema.json",
+  "title": "Offer",
+  "description": "Data for the offer template (templates/offer/default.typ).",
+  "type": "object",
+  "required": [
+    "metadata",
+    "recipient",
+    "items",
+    "totals",
+    "terms"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URI of this schema, for editor support. Ignored by the templates."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Offer header data.",
+      "required": [
+        "offer_number",
+        "offer_date"
+      ],
+      "properties": {
+        "offer_number": {
+          "type": "string",
+          "description": "Unique offer number."
+        },
+        "offer_date": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Offer date."
+        },
+        "valid_until": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Date until which the offer is valid, shown in the header."
+        },
+        "customer_number": {
+          "type": "string",
+          "description": "Customer number shown in the header."
+        },
+        "show_footer": {
+          "type": "boolean",
+          "description": "Set to false to hide the company footer. Default: true."
+        },
+        "project_reference": {
+          "type": "string",
+          "description": "Project, printed as \"Projekt:\" in the metadata box."
+        }
+      }
+    },
+    "recipient": {
+      "$ref": "common.schema.json#/$defs/recipient",
+      "description": "Recipient shown in the DIN 5008 address window."
+    },
+    "salutation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Opening of the letter. Omitted if absent or null.",
+      "required": [
+        "greeting"
+      ],
+      "properties": {
+        "greeting": {
+          "type": "string",
+          "description": "Greeting line, e.g. \"Sehr geehrte Frau Schmidt,\"."
+        },
+        "introduction": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Introductory sentence below the greeting."
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "Offer line items.",
+      "items": {
+        "type": "object",
+        "required": [
+          "position",
+          "title",
+          "description",
+          "quantity",
+          "unit",
+          "unit_price",
+          "total"
+        ],
+        "properties": {
+          "position": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Position number shown in the first column."
+          },
+          "title": {
+            "type": "string",
+            "description": "Item title, printed in bold."
+          },
+          "description": {
+            "type": "string",
+            "description": "Item description below the title."
+          },
+          "quantity": {
+            "$ref": "common.schema.json#/$defs/decimal",
+            "description": "Quantity, printed as given."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit. The codes stueck, stunde, tag, monat, jahr, pauschale, kg, meter, kilometer, liter, karton, palette are abbreviated; any other text is printed as is."
+          },
+          "unit_price": {
+            "$ref": "#/$defs/amount",
+            "description": "Net price per unit."
+          },
+          "total": {
+            "$ref": "#/$defs/amount",
+            "description": "Net line total. The build stops if it differs from quantity × unit price by a cent or more."
+          },
+          "sub_items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Detail lines printed below the description, joined with bullets. A leading \"- \" is stripped."
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "description": "Precomputed totals; the template does not calculate them.",
+      "required": [
+        "subtotal",
+        "total"
+      ],
+      "properties": {
+        "subtotal": {
+          "$ref": "#/$defs/amount",
+          "description": "Net total."
+        },
+        "vat_breakdown": {
+          "type": "array",
+          "description": "VAT per rate. Empty without VAT (e.g. Kleinunternehmer): then only the total is printed.",
+          "items": {
+            "type": "object",
+            "required": [
+              "rate",
+              "amount"
+            ],
+            "properties": {
+              "rate": {
+                "$ref": "common.schema.json#/$defs/vat_rate",
+                "description": "The VAT rate of this group."
+              },
+              "base": {
+                "$ref": "common.schema.json#/$defs/money",
+                "description": "Net amount this rate applies to. Not rendered."
+              },
+              "amount": {
+                "$ref": "#/$defs/amount",
+                "description": "VAT amount for this rate."
+              }
+            }
+          }
+        },
+        "vat_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Sum of all VAT amounts. Not rendered."
+        },
+        "total": {
+          "$ref": "#/$defs/amount",
+          "description": "Gross total. Without VAT rows it is printed as \"Gesamtbetrag (netto)\"."
+        },
+        "discount_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Discount on the subtotal. Not printed; the total check expects total = subtotal − discount + VAT."
+        }
+      }
+    },
+    "terms": {
+      "type": "object",
+      "description": "Offer terms printed after the totals.",
+      "required": [
+        "validity"
+      ],
+      "properties": {
+        "validity": {
+          "type": "string",
+          "description": "Validity sentence, e.g. \"Dieses Angebot ist gültig bis zum 15.02.2025\"."
+        },
+        "payment_terms": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Payment terms."
+        },
+        "delivery_terms": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Delivery terms."
+        },
+        "additional_terms": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "General terms and conditions, printed as a numbered list on a separate page."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "amount": {
+      "description": "An amount in object form. The templates read `.amount`, so a plain number is not accepted here.",
+      "allOf": [
+        {
+          "$ref": "common.schema.json#/$defs/money"
+        },
+        {
+          "type": "object",
+          "required": [
+            "amount"
+          ]
+        }
+      ]
+    }
+  }
+}

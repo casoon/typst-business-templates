@@ -131,6 +131,16 @@
   if company != none and "language" in company { company.language } else { "de" }
 }
 
+// company.logo is a path from the project root ("data/logo.png") or the image bytes
+// (`read("/data/logo.png", encoding: none)`). A path only resolves when the templates sit
+// in the project; imported as a package, the logo must be given as bytes.
+// The bundled translations for company.language, unless a locale dictionary is given.
+#let load-locale(locale, company) = if locale != none { locale } else {
+  json("../locale/" + get-language(company) + ".json")
+}
+
+#let logo-source(logo) = if type(logo) == str { "/" + logo } else { logo }
+
 #let color-secondary = rgb("#34495e")
 #let color-text = rgb("#2c3e50")
 #let color-text-light = rgb("#7f8c8d")

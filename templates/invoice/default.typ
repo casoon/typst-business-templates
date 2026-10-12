@@ -1,16 +1,19 @@
 // Invoice Template (Rechnung) - CASOON Layout
 // Based on casoon-documents simple.typ template
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
-#import "../common/formatting.typ": format_german_date, format_money
+#import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, invoice-metadata
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, vat-exemption-note, check-totals
 
-/// Renders the document. `data` has the shape of the docgen JSON file,
+/// Renders the document. `data` is described by schema/invoice.schema.json,
 /// `company` that of company.json.
 #let invoice(data: none, company: none) = [
+#check-totals(data)
+#set document(..document-metadata(company, data.metadata.at("invoice_number", default: none), data.metadata.at("invoice_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
@@ -23,7 +26,7 @@
 #set text(
   font: "Helvetica",
   size: 10pt,
-  lang: company.language
+  lang: get-language(company)
 )
 
 // ============================================================================
@@ -119,7 +122,7 @@
       [#item.position],
       [#item.description],
       [#item.quantity],
-      format-unit(item.unit),
+      format-unit(item.unit, quantity: item.quantity),
       [#item.vat_rate.percentage%],
       [#format_money(item.unit_price.amount)],
       [#text(weight: "bold")[#format_money(item.total.amount)]],
@@ -173,6 +176,13 @@
   #set text(size: 10pt, font: "Helvetica")
   #set par(leading: 0.65em)
 
+  #let vat-note = vat-exemption-note(company)
+  #if vat-note != none [
+    #vat-note
+
+    #v(8pt)
+  ]
+
   Zahlbar ohne Abzug bis zum #format_german_date(data.payment.due_date).
 
   #v(8pt)
@@ -192,8 +202,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  invoice(data: json(sys.inputs.data), company: json("/data/company.json"))
-}
