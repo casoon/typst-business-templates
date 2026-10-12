@@ -1,157 +1,99 @@
 # Examples
 
-This directory contains example projects and template references.
+Example projects that use the Typst package `business-templates` with
+[typstgen](https://github.com/casoon/typstgen).
 
-## Example Projects
+| Directory | Business | Documents |
+|-----------|----------|-----------|
+| [digitalagentur/](digitalagentur/) | Web agency (Cologne) | Invoice, offer, credentials, concept, documentation |
+| [freelance-designer/](freelance-designer/) | Graphic designer, Kleinunternehmer without VAT (Hamburg) | Invoice, offer, credentials, concept, documentation |
+| [it-consultant/](it-consultant/) | IT consulting (Berlin) | All document types |
+| `diagram-*/` | Diagram layouts | One diagram each |
 
-Complete, self-contained example projects for different business types. Each project has its own `data/`, `documents/`, `templates/`, `locale/`, and `output/` directories - just like a real project created with `docgen init`.
+## Compile
 
-| Directory | Business Type | Documents |
-|-----------|--------------|-----------|
-| [digitalagentur/](digitalagentur/) | Web Agency (Cologne) | 5 documents (Invoice, Offer, Credentials, Concept, Documentation) |
-| [freelance-designer/](freelance-designer/) | Graphic Designer, Kleinunternehmer (Hamburg) | 3 documents (Invoice, Offer, Credentials) |
-| [it-consultant/](it-consultant/) | IT Consulting (Berlin) | 3 documents (Invoice, Offer, Credentials) |
-
-Each project is **fully functional** and can be used as a template for your own projects.
-
-### Usage
-
-Each example project is self-contained - just like a real project created with `docgen init`.
-
-**Initialize templates (first time only):**
-```bash
-cd examples/digitalagentur
-docgen template init
-```
-
-**Compile all documents:**
-```bash
-docgen build
-```
-
-**Compile specific documents:**
-```bash
-# JSON-based documents
-docgen compile documents/invoices/2025/invoice.json
-docgen compile documents/offers/2025/offer.json
-docgen compile documents/credentials/2025/credentials.json
-
-# .typ documents (digitalagentur only)
-docgen compile documents/concepts/2025/concept.typ
-docgen compile documents/documentation/2025/documentation.typ
-```
-
-**Note:** Templates are automatically updated when you run `docgen compile` or `docgen build`.
-
-### PDF Encryption
-
-Generate password-protected PDFs using the `--encrypt` flag:
+Each project has its own `typstgen.toml`, so run typstgen inside the project folder. The PDF is
+written next to its source.
 
 ```bash
-docgen compile examples/digitalagentur/data/invoice.json --encrypt
+cd examples/it-consultant
+typstgen compile documents/invoices/2025/invoice.typ
 ```
 
-You will be prompted for:
-- **Password** (with confirmation)
-- **Allow printing** (default: yes)
-- **Allow copying text/images** (default: no)
-- **Allow modifications** (default: no)
+All documents of a project:
 
-**Example file:** [digitalagentur/output/credentials-encrypted.pdf](digitalagentur/output/credentials-encrypted.pdf) (Password: `test123`)
-
-**Generate your own:**
 ```bash
-docgen compile examples/digitalagentur/data/credentials.json -o examples/digitalagentur/output/credentials-encrypted.pdf --encrypt
+find documents -name '*.typ' -exec typstgen compile {} \;
 ```
 
-> Requires `qpdf` installed: `brew install qpdf` (macOS) or `apt install qpdf` (Linux)
+## E-invoice (ZUGFeRD / Factur-X)
 
-## Direct .typ Documents (Project-Local Templates)
+typstgen embeds the invoice data as `factur-x.xml` (EN 16931), built from the same JSON the
+template renders. PDF/A-3 needs a document date, hence `--creation-timestamp`:
 
-The digitalagentur example project demonstrates writing documents directly in Typst syntax using project-local templates - perfect for concept documents and documentation.
-
-### How It Works
-
-1. **Initialize project templates (one-time):**
 ```bash
-cd examples/digitalagentur
-docgen template init
+cd examples/it-consultant
+typstgen compile documents/invoices/2025/invoice.typ \
+  --zugferd documents/invoices/2025/invoice.json --company data/company.json \
+  --pdf-standard a-3b --creation-timestamp "$(date +%s)"
 ```
 
-2. **Write .typ documents with local template imports:**
-```typ
-#import "/.docgen/templates/concept/default.typ": concept
+See the [typstgen e-invoice guide](https://casoon.github.io/typstgen/docs/guides/e-invoices/) for the field mapping and
+VAT codes.
 
-// Load company and locale from project root (absolute paths)
-#let company = json("/data/company.json")
-#let locale = json("/locale/de.json")
+## Project layout
+
+```
+it-consultant/
+├── typstgen.toml        # project folder = root for /data/…, package path, fonts
+├── data/
+│   └── company.json     # company data, branding and language for every document
+└── documents/
+    ├── invoices/2025/
+    │   ├── invoice.json # the invoice data
+    │   └── invoice.typ  # loads the JSON and calls the template
+    └── concepts/2025/
+        └── concept.typ  # written in Typst directly
+```
+
+Accounting documents (invoice, offer, credit note, reminder, delivery note, order confirmation,
+quotation request, time sheet, letter, credentials) keep their data in JSON, and a short `.typ`
+file passes it to the template:
+
+```typst
+#import "@local/business-templates:0.1.0": invoice
+
+#invoice(
+  data: json("invoice.json"),
+  company: json("/data/company.json"),
+)
+```
+
+Running text (concept, documentation, contract, proposal, protocol, SLA, specification) is written
+in Typst with the template as a show rule:
+
+```typst
+#import "@local/business-templates:0.1.0": concept
 
 #show: concept.with(
-  title: "E-Commerce Shop für Biobauernhof",
-  document_number: "KO-2025-001",
-  client_name: "Hofbauer's Biohof",
-  project_name: "Onlineshop Entwicklung",
-  version: "1.0",
-  status: "final",
-  company: company,
-  locale: locale,
+  title: "IT-Security Konzept",
+  document_number: "KO-2025-003",
+  company: json("/data/company.json"),
 )
 
-= Projektziel
-
-Entwicklung eines professionellen E-Commerce Shops...
+= Ausgangssituation
+…
 ```
 
-3. **Compile:**
-```bash
-cd examples/digitalagentur
-docgen compile documents/concepts/2025/concept.typ
+Labels come in the language set in `company.json` (`"language": "de"`). A logo is passed as image
+bytes, because a path inside the package would point into the package:
+
+```typst
+#let company = json("/data/company.json")
+#company.insert("logo", read("/data/logo.png", encoding: none))
 ```
 
-Templates are automatically updated to match your docgen version when you compile.
+## Use an example for your own business
 
-See the [digitalagentur example](digitalagentur/) for complete working examples of concept and documentation .typ files.
-
-### Benefits of .typ Documents
-
-| Feature | JSON + content_file | Direct .typ |
-|---------|-------------------|-------------|
-| **File count** | 2 files (JSON + .typ) | 1 file |
-| **Typst features** | Limited | Full (math, references, custom layouts) |
-| **Version control** | Split across files | Single file |
-| **Best for** | Invoices, offers, credentials | Concepts, documentation, reports |
-
-### Template Commands
-
-```bash
-# Initialize project templates (one-time)
-docgen template init
-
-# List available templates
-docgen template list
-
-# Update standard templates (normally automatic)
-docgen template update
-
-# Fork a template for customization
-docgen template fork concept --name my-custom-concept
-```
-
-### Template Locations
-
-Templates are stored in your project directory for maximum portability:
-
-| Directory | Purpose | Git |
-|-----------|---------|-----|
-| `.docgen/templates/` | Standard templates (auto-updated) | Ignored |
-| `templates/` | Custom templates (stable) | Committed |
-
-## Learn More
-
-For detailed information about each example project, see their respective README files:
-
-- [digitalagentur/README.md](digitalagentur/README.md) - Web agency with full workflow demonstration
-- [freelance-designer/README.md](freelance-designer/README.md) - Kleinunternehmer setup without VAT
-- [it-consultant/README.md](it-consultant/README.md) - Regular business with 19% VAT
-
-For template customization and usage instructions, see the [main README](../README.md).
+Copy a project folder, set `package_path` and `font_paths` in its `typstgen.toml` to your
+locations, and edit `data/company.json`.

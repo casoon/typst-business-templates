@@ -7,7 +7,8 @@
 /// Renders the document. `data` has the shape of the docgen JSON file,
 /// `company` that of company.json (a logo goes in `_logo_image` as an image),
 /// `locale` that of locale/<lang>.json.
-#let credentials(data: none, company: (:), locale: (common: (:), credentials: (:))) = [
+#let credentials(data: none, company: (:), locale: none) = [
+#let locale = load-locale(locale, company)
 // Get branding from company data
 #let accent-color = get-accent-color(company)
 #let fonts = get-font-preset(company)
@@ -295,8 +296,8 @@
   // Load logo image if logo path is specified
   if "logo" in company and company.logo != none {
     let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
-    company.insert("_logo_image", image("/" + company.logo, width: logo-width))
+    company.insert("_logo_image", image(logo-source(company.logo), width: logo-width))
   }
-  let locale = if "locale" in sys.inputs { json(sys.inputs.locale) } else { (common: (:), credentials: (:)) }
+  let locale = if "locale" in sys.inputs { json(sys.inputs.locale) } else { none }
   credentials(data: json(sys.inputs.data), company: company, locale: locale)
 }

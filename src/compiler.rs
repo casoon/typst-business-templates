@@ -10,7 +10,7 @@ use crate::world::DocgenWorld;
 pub static TEMPLATES: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/templates");
 
 /// Locale JSON files, embedded at compile time
-pub static LOCALE: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/locale");
+pub static LOCALE: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/templates/locale");
 
 /// Bundled Google Fonts, embedded at compile time
 pub static FONTS: Dir<'static> = include_dir!("$CARGO_MANIFEST_DIR/fonts");

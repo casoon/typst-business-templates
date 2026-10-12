@@ -41,7 +41,7 @@
 ) = {
   // Use passed company/locale or empty defaults
   let company = if company != none { company } else { (:) }
-  let locale = if locale != none { locale } else { (common: (:), documentation: (:)) }
+  let locale = load-locale(locale, company)
   
   // Get branding from company data
   let accent-color = get-accent-color(company)
@@ -222,7 +222,7 @@
   // Load logo image if logo path is specified
   if "logo" in c and c.logo != none {
     let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
+    c.insert("_logo_image", image(logo-source(c.logo), width: logo-width))
   }
   c
 } else {

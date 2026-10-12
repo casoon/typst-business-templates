@@ -6,7 +6,7 @@
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, invoice-metadata
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, vat-exemption-note
 
 /// Renders the document. `data` has the shape of the docgen JSON file,
 /// `company` that of company.json.
@@ -172,6 +172,13 @@
 #block[
   #set text(size: 10pt, font: "Helvetica")
   #set par(leading: 0.65em)
+
+  #let vat-note = vat-exemption-note(company)
+  #if vat-note != none [
+    #vat-note
+
+    #v(8pt)
+  ]
 
   Zahlbar ohne Abzug bis zum #format_german_date(data.payment.due_date).
 

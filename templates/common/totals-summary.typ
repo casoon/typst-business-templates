@@ -203,3 +203,10 @@
     )
   ]
 }
+
+/// The VAT exemption note from company.default_terms (e.g. § 19 UStG for a Kleinunternehmer),
+/// or none if the company charges VAT.
+#let vat-exemption-note(company) = {
+  let terms = company.at("default_terms", default: (:))
+  if terms.at("vat_exempt", default: false) { terms.at("vat_note", default: none) }
+}

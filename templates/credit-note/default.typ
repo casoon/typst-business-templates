@@ -6,7 +6,7 @@
 #import "../common/accounting-header.typ": accounting-header, credit-note-metadata
 #import "../common/footers.typ": accounting-footer
 #import "../common/unit-formatter.typ": format-unit
-#import "../common/totals-summary.typ": invoice-totals
+#import "../common/totals-summary.typ": invoice-totals, vat-exemption-note
 
 /// Renders the document. `data` has the shape of the docgen JSON file,
 /// `company` that of company.json.
@@ -123,6 +123,13 @@
 // Closing
 #block[
   #set text(size: 10pt, font: "Helvetica")
+
+  #let vat-note = vat-exemption-note(company)
+  #if vat-note != none [
+    #vat-note
+
+    #v(8pt)
+  ]
 
   Der Gutschriftsbetrag wird Ihrem Konto gutgeschrieben.
 

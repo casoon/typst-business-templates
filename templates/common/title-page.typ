@@ -32,7 +32,7 @@
     #if company != none and "_logo_image" in company [
       #company._logo_image
     ] else if company != none and "logo" in company and company.logo != none [
-      #image("/" + company.logo, width: 150pt)
+      #image(logo-source(company.logo), width: 150pt)
     ]
   ]
   
@@ -131,7 +131,7 @@
     ] else if company != none and "_logo_image" in company [
       #company._logo_image
     ] else if company != none and "logo" in company and company.logo != none [
-      #image("/" + company.logo, width: 150pt)
+      #image(logo-source(company.logo), width: 150pt)
     ]
   ]
   
@@ -249,7 +249,7 @@
     ] else if company != none and "_logo_image" in company [
       #company._logo_image
     ] else if company != none and "logo" in company and company.logo != none [
-      #image("/" + company.logo, width: 150pt)
+      #image(logo-source(company.logo), width: 150pt)
     ]
   ]
   
@@ -399,7 +399,7 @@
     ] else if company != none and "_logo_image" in company [
       #company._logo_image
     ] else if company != none and "logo" in company and company.logo != none [
-      #image("/" + company.logo, width: 150pt)
+      #image(logo-source(company.logo), width: 150pt)
     ]
   ]
   

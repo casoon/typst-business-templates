@@ -2,6 +2,7 @@
 // Reusable header with logo and metadata box for DIN 5008 business documents
 
 #import "formatting.typ": format_german_date
+#import "styles.typ": logo-source
 
 /// Renders a DIN 5008-compliant accounting header with logo and metadata box
 ///
@@ -35,7 +36,7 @@
     dx: 0pt,
     dy: 0pt,
     if company != none and "logo" in company and company.logo != none [
-      #image("/" + company.logo, width: 150pt)
+      #image(logo-source(company.logo), width: 150pt)
     ] else [
       #box(
         width: 150pt,

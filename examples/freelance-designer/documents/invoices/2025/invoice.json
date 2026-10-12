@@ -39,7 +39,7 @@
         "currency": "EUR"
       },
       "vat_rate": {
-        "code": "Kleinunternehmer",
+        "code": "SmallBusiness", "exemption_reason": "Kleinunternehmer gemäß § 19 UStG",
         "percentage": "0"
       },
       "total": {
@@ -63,7 +63,7 @@
         "currency": "EUR"
       },
       "vat_rate": {
-        "code": "Kleinunternehmer",
+        "code": "SmallBusiness", "exemption_reason": "Kleinunternehmer gemäß § 19 UStG",
         "percentage": "0"
       },
       "total": {
@@ -88,7 +88,7 @@
         "currency": "EUR"
       },
       "vat_rate": {
-        "code": "Kleinunternehmer",
+        "code": "SmallBusiness", "exemption_reason": "Kleinunternehmer gemäß § 19 UStG",
         "percentage": "0"
       },
       "total": {
@@ -112,7 +112,7 @@
         "currency": "EUR"
       },
       "vat_rate": {
-        "code": "Kleinunternehmer",
+        "code": "SmallBusiness", "exemption_reason": "Kleinunternehmer gemäß § 19 UStG",
         "percentage": "0"
       },
       "total": {

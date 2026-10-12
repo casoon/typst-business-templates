@@ -1,8 +1,7 @@
-#import "/.docgen/templates/documentation/default.typ": documentation
+#import "@local/business-templates:0.1.0": documentation
 
-// Load company and locale from project root (absolute paths)
+// Company data from the example project
 #let company = json("/data/company.json")
-#let locale = json("/locale/de.json")
 
 #show: documentation.with(
   title: "WordPress Benutzerhandbuch",
@@ -17,7 +16,6 @@
   tags: ("WordPress", "CMS", "Anleitung"),
   authors: ("Pixelwerk Digitalagentur",),
   company: company,
-  locale: locale,
 )
 = Einführung
 

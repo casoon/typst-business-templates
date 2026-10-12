@@ -26,3 +26,6 @@ Thumbs.db
 *.tar.gz
 .docgen/
 !site/public/showcase/*.pdf
+
+# Local task tracking
+plan/

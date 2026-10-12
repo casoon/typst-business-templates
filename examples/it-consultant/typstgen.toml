@@ -1,0 +1,6 @@
+# Run typstgen from this folder: it is the root for absolute paths like /data/company.json.
+template_paths = ["."]
+# The package `business-templates` from this repository (packages/local/business-templates/0.1.0
+# links to templates/). In your own project, point this at your Typst package directory.
+package_path = "../../packages"
+font_paths = ["../../fonts"]

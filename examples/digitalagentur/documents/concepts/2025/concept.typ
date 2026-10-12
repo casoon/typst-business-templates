@@ -1,8 +1,7 @@
-#import "/.docgen/templates/concept/default.typ": concept
+#import "@local/business-templates:0.1.0": concept
 
-// Load company and locale from project root (absolute paths)
+// Company data from the example project
 #let company = json("/data/company.json")
-#let locale = json("/locale/de.json")
 
 #show: concept.with(
   title: "Online-Shop Konzept Bio-Hofladen",
@@ -14,7 +13,6 @@
   tags: ("E-Commerce", "Shopware", "Bio", "Regional"),
   created_at: "2025-01-15",
   company: company,
-  locale: locale,
 )
 
 = Ausgangssituation

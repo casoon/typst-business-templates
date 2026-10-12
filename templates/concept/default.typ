@@ -47,13 +47,13 @@
     // Pre-load logo image if logo path is specified (for package-import mode)
     if "logo" in company and company.logo != none and "_logo_image" not in company {
       let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
-      company.insert("_logo_image", image("/" + company.logo, width: logo-width))
+      company.insert("_logo_image", image(logo-source(company.logo), width: logo-width))
     }
     company
   } else { 
     (:) 
   }
-  let locale = if locale != none { locale } else { (common: (:), concept: (:)) }
+  let locale = load-locale(locale, company)
   
   // Get branding from company data
   let accent-color = get-accent-color(company)
@@ -204,7 +204,7 @@
   // Load logo image if logo path is specified
   if "logo" in c and c.logo != none {
     let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image("/" + c.logo, width: logo-width))
+    c.insert("_logo_image", image(logo-source(c.logo), width: logo-width))
   }
   c
 } else {
