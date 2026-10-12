@@ -2,13 +2,14 @@
 // Multi-level payment reminder system
 
 #import "../common/footers.typ": accounting-footer
-#import "../common/formatting.typ": format_german_date, format_money
+#import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, reminder-metadata
 
 /// Renders the document. `data` has the shape of the docgen JSON file,
 /// `company` that of company.json.
 #let reminder(data: none, company: none) = [
+#set document(..document-metadata(company, data.metadata.at("reminder_number", default: none), data.metadata.at("date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(

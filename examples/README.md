@@ -29,13 +29,13 @@ find documents -name '*.typ' -exec typstgen compile {} \;
 ## E-invoice (ZUGFeRD / Factur-X)
 
 typstgen embeds the invoice data as `factur-x.xml` (EN 16931), built from the same JSON the
-template renders. PDF/A-3 needs a document date, hence `--creation-timestamp`:
+template renders. The template sets the invoice date as document date, which PDF/A-3 requires:
 
 ```bash
 cd examples/it-consultant
 typstgen compile documents/invoices/2025/invoice.typ \
   --zugferd documents/invoices/2025/invoice.json --company data/company.json \
-  --pdf-standard a-3b --creation-timestamp "$(date +%s)"
+  --pdf-standard a-3b
 ```
 
 See the [typstgen e-invoice guide](https://casoon.github.io/typstgen/docs/guides/e-invoices/) for the field mapping and

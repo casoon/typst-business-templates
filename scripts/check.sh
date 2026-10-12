@@ -27,7 +27,7 @@ for project in it-consultant digitalagentur freelance-designer; do
 
   invoice=documents/invoices/2025/invoice
   if typstgen compile "$invoice.typ" -o "$tmp/out.pdf" --zugferd "$invoice.json" \
-    --company data/company.json --pdf-standard a-3b --creation-timestamp 0 >/dev/null 2>"$tmp/err"; then
+    --company data/company.json --pdf-standard a-3b >/dev/null 2>"$tmp/err"; then
     echo "ok   $project/$invoice.typ (ZUGFeRD)"
   else
     fail "$project/$invoice.typ (ZUGFeRD)"
