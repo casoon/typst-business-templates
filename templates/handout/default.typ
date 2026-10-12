@@ -7,7 +7,7 @@
 //   Page 2+: Schülerblatt (student material) — visually engaging
 //
 // USAGE (Package Import):
-//   #import "@local/docgen-handout:0.4.2": handout
+//   #import "@local/business-templates:0.1.0": handout
 //   #show: handout.with(
 //     title: "Argumentationsanalyse im KI-Zeitalter",
 //     handout-type: "Aufgabenblatt",
@@ -577,56 +577,3 @@
     #text(size: size-small, style: "italic", fill: rgb("#64748b"))[— #quelle]
   ]
 ]
-
-// ============================================================================
-// JSON-BASED USAGE (via docgen CLI)
-// ============================================================================
-
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-#let _company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 120pt }
-    c.insert("_logo_image", image(logo-source(c.logo), width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let _locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  none
-}
-
-#if data != none {
-  let content-body = if "content_file" in data {
-    include(data.content_file)
-  } else if "content" in data and "markdown" in data.content {
-    eval(data.content.markdown, mode: "markup")
-  } else {
-    []
-  }
-
-  handout(
-    title: data.metadata.title,
-    handout-type: if "handout_type" in data.metadata { data.metadata.handout_type } else { "Aufgabenblatt" },
-    category: if "category" in data.metadata { data.metadata.category } else { none },
-    subject: if "subject" in data.metadata { data.metadata.subject } else { none },
-    target-group: if "target_group" in data.metadata { data.metadata.target_group } else { "Oberstufe" },
-    ai-context: if "ai_context" in data.metadata { data.metadata.ai_context } else { none },
-    competencies: if "competencies" in data.metadata { data.metadata.competencies } else { () },
-    duration: if "duration" in data.metadata { data.metadata.duration } else { none },
-    materials: if "materials" in data.metadata { data.metadata.materials } else { () },
-    version: if "version" in data.metadata { data.metadata.version } else { "1.0" },
-    company: _company,
-    locale: _locale,
-    content-body
-  )
-}

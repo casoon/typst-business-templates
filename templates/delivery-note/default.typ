@@ -162,8 +162,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the path of the JSON file in sys.inputs.
-#if "data" in sys.inputs {
-  delivery-note(data: json(sys.inputs.data), company: json("/data/company.json"))
-}

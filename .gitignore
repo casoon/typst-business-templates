@@ -1,14 +1,6 @@
-# Generated files (except output folders)
+# Compiled documents (the website showcase is committed)
 *.pdf
-!output/*.pdf
-!examples/*/output/*.pdf
-
-# Rust
-/target/
-/cli/target/
-
-# Database
-*.db
+!site/public/showcase/*.pdf
 
 # OS
 .DS_Store
@@ -24,8 +16,9 @@ Thumbs.db
 *.tmp
 *.bak
 *.tar.gz
-.docgen/
-!site/public/showcase/*.pdf
 
 # Local task tracking
 plan/
+
+# Left behind by the former docgen CLI
+.docgen/

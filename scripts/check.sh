@@ -37,6 +37,13 @@ for project in it-consultant digitalagentur freelance-designer; do
   fi
 done
 
+cd "$repo/examples/handout"
+if typstgen compile aufgabenblatt.typ -o "$tmp/out.pdf" >/dev/null 2>"$tmp/err"; then
+  echo "ok   handout/aufgabenblatt.typ"
+else
+  fail "handout/aufgabenblatt.typ"
+fi
+
 cd "$repo/examples/diagrams"
 for source in *.typ; do
   if typstgen compile "$source" -o "$tmp/out.pdf" >/dev/null 2>"$tmp/err"; then

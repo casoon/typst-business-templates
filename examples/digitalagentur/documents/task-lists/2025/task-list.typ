@@ -1,4 +1,4 @@
-#import "default.typ": task-list
+#import "@local/business-templates:0.1.0": task-list
 
 // Einfaches Beispiel für eine Aufgabenliste
 #task-list(
@@ -7,6 +7,7 @@
   project: "Website Redesign",
   client: "Acme Corporation",
   document-number: "DOC-2026-001",
+  company: json("/data/company.json"),
   
   categories: (
     (

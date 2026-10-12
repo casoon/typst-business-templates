@@ -4,41 +4,7 @@
 
 #import "../common/styles.typ": *
 #import "../common/title-page.typ": standard-title-page
-
-// Load data from JSON input (only if available)
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-// Load company and locale from sys.inputs (passed by docgen CLI)
-#let company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  // Load logo image if logo path is specified
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image(logo-source(c.logo), width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  (common: (:))
-}
-
-// Get branding from company data
-#let accent-color = get-accent-color(company)
-#let fonts = get-font-preset(company)
-
-// Locale helpers with fallbacks
-#let l-page = if "common" in locale and "page" in locale.common { locale.common.page } else { "Seite" }
-#let l-project = if "common" in locale and "project" in locale.common { locale.common.project } else { "Projekt" }
-#let l-client = if "common" in locale and "client" in locale.common { locale.common.client } else { "Kunde" }
+#import "../common/locale-helpers.typ": get-locale-string
 
 // Template function
 #let task-list(
@@ -50,8 +16,9 @@
   document-number: none,
   created: datetime.today().display("[day].[month].[year]"),
   
-  // Company info (optional, will be overridden by JSON workflow)
-  company: company,
+  // company.json and translations (default: the language in company.json)
+  company: none,
+  locale: none,
   
   // Display options
   show-title-page: true,
@@ -64,7 +31,18 @@
   
   body
 ) = {
-  
+  let company = if company != none { company } else { (:) }
+  if "logo" in company and company.logo != none and "_logo_image" not in company {
+    let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
+    company.insert("_logo_image", image(logo-source(company.logo), width: logo-width))
+  }
+  let locale = load-locale(locale, company)
+  let accent-color = get-accent-color(company)
+  let fonts = get-font-preset(company)
+  let l-page = get-locale-string(locale, "common", "page", "Seite")
+  let l-project = get-locale-string(locale, "common", "project", "Projekt")
+  let l-client = get-locale-string(locale, "common", "client", "Kunde")
+
   // Page setup with header/footer
   set page(
     paper: "a4",

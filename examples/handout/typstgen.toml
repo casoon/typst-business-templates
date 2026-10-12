@@ -1,0 +1,4 @@
+# Run typstgen from this folder. The package comes from this repository.
+template_paths = ["."]
+package_path = "../../packages"
+font_paths = ["../../fonts"]

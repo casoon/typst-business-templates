@@ -16,13 +16,6 @@
 #import "../common/styles.typ": *
 #import "../common/title-page.typ": document-title-page
 
-// Load data from JSON input (only if available for JSON workflow)
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
 // Document function for flexible use
 #let concept(
   title: none,
@@ -188,67 +181,4 @@
   // ============================================================================
 
   body
-}
-
-// For JSON-based usage (via docgen CLI)
-// Only load from sys.inputs when "data" is present (JSON workflow)
-#let data = if "data" in sys.inputs {
-  json(sys.inputs.data)
-} else {
-  none
-}
-
-// Only load company/locale when in JSON workflow (data != none)
-#let _company = if data != none and "company" in sys.inputs {
-  let c = json(sys.inputs.company)
-  // Load logo image if logo path is specified
-  if "logo" in c and c.logo != none {
-    let logo-width = if "logo_width" in c { eval(c.logo_width) } else { 150pt }
-    c.insert("_logo_image", image(logo-source(c.logo), width: logo-width))
-  }
-  c
-} else {
-  none
-}
-
-#let _locale = if data != none and "locale" in sys.inputs {
-  json(sys.inputs.locale)
-} else {
-  none
-}
-
-#if data != none {
-  let created-date = if "created_at" in data.metadata {
-    if type(data.metadata.created_at) == dictionary and "date" in data.metadata.created_at {
-      data.metadata.created_at.date
-    } else {
-      data.metadata.created_at
-    }
-  } else {
-    none
-  }
-  
-  let content-body = if "content_file" in data {
-    include(data.content_file)
-  } else if "content" in data {
-    eval(data.content, mode: "markup")
-  } else {
-    []
-  }
-  
-  concept(
-    title: data.metadata.title,
-    document_number: data.metadata.document_number,
-    client_name: data.metadata.client_name,
-    project_name: data.metadata.project_name,
-    version: if "version" in data.metadata { data.metadata.version } else { "1.0" },
-    status: if "status" in data.metadata { data.metadata.status } else { "Entwurf" },
-    tags: if "tags" in data.metadata { data.metadata.tags } else { () },
-    created_at: created-date,
-    authors: if "authors" in data.metadata { data.metadata.authors } else { () },
-    show_toc: if "show_toc" in data.metadata { data.metadata.show_toc } else { true },
-    company: _company,
-    locale: _locale,
-    content-body
-  )
 }

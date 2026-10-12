@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v7
 
       # The showcase PDFs and WebP previews in site/public/showcase/ are committed
-      # (site/scripts/render-showcase.sh builds them with docgen), so no Rust toolchain here.
+      # (site/scripts/render-showcase.sh builds them with typstgen and chartlet), so no tools here.
 
       # Project repos have no package.json at the root, so the pnpm version is set here.
       - uses: pnpm/action-setup@v6

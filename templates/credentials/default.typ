@@ -289,15 +289,3 @@
   ]
 ]
 ]
-
-// docgen: the CLI passes the paths of the JSON files in sys.inputs.
-#if "data" in sys.inputs {
-  let company = json(sys.inputs.company)
-  // Load logo image if logo path is specified
-  if "logo" in company and company.logo != none {
-    let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
-    company.insert("_logo_image", image(logo-source(company.logo), width: logo-width))
-  }
-  let locale = if "locale" in sys.inputs { json(sys.inputs.locale) } else { none }
-  credentials(data: json(sys.inputs.data), company: company, locale: locale)
-}
