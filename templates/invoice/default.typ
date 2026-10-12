@@ -1,6 +1,7 @@
 // Invoice Template (Rechnung) - CASOON Layout
 // Based on casoon-documents simple.typ template
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -25,7 +26,7 @@
 #set text(
   font: "Helvetica",
   size: 10pt,
-  lang: company.language
+  lang: get-language(company)
 )
 
 // ============================================================================
@@ -121,7 +122,7 @@
       [#item.position],
       [#item.description],
       [#item.quantity],
-      format-unit(item.unit),
+      format-unit(item.unit, quantity: item.quantity),
       [#item.vat_rate.percentage%],
       [#format_money(item.unit_price.amount)],
       [#text(weight: "bold")[#format_money(item.total.amount)]],

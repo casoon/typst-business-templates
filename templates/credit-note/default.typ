@@ -1,6 +1,7 @@
 // Credit Note Template (Gutschrift) - CASOON Layout
 // Based on invoice template - for refunds and corrections
 
+#import "../common/styles.typ": get-language
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, credit-note-metadata
@@ -22,7 +23,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and metadata header
 #accounting-header(
@@ -99,7 +100,7 @@
       [#item.position],
       [#item.description],
       [#item.quantity],
-      [#format-unit(item.unit)],
+      [#format-unit(item.unit, quantity: item.quantity)],
       [#item.vat_rate.percentage%],
       [#format_money(item.unit_price.amount)],
       [#text(weight: "bold")[#format_money(item.total.amount)]],

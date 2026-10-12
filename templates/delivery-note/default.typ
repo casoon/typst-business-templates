@@ -1,6 +1,7 @@
 // Delivery Note Template (Lieferschein) - CASOON Layout
 // Document for tracking goods delivery
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block-with-delivery
@@ -19,7 +20,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and metadata header
 #accounting-header(

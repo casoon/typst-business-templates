@@ -169,6 +169,10 @@
         "total": {
           "$ref": "#/$defs/amount",
           "description": "Gross total credited."
+        },
+        "discount_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Discount on the subtotal. Not printed; the total check expects total = subtotal − discount + VAT."
         }
       }
     }

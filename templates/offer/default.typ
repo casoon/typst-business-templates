@@ -1,6 +1,7 @@
 // Offer Template (Angebot) - CASOON Layout
 // Based on invoice template layout
 
+#import "../common/styles.typ": get-language
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
 #import "../common/accounting-header.typ": accounting-header, offer-metadata
@@ -24,7 +25,7 @@
 #set text(
   font: "Helvetica",
   size: 10pt,
-  lang: company.language
+  lang: get-language(company)
 )
 
 // ============================================================================
@@ -38,6 +39,7 @@
     offer_date: data.metadata.offer_date,
     valid_until: if "valid_until" in data.metadata { data.metadata.valid_until } else { none },
     customer_number: if "customer_number" in data.metadata { data.metadata.customer_number } else { none },
+    project_reference: data.metadata.at("project_reference", default: none),
   )
 )
 
@@ -48,6 +50,7 @@
 #din5008-address-block(
   company: company,
   recipient: data.recipient,
+  company-first: true,
 )
 
 // ============================================================================
@@ -114,7 +117,7 @@
         #item.description
       ],
       [#item.quantity],
-      [#format-unit(item.unit)],
+      [#format-unit(item.unit, quantity: item.quantity)],
       [#format_money(item.unit_price.amount) EUR],
       [#text(weight: "bold")[#format_money(item.total.amount) EUR]],
     )
@@ -155,6 +158,7 @@
   subtotal: data.totals.subtotal,
   vat_breakdown: if "vat_breakdown" in data.totals { data.totals.vat_breakdown } else { () },
   total: data.totals.total,
+  net: true,
 )
 
 #v(5pt)

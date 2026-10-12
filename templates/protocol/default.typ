@@ -126,17 +126,23 @@
   }
 
   if show-title-page {
-    document-title-page(
-      company: company,
-      logo: logo,
-      title: title,
-      document-type: "BESPRECHUNGSPROTOKOLL",
-      document-number: document_number,
-      accent-color: accent-color,
-      metadata: title-metadata,
-      tags: (),
-      custom-content: participants-content,
-    )
+    page(
+      margin: (left: 50pt, right: 45pt, top: 50pt, bottom: 50pt),
+      header: none,
+      footer: none,
+    )[
+      #document-title-page(
+        company: company,
+        logo: logo,
+        title: title,
+        document-type: "BESPRECHUNGSPROTOKOLL",
+        document-number: document_number,
+        accent-color: accent-color,
+        metadata: title-metadata,
+        tags: (),
+        custom-content: participants-content,
+      )
+    ]
 
     pagebreak()
   }

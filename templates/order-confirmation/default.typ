@@ -1,6 +1,7 @@
 // Order Confirmation Template (Auftragsbestätigung) - CASOON Layout
 // Confirmation of received orders
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -22,7 +23,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and metadata
 #accounting-header(
@@ -106,7 +107,7 @@
         #item.description
       ],
       [#item.quantity],
-      [#format-unit(item.unit)],
+      [#format-unit(item.unit, quantity: item.quantity)],
       [#format_money(item.unit_price.amount) EUR],
       [#text(weight: "bold")[#format_money(item.total.amount) EUR]],
     )

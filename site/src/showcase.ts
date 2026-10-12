@@ -140,7 +140,7 @@ const entries: Entry[] = [
     tags: ['concept', '.typ workflow', '5 pages'],
     description:
       'Written directly in Typst: the file imports the concept template from the package and loads company.json; labels follow its language.',
-    alt: 'Title page of the concept KO-2025-002 “Online-Shop Konzept Bio-Hofladen” by Pixelwerk Digitalagentur, with project, client, version, draft status and four tags in orange.',
+    alt: 'Title page of the concept KO-2025-002 “Online-Shop Konzept Bio-Hofladen” by Pixelwerk Digitalagentur, with project, client, version, draft status and four outlined tags.',
     size: portrait,
   },
   {
@@ -148,8 +148,8 @@ const entries: Entry[] = [
     title: 'Documentation from a .typ file',
     file: 'examples/digitalagentur/documents/documentation/2025/documentation.typ',
     tags: ['documentation', '.typ workflow', '6 pages'],
-    description: 'A user manual in Typst markup on top of the documentation template, with footer on every page.',
-    alt: 'Title page of the documentation DOC-2025-002 “WordPress Benutzerhandbuch” for Zimmermann Schreinerei GmbH, status final, with a four-column company footer.',
+    description: 'A user manual in Typst markup on top of the documentation template, with the company footer on every page after the title page.',
+    alt: 'Title page of the documentation DOC-2025-002 “WordPress Benutzerhandbuch” for Zimmermann Schreinerei GmbH, with project, client, version and status final in bold labels.',
     size: portrait,
   },
   {

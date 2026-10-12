@@ -34,7 +34,7 @@ four-column company footer (address, contact, tax data, bank account). Helvetica
 | `order-confirmation` | Order confirmation | data | [order-confirmation](https://casoon.github.io/typst-business-templates/schema/order-confirmation.schema.json) | Order reference, expected delivery, position table; totals check |
 | `quotation-request` | Quotation request | data | [quotation-request](https://casoon.github.io/typst-business-templates/schema/quotation-request.schema.json) | Requested items with specifications, requirements, response deadline |
 | `time-sheet` | Time sheet | data | [time-sheet](https://casoon.github.io/typst-business-templates/schema/time-sheet.schema.json) | Daily entries with start and end times, hour totals, signatures |
-| `letter` | Business letter | data | [letter](https://casoon.github.io/typst-business-templates/schema/letter.schema.json) | Subject, your/our reference, body, enclosures |
+| `letter` | Business letter | data | [letter](https://casoon.github.io/typst-business-templates/schema/letter.schema.json) | Subject, your/our reference, text as Typst content (headings, lists, tables), page header from page 2, enclosures |
 
 ## Credentials
 

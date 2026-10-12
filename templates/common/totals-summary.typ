@@ -10,6 +10,7 @@
 /// - vat_breakdown: Array of VAT entries with rate and amount
 /// - total: Total amount including VAT
 /// - locale: Optional locale dictionary for labels
+/// - net: the document is net (offer); without VAT rows the total reads "Gesamtbetrag (netto)"
 ///
 /// Example:
 /// ```typst
@@ -24,6 +25,7 @@
   vat_breakdown: (),
   total: none,
   locale: none,
+  net: false,
 ) = {
   // Locale strings with fallbacks
   let l-subtotal = if locale != none and "common" in locale and "subtotal" in locale.common {
@@ -63,14 +65,15 @@
         rows.push(([#l-vat (#pct%):], [#format_money(vat.amount.amount) EUR]))
       }
       
-      // Total
+      // Total; without VAT rows an offer's total is net
+      let label = if net and vat_breakdown.len() == 0 { l-total + " (netto)" } else { l-total }
       rows.push((
-        [#text(weight: "bold", size: 11pt)[#l-total:]],
+        [#text(weight: "bold", size: 11pt)[#label:]],
         [#text(weight: "bold", size: 11pt)[#format_money(total.amount) EUR]]
       ))
       
       grid(
-        columns: (100pt, 80pt),
+        columns: if vat_breakdown.len() == 0 { (120pt, 100pt) } else { (100pt, 80pt) },
         align: (right, right),
         row-gutter: 10pt,
         ..rows.flatten()
@@ -222,8 +225,8 @@
 
 /// Stops the build if the totals in `data` do not add up: each item's total against
 /// quantity × unit price, the subtotal against the item totals, the VAT total against the VAT
-/// breakdown and the total against subtotal plus VAT. Amounts are compared to the cent; fields
-/// that are missing are not checked.
+/// breakdown and the total against subtotal minus discount_total plus VAT. Amounts are compared
+/// to the cent; fields that are missing are not checked.
 #let check-totals(data) = {
   let round2(x) = calc.round(x, digits: 2)
   let problems = ()
@@ -252,11 +255,15 @@
   if vat-total != none and breakdown.len() > 0 and none not in breakdown and round2(breakdown.sum()) != round2(vat-total) {
     problems.push("totals.vat_total: " + str(vat-total) + " ≠ sum of vat_breakdown = " + str(round2(breakdown.sum())))
   }
+  let discount = _decimal(totals.at("discount_total", default: none))
   let total = _decimal(totals.at("total", default: none))
   if total != none and subtotal != none {
-    let expected = subtotal + if vat-total != none { vat-total } else { decimal("0") }
+    let expected = subtotal
+    if discount != none { expected -= discount }
+    if vat-total != none { expected += vat-total }
     if round2(expected) != round2(total) {
-      problems.push("totals.total: " + str(total) + " ≠ subtotal + VAT = " + str(round2(expected)))
+      let terms = "subtotal" + if discount != none { " − discount" } else { "" } + " + VAT"
+      problems.push("totals.total: " + str(total) + " ≠ " + terms + " = " + str(round2(expected)))
     }
   }
   if problems.len() > 0 { panic("totals do not add up:\n" + problems.join("\n")) }

@@ -52,8 +52,28 @@
       }
     },
     "recipient": {
-      "$ref": "common.schema.json#/$defs/recipient",
-      "description": "Recipient of the letter."
+      "description": "Recipient of the letter: name, optional company and address, or the address as free lines.",
+      "oneOf": [
+        {
+          "$ref": "common.schema.json#/$defs/recipient"
+        },
+        {
+          "type": "object",
+          "required": [
+            "lines"
+          ],
+          "properties": {
+            "lines": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Address lines as printed, e.g. company, contact person, street, postal code and city."
+            }
+          }
+        }
+      ]
     },
     "salutation": {
       "type": [
@@ -64,7 +84,7 @@
     },
     "content": {
       "type": "string",
-      "description": "Letter body."
+      "description": "Letter text as plain text. For headings, lists and tables pass the text as Typst content: letter(data: …, company: …)[…]."
     },
     "closing": {
       "type": [
@@ -89,6 +109,10 @@
         "type": "string"
       },
       "description": "Names of enclosed attachments."
+    },
+    "final": {
+      "description": "Last paragraph, kept on one page with the closing and signature. In Typst it may be content.",
+      "type": "string"
     }
   }
 }

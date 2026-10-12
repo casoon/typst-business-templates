@@ -55,8 +55,30 @@ field):
 | `totals` | `subtotal`, `vat_breakdown`, `vat_total`, `total` |
 | `payment` | invoice only: `due_date`, `payment_terms`, `bank_account` |
 
-`reminder` lists `outstanding_invoices` instead of items, `time-sheet` has `entries`, `letter` has
-`content`, and `credentials` has `metadata` (title-page data) and `services` with access data.
+`reminder` lists `outstanding_invoices` instead of items, `time-sheet` has `entries`, and
+`credentials` has `metadata` (title-page data) and `services` with access data.
+
+`letter` takes its text as `content` (plain text) or, for headings, lists and tables, as Typst
+content after the call; `recipient` may be free `lines` instead of name and address, and `final`
+is a last paragraph kept on one page with the closing:
+
+```typst
+#letter(
+  data: (
+    metadata: (date: "2026-10-08", subject: "Bieterfragen", reference_number: "BRF-2026-001"),
+    recipient: (lines: ("Muster GmbH", "Herr Max Muster", "Hauptstraße 1", "12345 Musterstadt")),
+    salutation: "Sehr geehrte Damen und Herren,",
+  ),
+  company: json("/data/company.json"),
+)[
+  = A. Eignung
+  …
+]
+```
+
+A recipient's `company` is left out when it repeats `name`; the offer prints the company above
+the name, the other documents below it. Units `tag`, `monat` and `jahr` take the plural
+(`Tage`, `Monate`, `Jahre`) for a quantity other than 1.
 
 Value formats, defined in
 [`common.schema.json`](https://github.com/casoon/typst-business-templates/blob/main/schema/common.schema.json):
@@ -98,7 +120,7 @@ The build stops if
 - an item's `total` differs from `quantity` × `unit_price`,
 - `totals.subtotal` differs from the sum of the item totals,
 - `totals.vat_total` differs from the sum of `vat_breakdown`,
-- `totals.total` differs from subtotal plus VAT,
+- `totals.total` differs from subtotal minus `totals.discount_total` (if given) plus VAT,
 
 compared to the cent. All problems are listed at once:
 

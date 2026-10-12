@@ -13,7 +13,7 @@
 /// - stueck → Stk.
 /// - stunde → Std.
 /// - tag → Tag
-/// - monat → Monat
+/// - monat → Monat, or Monate for a quantity other than 1 (also tag, jahr)
 /// - jahr → Jahr
 /// - pauschale → Psch.
 /// - kg → kg
@@ -29,12 +29,13 @@
 /// #format-unit("stunde")   // "Std."
 /// #format-unit("unknown")  // "unknown"
 /// ```
-#let format-unit(unit) = {
+#let format-unit(unit, quantity: 1) = {
+  let one = str(quantity).match(regex("^1(\.0*)?$")) != none
   if unit == "stueck" [Stk.]
   else if unit == "stunde" [Std.]
-  else if unit == "tag" [Tag]
-  else if unit == "monat" [Monat]
-  else if unit == "jahr" [Jahr]
+  else if unit == "tag" { if one [Tag] else [Tage] }
+  else if unit == "monat" { if one [Monat] else [Monate] }
+  else if unit == "jahr" { if one [Jahr] else [Jahre] }
   else if unit == "pauschale" [Psch.]
   else if unit == "kg" [kg]
   else if unit == "meter" [m]

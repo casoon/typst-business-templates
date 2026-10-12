@@ -1,6 +1,7 @@
 // Quotation Request Template (Angebotsanfrage) - Accounting Layout
 // Request for quotations from suppliers/vendors
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -18,7 +19,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Header with logo and metadata
 #accounting-header(

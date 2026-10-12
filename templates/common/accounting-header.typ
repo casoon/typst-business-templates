@@ -128,6 +128,7 @@
   offer_date: none,
   valid_until: none,
   customer_number: none,
+  project_reference: none,
 ) = [
   *Angebots-Nr.:* #offer_number\
   #if customer_number != none [
@@ -136,6 +137,9 @@
   *Angebotsdatum:* #format_german_date(offer_date)\
   #if valid_until != none [
     *Gültig bis:* #format_german_date(valid_until)\
+  ]
+  #if project_reference != none [
+    *Projekt:* #project_reference\
   ]
 ]
 
@@ -247,23 +251,6 @@
     *Mahnstufe:* #reminder_level\
   ]
   *Datum:* #format_german_date(reminder_date)\
-]
-
-/// Helper function to create metadata content for letters
-///
-/// Parameters:
-/// - letter_date: Letter date object (required)
-/// - reference: Optional reference/subject line
-///
-/// Returns: Content block with formatted metadata
-#let letter-metadata(
-  letter_date: none,
-  reference: none,
-) = [
-  #if reference != none [
-    *Betreff:* #reference\
-  ]
-  *Datum:* #format_german_date(letter_date)\
 ]
 
 /// Helper function to create metadata content for time sheets

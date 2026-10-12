@@ -43,6 +43,10 @@
         "show_footer": {
           "type": "boolean",
           "description": "Set to false to hide the company footer. Default: true."
+        },
+        "project_reference": {
+          "type": "string",
+          "description": "Project, printed as \"Projekt:\" in the metadata box."
         }
       }
     },
@@ -172,7 +176,11 @@
         },
         "total": {
           "$ref": "#/$defs/amount",
-          "description": "Gross total."
+          "description": "Gross total. Without VAT rows it is printed as \"Gesamtbetrag (netto)\"."
+        },
+        "discount_total": {
+          "$ref": "common.schema.json#/$defs/money",
+          "description": "Discount on the subtotal. Not printed; the total check expects total = subtotal − discount + VAT."
         }
       }
     },

@@ -76,15 +76,10 @@
         row-gutter: 14pt,
         column-gutter: 20pt,
         align: (right, left),
-        ..if type(metadata) == array {
-          // If metadata is an array of tuples, flatten it directly
-          metadata.flatten()
-        } else {
-          // If metadata is a dictionary, convert to array of tuples
-          metadata.pairs().map(((key, value)) => {
-            ([*#key:*], [#value])
-          }).flatten()
-        }
+        // An array of (label, value) pairs keeps its order; a dictionary is taken as is
+        ..(if type(metadata) == array { metadata } else { metadata.pairs() }).map(((key, value)) => {
+          ([*#key:*], [#value])
+        }).flatten()
       )
     ]
   ]
@@ -124,23 +119,24 @@
 ) = {
   v(50pt)
   
-  // Logo (prioritize passed logo parameter)
+  // Logo (prioritize passed logo parameter), with space below only when there is one
   align(center)[
     #if logo != none [
       #logo
+      #v(30pt)
     ] else if company != none and "_logo_image" in company [
       #company._logo_image
+      #v(30pt)
     ] else if company != none and "logo" in company and company.logo != none [
       #image(logo-source(company.logo), width: 150pt)
+      #v(30pt)
     ]
   ]
-  
-  v(30pt)
   
   // Document title
   if title != none [
     #align(center)[
-      #text(size: size-title, weight: "bold")[#title]
+      #text(size: 24pt, weight: "bold")[#title]
     ]
     #v(20pt)
   ]
@@ -168,15 +164,10 @@
         row-gutter: 14pt,
         column-gutter: 20pt,
         align: (right, left),
-        ..if type(metadata) == array {
-          // If metadata is an array of tuples, flatten it directly
-          metadata.flatten()
-        } else {
-          // If metadata is a dictionary, convert to array of tuples
-          metadata.pairs().map(((key, value)) => {
-            ([*#key:*], [#value])
-          }).flatten()
-        }
+        // An array of (label, value) pairs keeps its order; a dictionary is taken as is
+        ..(if type(metadata) == array { metadata } else { metadata.pairs() }).map(((key, value)) => {
+          ([*#key:*], [#value])
+        }).flatten()
       )
     ]
   ]
@@ -193,12 +184,7 @@
   if tags != none and tags.len() > 0 [
     #align(center)[
       #for tag in tags [
-        #box(
-          fill: accent-color.lighten(80%),
-          inset: (x: 10pt, y: 5pt),
-          radius: 12pt,
-          text(size: size-xs, fill: accent-color, weight: "bold")[#upper(tag)]
-        )
+        #pill(tag)
         #h(8pt)
       ]
     ]
@@ -342,15 +328,10 @@
         row-gutter: 14pt,
         column-gutter: 20pt,
         align: (right, left),
-        ..if type(metadata) == array {
-          // If metadata is an array of tuples, flatten it directly
-          metadata.flatten()
-        } else {
-          // If metadata is a dictionary, convert to array of tuples
-          metadata.pairs().map(((key, value)) => {
-            ([*#key:*], [#value])
-          }).flatten()
-        }
+        // An array of (label, value) pairs keeps its order; a dictionary is taken as is
+        ..(if type(metadata) == array { metadata } else { metadata.pairs() }).map(((key, value)) => {
+          ([*#key:*], [#value])
+        }).flatten()
       )
     ]
   ]

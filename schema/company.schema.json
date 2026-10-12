@@ -4,7 +4,11 @@
   "title": "Company",
   "description": "company.json: the issuing company, passed as `company:` to every template. Accounting templates (invoice, offer, credit note, reminder, letter, order confirmation, delivery note, quotation request, time sheet) read name, language, address and contact unconditionally; the other templates fall back to defaults when fields are missing.",
   "type": "object",
-  "required": ["name", "language", "address", "contact"],
+  "required": [
+    "name",
+    "address",
+    "contact"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -16,51 +20,98 @@
     },
     "language": {
       "type": "string",
-      "enum": ["de", "en", "es", "fr", "it", "nl", "pt"],
-      "description": "Document language. Selects templates/locale/<language>.json and sets the text language."
+      "enum": [
+        "de",
+        "en",
+        "es",
+        "fr",
+        "it",
+        "nl",
+        "pt"
+      ],
+      "description": "Document language. Selects templates/locale/<language>.json and sets the text language. Optional, de if omitted."
     },
     "business_owner": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Owner or managing director. If set, used instead of the company name in the sender line and signature."
     },
     "logo": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Logo as a path from the project root, e.g. \"data/logo.png\". In Typst the value may also be the image bytes (read(\"/data/logo.png\", encoding: none)); bytes cannot be expressed in JSON, and templates imported as a package can only load the logo from bytes."
     },
     "logo_width": {
       "type": "string",
       "description": "Logo width as a Typst length, e.g. \"150pt\" or \"3cm\". Default 150pt.",
-      "examples": ["150pt", "3cm"]
+      "examples": [
+        "150pt",
+        "3cm"
+      ]
     },
     "address": {
       "description": "Postal address of the company. The DIN 5008 sender line reads street, house_number, postal_code and city unconditionally.",
       "allOf": [
-        { "$ref": "common.schema.json#/$defs/address" },
-        { "required": ["house_number"] }
+        {
+          "$ref": "common.schema.json#/$defs/address"
+        },
+        {
+          "required": [
+            "house_number"
+          ]
+        }
       ]
     },
     "contact": {
       "type": "object",
       "description": "Contact details shown in headers and footers.",
       "properties": {
-        "phone": { "type": "string", "description": "Phone number." },
-        "email": { "type": "string", "description": "Email address; seller contact email in ZUGFeRD." },
-        "website": { "type": "string", "description": "Website, e.g. www.example.com." }
+        "phone": {
+          "type": "string",
+          "description": "Phone number."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address; seller contact email in ZUGFeRD."
+        },
+        "website": {
+          "type": "string",
+          "description": "Website, e.g. www.example.com."
+        }
       }
     },
     "tax_id": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Tax number (Steuernummer); seller tax registration in ZUGFeRD."
     },
     "vat_id": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "VAT identification number (USt-IdNr.), e.g. DE123456789; seller VAT ID in ZUGFeRD."
     },
     "bank_account": {
       "description": "Bank details for payment. When present, the accounting footer prints bank_name, account_holder, iban and bic; ZUGFeRD uses it as payee account.",
       "allOf": [
-        { "$ref": "common.schema.json#/$defs/bank_account" },
-        { "required": ["bank_name", "account_holder", "iban", "bic"] }
+        {
+          "$ref": "common.schema.json#/$defs/bank_account"
+        },
+        {
+          "required": [
+            "bank_name",
+            "account_holder",
+            "iban",
+            "bic"
+          ]
+        }
       ]
     },
     "branding": {
@@ -79,7 +130,19 @@
         },
         "font_preset": {
           "type": "string",
-          "enum": ["inter", "roboto", "open-sans", "lato", "montserrat", "source-sans", "poppins", "raleway", "nunito", "work-sans", "default"],
+          "enum": [
+            "inter",
+            "roboto",
+            "open-sans",
+            "lato",
+            "montserrat",
+            "source-sans",
+            "poppins",
+            "raleway",
+            "nunito",
+            "work-sans",
+            "default"
+          ],
           "description": "Font preset from styles.typ (body, heading and mono font). \"default\" is Helvetica; unknown names fall back to it."
         }
       }
@@ -94,11 +157,19 @@
           "items": {
             "type": "object",
             "properties": {
-              "title": { "type": ["string", "null"], "description": "Optional bold column title." },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Optional bold column title."
+              },
               "lines": {
                 "type": "array",
                 "description": "Lines with placeholders: {name}, {business_owner}, {tax_id}, {vat_id}, {address.street|house_number|postal_code|city|country}, {contact.phone|email|website}, {bank_account.bank_name|iban|bic|account_holder}. Lines with unresolved placeholders are skipped.",
-                "items": { "type": "string" }
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -109,26 +180,63 @@
       "type": "object",
       "description": "Default commercial terms. The templates read only vat_exempt and vat_note; the other fields are defaults for tooling.",
       "properties": {
-        "vat_exempt": { "type": "boolean", "description": "Company charges no VAT (e.g. Kleinunternehmer, § 19 UStG). Enables vat_note on invoices and credit notes." },
-        "vat_note": { "type": "string", "description": "Exemption note printed on invoices and credit notes when vat_exempt is true." },
-        "vat_rate": { "$ref": "common.schema.json#/$defs/decimal", "description": "Default VAT rate in percent. Not read by the templates." },
-        "payment_days": { "type": "integer", "minimum": 0, "description": "Default payment term in days. Not read by the templates." },
-        "hourly_rate": { "$ref": "common.schema.json#/$defs/decimal", "description": "Default hourly rate. Not read by the templates." },
-        "daily_rate": { "$ref": "common.schema.json#/$defs/decimal", "description": "Default daily rate. Not read by the templates." },
-        "currency": { "type": "string", "description": "Default currency, ISO 4217 code. Not read by the templates." },
-        "warranty_months": { "type": "integer", "minimum": 0, "description": "Default warranty period in months. Not read by the templates." },
-        "standard_terms": { "type": "array", "items": { "type": "string" }, "description": "Standard terms text lines. Not read by the templates." }
+        "vat_exempt": {
+          "type": "boolean",
+          "description": "Company charges no VAT (e.g. Kleinunternehmer, § 19 UStG). Enables vat_note on invoices and credit notes."
+        },
+        "vat_note": {
+          "type": "string",
+          "description": "Exemption note printed on invoices and credit notes when vat_exempt is true."
+        },
+        "vat_rate": {
+          "$ref": "common.schema.json#/$defs/decimal",
+          "description": "Default VAT rate in percent. Not read by the templates."
+        },
+        "payment_days": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Default payment term in days. Not read by the templates."
+        },
+        "hourly_rate": {
+          "$ref": "common.schema.json#/$defs/decimal",
+          "description": "Default hourly rate. Not read by the templates."
+        },
+        "daily_rate": {
+          "$ref": "common.schema.json#/$defs/decimal",
+          "description": "Default daily rate. Not read by the templates."
+        },
+        "currency": {
+          "type": "string",
+          "description": "Default currency, ISO 4217 code. Not read by the templates."
+        },
+        "warranty_months": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Default warranty period in months. Not read by the templates."
+        },
+        "standard_terms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standard terms text lines. Not read by the templates."
+        }
       }
     },
     "numbering": {
       "type": "object",
       "description": "Document numbering settings from the docgen scaffold. Not read by the templates.",
       "properties": {
-        "year_format": { "type": "string", "description": "Year format in document numbers, e.g. \"short\"." },
+        "year_format": {
+          "type": "string",
+          "description": "Year format in document numbers, e.g. \"short\"."
+        },
         "prefixes": {
           "type": "object",
           "description": "Number prefix per document type, e.g. { \"invoice\": \"RE\" }.",
-          "additionalProperties": { "type": "string" }
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
@@ -136,7 +244,10 @@
       "type": "object",
       "description": "Project folder settings from the docgen scaffold. Not read by the templates.",
       "properties": {
-        "organize_by_year": { "type": "boolean", "description": "Group documents in per-year folders." }
+        "organize_by_year": {
+          "type": "boolean",
+          "description": "Group documents in per-year folders."
+        }
       }
     }
   }

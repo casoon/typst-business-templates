@@ -1,6 +1,7 @@
 // Reminder Template (Zahlungserinnerung/Mahnung) - CASOON Layout
 // Multi-level payment reminder system
 
+#import "../common/styles.typ": get-language
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -19,7 +20,7 @@
   footer: if show-footer { accounting-footer(company: company) }
 )
 
-#set text(font: "Helvetica", size: 10pt, lang: company.language)
+#set text(font: "Helvetica", size: 10pt, lang: get-language(company))
 
 // Logo and Metadata
 // "1", 1 or missing: first reminder

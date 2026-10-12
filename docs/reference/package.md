@@ -29,7 +29,7 @@ delivery-note(data: none, company: none)
 order-confirmation(data: none, company: none)
 quotation-request(data: none, company: none)
 time-sheet(data: none, company: none)
-letter(data: none, company: none)
+letter(data: none, company: none, [body])
 credentials(data: none, company: (:), locale: none)
 ```
 
@@ -38,8 +38,9 @@ credentials(data: none, company: (:), locale: none)
 | `data` | dictionary | the document, usually `json("…")`; shape per [schema](#json-schemas) |
 | `company` | dictionary | `company.json`; `company.logo` may be replaced by image bytes |
 | `locale` | dictionary | `credentials` only: labels, default `templates/locale/<company.language>.json` |
+| body | content | `letter` only, optional: the letter text with headings, lists and tables, after `data.content` |
 
-All except `credentials` require `company.language`. `invoice`, `offer`, `credit-note` and
+`company.language` defaults to `de`. `invoice`, `offer`, `credit-note` and
 `order-confirmation` panic if the totals in `data` do not add up
 ([details](../../guides/json-documents/#totals-check)). All set the PDF title
 (document number) and author (company name); all except `time-sheet` set the PDF date to the

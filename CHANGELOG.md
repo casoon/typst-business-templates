@@ -30,10 +30,20 @@ All notable changes to this project will be documented in this file.
   reference them with `$schema`
 - **Examples** for every template, compiled with typstgen, including a ZUGFeRD invoice, a task list,
   a handout and an architecture diagram in the documentation
+- **From casoon-data:** the letter takes its text as Typst content (headings, lists, tables), free
+  address `lines`, a `final` paragraph kept with the closing and a page header from page 2; a
+  recipient's company is not printed twice when it repeats the name; the offer prints the company
+  above the contact person, its project reference, and "Gesamtbetrag (netto)" without VAT; units
+  `tag`, `monat`, `jahr` take the plural for quantities other than 1
 - **`scripts/check.sh`** and a CI workflow on pull requests: compiles all examples and diagrams,
   builds the e-invoices, validates the JSON and compares the locale keys
 
 ### Fixed
+- **Templates checked against casoon-data**, the production user of the old template copy: the
+  title pages of concept, documentation and protocol look as before the refactoring of January
+  2026 again (own page without header and footer, bold labels with colon, outlined tags, 24 pt
+  title); accounting documents no longer fail without `language` in `company.json` (default `de`);
+  the totals check accepts `totals.discount_total`
 - **Logo with the package:** `company.logo` may be image bytes; a path pointed into the package
 - **Task list** ignored a `company` passed to it (colours, logo, language)
 - **Reminder** failed on a numeric or missing `reminder_level` and on a fee given as string;
