@@ -30,6 +30,6 @@ jobs:
           command -v typstgen || cargo install typstgen --version 0.4.1 --locked
           command -v chartlet || cargo install chartlet --version 0.18.0 --locked
       - name: Install jsonschema
-        run: pip install jsonschema
+        run: python3 -m pip install jsonschema referencing
       - name: Compile examples and diagrams, ZUGFeRD invoices, schemas, locales
         run: scripts/check.sh

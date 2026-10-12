@@ -4,7 +4,7 @@
 # specs (if chartlet is installed), every example JSON matches the schema named in its "$schema",
 # and every locale has the same keys as de.json.
 # Runs locally and in CI (.github/workflows/check.yml). Needs typstgen and python3 with
-# jsonschema (pip install jsonschema).
+# jsonschema (python3 -m pip install jsonschema referencing).
 set -uo pipefail
 
 repo="$(cd "$(dirname "$0")/.." && pwd)"
