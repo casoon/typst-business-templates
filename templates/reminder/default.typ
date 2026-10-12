@@ -22,12 +22,15 @@
 #set text(font: "Helvetica", size: 10pt, lang: company.language)
 
 // Logo and Metadata
+// "1", 1 or missing: first reminder
+#let reminder-level = str(data.metadata.at("reminder_level", default: "1"))
+
 #accounting-header(
   company: company,
   metadata_content: reminder-metadata(
     reminder_number: data.metadata.reminder_number,
     reminder_date: data.metadata.date,
-    reminder_level: if "reminder_level" in data.metadata { data.metadata.reminder_level } else { none },
+    reminder_level: reminder-level,
   )
 )
 
@@ -42,10 +45,10 @@
   #set text(size: 10pt, font: "Helvetica")
 
   #text(weight: "bold", size: 12pt)[
-    #if data.metadata.reminder_level == "1" [
+    #if reminder-level == "1" [
       Zahlungserinnerung
     ] else [
-      #data.metadata.reminder_level. Mahnung
+      #reminder-level. Mahnung
     ]
   ]
 
@@ -104,7 +107,7 @@
     [#text(weight: "bold")[Offener Gesamtbetrag:]], 
     [#text(weight: "bold")[#format_money(data.totals.total_outstanding.amount) EUR]],
 
-    ..if "reminder_fee" in data.totals and data.totals.reminder_fee.amount > 0 {
+    ..if "reminder_fee" in data.totals and float(data.totals.reminder_fee.amount) > 0 {
       (
         [Mahngebühr:],
         [#format_money(data.totals.reminder_fee.amount) EUR],

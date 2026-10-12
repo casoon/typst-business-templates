@@ -67,7 +67,10 @@
           "description": "Greeting line, e.g. \"Sehr geehrte Frau Schmidt,\"."
         },
         "introduction": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Introductory sentence below the greeting."
         }
       }

@@ -20,8 +20,7 @@
       "description": "Reminder header data.",
       "required": [
         "reminder_number",
-        "date",
-        "reminder_level"
+        "date"
       ],
       "properties": {
         "reminder_number": {
@@ -33,8 +32,11 @@
           "description": "Reminder date."
         },
         "reminder_level": {
-          "type": "string",
-          "description": "Reminder level as a string: \"1\" gives the title \"Zahlungserinnerung\", any other value \"<level>. Mahnung\"."
+          "type": [
+            "string",
+            "integer"
+          ],
+          "description": "Reminder level, 1 if omitted: 1 gives the title \"Zahlungserinnerung\", any other value \"<level>. Mahnung\"."
         },
         "payment_deadline": {
           "$ref": "common.schema.json#/$defs/date",
@@ -118,13 +120,13 @@
         },
         "reminder_fee": {
           "type": "object",
-          "description": "Reminder fee. Its amount must be a number, because the template compares it with 0; the fee rows are shown only when it is greater than 0.",
+          "description": "Reminder fee; the fee rows are shown only when it is greater than 0.",
           "required": [
             "amount"
           ],
           "properties": {
             "amount": {
-              "type": "number",
+              "$ref": "common.schema.json#/$defs/decimal",
               "description": "Fee amount."
             },
             "currency": {

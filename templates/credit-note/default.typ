@@ -56,7 +56,7 @@
   #if "salutation" in data and data.salutation != none [
     #data.salutation.greeting\
     #v(3pt)
-    #if "introduction" in data.salutation [
+    #if data.salutation.at("introduction", default: none) != none [
       #data.salutation.introduction
     ]
   ]
