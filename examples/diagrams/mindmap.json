@@ -3,7 +3,8 @@
   "type": "tree",
   "title": "Produktstrategie 2026",
   "source": "Zentrale Themen und Maßnahmen",
-  "height": 500,
+  "width": 890,
+  "height": 508,
   "tree": {
     "nodes": [
       {
@@ -70,6 +71,7 @@
         "label": "CRM-Automation",
         "parent": "growth"
       }
-    ]
+    ],
+    "layout": "radial"
   }
 }

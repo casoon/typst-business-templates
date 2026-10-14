@@ -184,8 +184,8 @@ const entries: Entry[] = [
     title: 'Diagram: quadrant',
     file: 'examples/diagrams/quadrant.json',
     tags: ['diagram', 'quadrant', 'chartlet'],
-    description: 'Impact versus effort as a scatter plot with lines at the middle of both axes.',
-    alt: 'Scatter plot “Feature-Priorisierung” with effort on the x axis and impact on the y axis, both from 0 to 10, dashed lines at 5 dividing four quadrants, and four labelled features: Analytics Dashboard, SSO Integration, Dark Mode, Legacy Import.',
+    description: 'Impact versus effort as a scatter plot with named quadrants: chartlet draws the dividing lines and the area names.',
+    alt: 'Scatter plot “Feature-Priorisierung” with effort on the x axis and impact on the y axis, both from 0 to 10, divided at 5 into four named quadrants: Schnelle Erfolge, Großprojekte, Lückenfüller and Vermeiden, with four labelled features.',
     size: { width: 1100, height: 668 },
   },
   {
