@@ -26,18 +26,6 @@
         "label": "Legacy Import"
       }
     ],
-    "lines": [
-      {
-        "axis": "x",
-        "value": 5,
-        "label": "Aufwand"
-      },
-      {
-        "axis": "y",
-        "value": 5,
-        "label": "Impact"
-      }
-    ],
     "xRange": [
       0,
       10
@@ -47,6 +35,16 @@
       10
     ],
     "xTitle": "Aufwand",
-    "yTitle": "Impact"
+    "yTitle": "Impact",
+    "quadrants": {
+      "x": 5,
+      "y": 5,
+      "labels": {
+        "topLeft": "Schnelle Erfolge",
+        "topRight": "Großprojekte",
+        "bottomLeft": "Lückenfüller",
+        "bottomRight": "Vermeiden"
+      }
+    }
   }
 }

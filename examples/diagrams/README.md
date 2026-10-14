@@ -10,10 +10,10 @@ own page or inside a concept, documentation or proposal.
 | `flow.json` | `flow` – process with a decision and a loop back |
 | `swimlane.json` | `flow` with `lanes` |
 | `orgchart.json` | `tree` |
-| `mindmap.json` | `tree` (chartlet has no radial layout) |
+| `mindmap.json` | `tree` with `"layout": "radial"` – the root in the middle, one ring per level |
 | `timeline.json` | `timeline` – phases and milestones |
 | `roadmap.json` | `timeline` with groups |
-| `quadrant.json` | `scatter` with threshold lines at the middle of both axes |
+| `quadrant.json` | `scatter` with `quadrants` – dividing lines and the four area names |
 
 Build all of them (needs `cargo install chartlet` and typstgen):
 

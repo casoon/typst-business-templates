@@ -12,7 +12,8 @@ All notable changes to this project will be documented in this file.
   numbering and `--encrypt` are not carried over.
 - **Diagrams** come from [chartlet](https://github.com/casoon/chartlet) instead of docgen's layout
   code: the examples in `examples/diagrams/` are chartlet specs, rendered as SVG. The `diagram`
-  template is removed; mind map and quadrant become a tree and a scatter plot.
+  template is removed; the mind map uses chartlet's radial tree and the quadrant a scatter plot with
+  named quadrants (chartlet 0.19).
 - **`locale/` moved into the package** (`templates/locale/`).
 
 ### Added

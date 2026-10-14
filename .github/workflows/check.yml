@@ -24,11 +24,11 @@ jobs:
           path: |
             ~/.cargo/bin/typstgen
             ~/.cargo/bin/chartlet
-          key: typstgen-0.4.1-chartlet-0.18.0
+          key: typstgen-0.5.0-chartlet-0.19.0
       - name: Install typstgen and chartlet
         run: |
-          command -v typstgen || cargo install typstgen --version 0.4.1 --locked
-          command -v chartlet || cargo install chartlet --version 0.18.0 --locked
+          command -v typstgen || cargo install typstgen --version 0.5.0 --locked
+          command -v chartlet || cargo install chartlet --version 0.19.0 --locked
       - name: Install jsonschema
         run: python3 -m pip install --upgrade jsonschema referencing
       - name: Compile examples and diagrams, ZUGFeRD invoices, schemas, locales
