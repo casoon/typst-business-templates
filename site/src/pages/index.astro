@@ -12,6 +12,7 @@ import {
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
 import config from 'virtual:casoon-pages/config';
+import tools from '../../../tool-versions.json';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import { example } from '../showcase';
 
@@ -46,7 +47,7 @@ typstgen compile documents/invoices/2025/invoice.typ \\
       <Badge>MIT</Badge>
       <Badge>business-templates {config.version}</Badge>
       <Badge>Typst 0.15</Badge>
-      <Badge>typstgen 0.5.0</Badge>
+      <Badge>typstgen {tools.typstgen}</Badge>
     </Badges>
     <figure slot="output" class="hero-doc">
       <a href={url(`showcase/${hero.slug}/`)}>
