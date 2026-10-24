@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 - **Diagrams** come from [chartlet](https://github.com/casoon/chartlet) instead of docgen's layout
   code: the examples in `examples/diagrams/` are chartlet specs, rendered as SVG. The `diagram`
   template is removed; the mind map uses chartlet's radial tree and the quadrant a scatter plot with
-  named quadrants (chartlet 0.19).
+  named quadrants (chartlet 0.21).
 - **`locale/` moved into the package** (`templates/locale/`).
 
 ### Added
@@ -39,6 +39,13 @@ All notable changes to this project will be documented in this file.
 - **Task list tags** are shown again below each task (removed in 0.6.10)
 - **`scripts/check.sh`** and a CI workflow on pull requests: compiles all examples and diagrams,
   builds the e-invoices, validates the JSON and compares the locale keys
+
+### Changed
+- **Diagrams:** rendered with chartlet 0.21 instead of 0.19. The checked-in SVGs of the
+  architecture, flow and swimlane examples gained a fuller description for screen readers, naming
+  the most connected node, loops and bottlenecks; the drawings themselves are unchanged.
+- **Tooling:** the pinned versions of typstgen and chartlet live in `tool-versions.json`, read by
+  the check workflow and by the start page, instead of being written out in each place.
 
 ### Fixed
 - **Templates checked against casoon-data**, the production user of the old template copy: the
