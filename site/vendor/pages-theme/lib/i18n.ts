@@ -45,6 +45,7 @@ const en = {
   keyFacts: 'Key facts',
   themeDependent: 'theme-dependent',
   tabsLabel: 'Variants',
+  filesLabel: 'Generated files',
   notFoundTitle: 'Page not found',
   notFoundHeading: 'This page does not exist.',
   notFoundBody: 'The address may be outdated, or the page moved when the docs were restructured.',
@@ -103,6 +104,7 @@ const de: Strings = {
   keyFacts: 'Eckdaten',
   themeDependent: 'je nach Farbschema',
   tabsLabel: 'Varianten',
+  filesLabel: 'Erzeugte Dateien',
   notFoundTitle: 'Seite nicht gefunden',
   notFoundHeading: 'Diese Seite gibt es nicht.',
   notFoundBody:

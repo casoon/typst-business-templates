@@ -110,11 +110,12 @@ Import from `@casoon/pages-theme/components` in `.astro` files; available direct
 
 | Component | Use |
 | --- | --- |
-| `Hero` | Title, lead, default slot (install, badges), `output` slot (real output) |
+| `Hero` | Title, lead, default slot (install, badges), `output` slot (real output); `layout`, `command` and `tone` pick the variant |
 | `Install` | Install command per ecosystem, CSS-only tabs, copy button |
 | `Badge`, `Badges` | Static badges (no external badge services) |
 | `Facts` | Verifiable key figures |
 | `Features` | 3–5 core points |
+| `FileSet` | The files a run produced: `tabs`, `grid` or `rail` view |
 | `BuildOutput` | One real build output on the start page |
 | `Quickstart` | Steps, docs link, code slot |
 | `CodeBlock` | Build-time highlighting (Shiki, theme-aware), copy button |
@@ -131,6 +132,36 @@ own renderer. `ansiToHtml` renders the 16-colour palette as classes (so the them
 apply) and 256-colour and 24-bit colour — foreground and background — as inline styles. `@casoon/pages-theme/layouts/Base.astro` wraps custom pages in the frame, and
 `@casoon/pages-theme/url` exports `url()` — a project page that links or loads something
 site-internal needs it, because the base path changes per project.
+
+## Hero variants
+
+`Hero` carries four start-page openings. All of them use the same props; `layout`, `command`
+and `tone` decide which one, and what goes into the slots decides the rest. The `output`
+slot takes the project's real output — a `Terminal`, or `FileSet` when the project writes
+files.
+
+| Variant | Hero | `output` slot |
+| --- | --- | --- |
+| Artefacts | `layout="split"` (default) | `FileSet view="grid"` — one card per file |
+| Pipeline | `layout="stack" command="<cmd>"` plus a `source` slot | `FileSet view="tabs"` — one pane per file |
+| Colour field | `tone="invert"` on any layout | `Terminal`, or whatever the project shows |
+| Editorial | `layout="editorial"` | `FileSet view="rail"` — names and one line each |
+
+The stack layout reads as a pipeline from top to bottom: the `source` slot (usually a
+`CodeBlock` with the configuration), the `command` pill, then the output — each over the full
+width of the container. Side by side the three do not fit inside `--max`: the source is cut off
+mid-line and the file names wrap to a second row. Without a `source` slot the band is just the
+output.
+
+`FileSet` takes `files` — `id`, `name` and optional `path`, `size`, `note` — and one named slot
+per `id` holding that file's content, the same way `Tabs` does. The `rail` view needs no slots.
+The tab strip stays on one row at every width: below 640 px the names lose their suffix
+(`robots.txt` → `robots`, and only when the stems stay distinct), and a strip that still does not
+fit scrolls sideways. Each pane scrolls on its own for long lines.
+
+`tone="invert"` redefines the colour tokens inside the hero, so `Install`, `Badges` and
+`FileSet` follow without knowing about it. The ground is `--invert-bg` with `--invert-accent`,
+the same in both colour schemes.
 
 ## Showcase descriptions
 
@@ -183,7 +214,10 @@ in `astro.config.mjs`.
   title stays under about 60 characters; `description` remains the meta description.
 - **OG image:** `og.png` (1200×630) is rendered at build time from name, tagline, description
   and address, in the theme's fonts and the dark theme, with the project's dark `accent` as edge.
-- **Sitemap:** `sitemap.xml` lists every built page except 404, linked from the head.
+- **Sitemap:** `sitemap.xml` lists every built page except 404, linked from the head. A project
+  that writes its own — `@casoon/astro-site-files` does — keeps it: the theme skips the file when
+  it already exists. That works only when the project's integration is listed before
+  `casoonPages()` in `astro.config.mjs`, because the hooks run in that order.
 - **Links out:** the header shows `website` next to the project name; the footer links
   `website`, the project's catalog entry on casoon.dev and the catalog itself, all with
   descriptive text in the page's `lang`.
