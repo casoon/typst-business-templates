@@ -11,6 +11,7 @@ import {
   Quickstart,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
+import config from 'virtual:casoon-pages/config';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import { example } from '../showcase';
 
@@ -43,7 +44,7 @@ typstgen compile documents/invoices/2025/invoice.typ \\
     />
     <Badges>
       <Badge>MIT</Badge>
-      <Badge>business-templates 0.1.0</Badge>
+      <Badge>business-templates {config.version}</Badge>
       <Badge>Typst 0.15</Badge>
       <Badge>typstgen 0.5.0</Badge>
     </Badges>
