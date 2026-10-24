@@ -82,10 +82,10 @@ has one spec per common business diagram, and `build.sh` there renders and compi
 | `flow.json` | `flow` — process with a decision and a loop back |
 | `swimlane.json` | `flow` with `lanes` |
 | `orgchart.json` | `tree` |
-| `mindmap.json` | `tree` (chartlet has no radial layout) |
+| `mindmap.json` | `tree` with `"layout": "radial"` |
 | `timeline.json` | `timeline` — phases and milestones |
 | `roadmap.json` | `timeline` with groups |
-| `quadrant.json` | `scatter` with threshold lines through the middle of both axes |
+| `quadrant.json` | `scatter` with `quadrants`: dividing lines and the four area names |
 
 The documentation of the IT consultancy example
 ([`documentation.typ`](https://github.com/casoon/typst-business-templates/blob/main/examples/it-consultant/documents/documentation/2025/documentation.typ))
