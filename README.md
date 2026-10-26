@@ -19,6 +19,10 @@ providing the CLI, Rust library and MCP server, with the Typst compiler embedded
 Install it using the [setup guide](docs/getting-started/installation.md); configured invoices
 require the coordinated source revision documented there.
 
+**Working with an AI assistant?** Connect typstgen through MCP to check Typst sources,
+inspect page previews and compile PDFs while you edit the template inputs.
+The [MCP guide](docs/guides/ai-agents.md) walks through an existing letter example.
+
 **[Documentation](https://casoon.github.io/typst-business-templates/)** ·
 **[Capabilities and limits](docs/reference/project-status.md)** ·
 **[Demo gallery](examples/invoice-languages/README.md)**

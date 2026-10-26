@@ -17,6 +17,7 @@ printable forms and landscape brochures. Company data and content remain ordinar
 | Existing invoice JSON with supplied totals | [Quickstart](getting-started/quickstart/) and [accounting documents](guides/json-documents/) |
 | Compact A4 guides, intake forms and landscape pages | [Publications](guides/publications/) |
 | Long documents authored in Typst | [Documents in Typst](guides/typst-documents/) |
+| An AI assistant that checks, previews and compiles your documents | [AI assistants with MCP](guides/ai-agents/) |
 | Reviewed, explicitly bounded national rules | [Optional invoice profiles](guides/invoice-profiles/) |
 
 ## Roles of the tools

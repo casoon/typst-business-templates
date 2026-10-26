@@ -58,6 +58,8 @@ All notable changes to this project will be documented in this file.
   builds the e-invoices, validates the JSON and compares the locale keys
 
 ### Changed
+- **Pages:** A practical MCP workflow and setup guide explain AI-assisted checking, previews
+  and PDF generation; the entry path covers other documents and clarifies invoice language scope.
 - **Pages:** The homepage, README and documentation explain typstgen as the separate
   compiler project, with links to its repository and compatible installation instructions.
 - **Pages:** The hero explains deterministic JSON/Typst document generation with a responsive
