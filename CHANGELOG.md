@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - `locale/` moved into the package (`templates/locale/`).
 
 ### Added
+- **Examples:** All eight invoice language demos include a shared fictional SVG logo.
 - **Invoices:** Configurable US Letter, US dollar/date formatting and separately calculated
   sales-tax components, with eight committed language and US demos plus editable inputs.
 - **Invoices:** A reusable `invoice-config.json` controls named taxes, required fields, notes,

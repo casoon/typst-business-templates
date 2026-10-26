@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" role="img" aria-labelledby="title">
+  <title id="title">Example Studio — fictional demo logo</title>
+  <rect x="8" y="14" width="72" height="72" rx="16" fill="#173c56"/>
+  <path d="M28 34h32M28 50h24M28 66h32M28 34v32" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="square"/>
+  <circle cx="72" cy="22" r="10" fill="#26b9ad"/>
+  <g fill="#173c56" font-family="Arial, Helvetica, sans-serif">
+    <text x="98" y="47" font-size="25" font-weight="700" letter-spacing="1.8">EXAMPLE</text>
+    <text x="99" y="73" font-size="19" letter-spacing="5">STUDIO</text>
+  </g>
+</svg>

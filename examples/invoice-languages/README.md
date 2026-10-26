@@ -2,6 +2,7 @@
 
 The PDFs are committed and can be opened directly. Each folder contains the editable
 `invoice-config.json` and `invoice.json`; all eight use the same `invoice.typ` wrapper.
+The shared fictional [Example Studio logo](logo.svg) is selected through `company.logo`.
 Descriptions, greetings and notes are supplied in the selected language. Companies,
 registrations, accounts and tax rates are fictional; these are presentation examples,
 not national tax presets.

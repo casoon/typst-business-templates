@@ -23,7 +23,8 @@
       "bank_name": "Example Bank",
       "account_holder": "Example Studio"
     },
-    "business_owner": "Alex Example"
+    "business_owner": "Alex Example",
+    "logo": "logo.svg"
   },
   "data": {
     "metadata": {

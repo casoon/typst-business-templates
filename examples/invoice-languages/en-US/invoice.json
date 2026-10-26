@@ -22,7 +22,8 @@
       "routing_number": "000000000",
       "account_number": "DEMO-000123"
     },
-    "business_owner": "Alex Example"
+    "business_owner": "Alex Example",
+    "logo": "logo.svg"
   },
   "data": {
     "metadata": {
