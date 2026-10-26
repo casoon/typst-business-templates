@@ -8,6 +8,11 @@ Every template takes the company as `company:`, usually `json("/data/company.jso
 is [`company.schema.json`](https://casoon.github.io/typst-business-templates/schema/company.schema.json);
 `name`, `language`, `address` and `contact` are required.
 
+Language support depends on the template. Invoices have translated labels in all seven
+supported languages. Other accounting templates still contain German labels and DIN-specific
+formats; choosing `company.language` alone does not translate those labels. Running-text
+templates use their documented locale options. Supply your own body text in the desired language.
+
 ```json
 {
   "$schema": "https://casoon.github.io/typst-business-templates/schema/company.schema.json",

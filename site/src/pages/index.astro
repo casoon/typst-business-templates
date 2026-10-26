@@ -78,13 +78,13 @@ python3 examples/invoice-languages/build.py`;
     <h2 id="toolchain-title">The templates and the compiler</h2>
     <div class="toolchain-roles">
       <div>
-        <h3>business-templates — this repository</h3>
+        <h3>business-templates: this repository</h3>
         <p>Reusable Typst layouts, JSON schemas, translations and editable examples.
           Your data and these templates define the document.</p>
         <a href={url('docs/reference/package/')}>Explore the template package →</a>
       </div>
       <div>
-        <h3>typstgen — a separate project</h3>
+        <h3>typstgen: a separate project</h3>
         <p>The PDF builder, with the Typst compiler embedded. Use its CLI, Rust library
           or MCP server to compile your documents. Its coordinated source build also
           prepares configured invoices and calculates their totals.</p>
@@ -117,14 +117,31 @@ python3 examples/invoice-languages/build.py`;
       },
       {
         title: 'Fit document generation into your project',
-        body: 'Keep JSON data and Typst sources in Git. Compile with the CLI, integrate through Rust or use MCP tools for checking and previews. Add chartlet diagrams when your documents need them.',
+        body: 'Keep JSON data and Typst sources in Git. Compile with the CLI or integrate through Rust. Add chartlet diagrams when your documents need them.',
       },
     ]}
   />
 
+  <section class="toolchain agent-workflow" aria-labelledby="agent-title">
+    <h2 id="agent-title">Let your AI assistant check the document it builds</h2>
+    <p>Connect an MCP-compatible assistant to typstgen’s local Model Context Protocol server.
+      The assistant edits your JSON or Typst files using its editor tools, then asks typstgen
+      to check the source, show a page preview and write the PDF.</p>
+    <ol class="agent-steps">
+      <li><h3>Check</h3><p>Get compiler errors and warnings with file and line references.</p></li>
+      <li><h3>Preview</h3><p>Inspect a rendered page to spot table overflow and awkward page breaks.</p></li>
+      <li><h3>Compile</h3><p>Save the PDF using the same templates, data and fixed build inputs.</p></li>
+    </ol>
+    <blockquote>“Check the letter, show me the first page, then save the PDF with a fixed build timestamp.”</blockquote>
+    <p>The model proposes edits; the Typst compiler renders the result. Review the data and preview
+      before using the final document.</p>
+    <a href={url('docs/guides/ai-agents/')}>Set up MCP with these templates →</a>{' · '}
+    <a href="https://casoon.github.io/typstgen/docs/guides/ai-agents/#in-practice">Watch typstgen’s MCP walkthrough</a>
+  </section>
+
   <BuildOutput
-    heading="Seven languages, plus a US variant"
-    caption="Eight real invoice PDFs from one shared template, each with editable configuration, invoice data and a fictional SVG logo. Tax rates and company details are illustrative, not national tax presets."
+    heading="Seven invoice languages, plus a US variant"
+    caption="Eight real invoice PDFs from one shared template, each with editable configuration, invoice data and a fictional SVG logo. Seven-language labels apply to invoices; other templates have their own language support. Tax rates and company details are illustrative, not national tax presets."
     file="examples/invoice-languages/"
   >
     <ul class="gallery">
@@ -168,11 +185,11 @@ python3 examples/invoice-languages/build.py`;
 
   <Quickstart
     title="Make an example your own"
-    lead="Open a PDF first, then edit its data and configuration. Install the compiler from the setup guide before rebuilding the examples."
+    lead="Start with a letter, project document or invoice in the showcase. Follow the setup guide to install typstgen and the template package. The command below rebuilds the invoice demos."
     steps={[
-      'Choose a PDF example and open the configuration and invoice data alongside it.',
-      'Replace the sample company details, logo and descriptions, then choose the taxes and language your invoice needs.',
-      'Rebuild the PDFs with the documented compiler and keep the editable inputs with your project.',
+      'Choose a PDF example and open its linked Typst source or JSON data.',
+      'Replace the sample company details, logo and content. For invoices, also configure taxes, language and paper.',
+      'Build with the CLI or ask your MCP-connected assistant to check, preview and compile. Keep the inputs and build settings with your project.',
     ]}
   >
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
@@ -216,6 +233,24 @@ python3 examples/invoice-languages/build.py`;
   .toolchain a { color: var(--heading); text-decoration: underline; }
   .toolchain-roles a { font-size: 14.5px; }
   .toolchain-setup { margin: 24px 0 0; color: var(--muted); }
+  .agent-workflow > p { max-width: 78ch; }
+  .agent-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    gap: 28px 48px;
+    padding: 0;
+    margin: 28px 0;
+    list-style-position: inside;
+  }
+  .agent-steps li { border-top: 1px solid var(--border); padding-top: 20px; }
+  .agent-steps h3 { display: inline; }
+  .agent-steps p { margin: 8px 0 0; }
+  .agent-workflow blockquote {
+    margin: 28px 0;
+    color: var(--heading);
+    font-size: 20px;
+    line-height: 1.5;
+  }
 
   .workflow {
     margin: 0;
