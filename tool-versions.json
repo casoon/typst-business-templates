@@ -2,7 +2,7 @@
   "$comment": "Versions of the tools the templates are built and checked against. Read by .github/workflows/check.yml and by site/src/pages/index.astro, so the numbers exist once.",
   "typstgen": "0.5.0",
   "chartlet": "0.21.0",
-  "typstgen_profiles_revision": "aad498243e13011906e66ec4bbf3874d33734035",
+  "typstgen_profiles_revision": "f76bfc919f01988a2d01199699c6e68b65a29873",
   "python_packages": {
     "jsonschema": "4.26.0",
     "referencing": "0.37.0",

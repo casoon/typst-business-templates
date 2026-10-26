@@ -1,0 +1,79 @@
+{
+  "company": {
+    "name": "Example Studio GmbH",
+    "address": {
+      "street": "Example Street",
+      "house_number": "1",
+      "postal_code": "10115",
+      "city": "Berlin",
+      "country": "Deutschland",
+      "country_code": "DE"
+    },
+    "tax_id": "TEST-TAX-ID",
+    "vat_id": "DE123456789",
+    "contact": {
+      "email": "hello@example.invalid"
+    },
+    "default_terms": {
+      "vat_exempt": false
+    },
+    "bank_account": {
+      "iban": "DE89370400440532013000",
+      "bic": "COBADEFFXXX",
+      "bank_name": "Example Bank",
+      "account_holder": "Example Studio GmbH"
+    }
+  },
+  "data": {
+    "metadata": {
+      "invoice_number": "SYNTH-2026-001",
+      "invoice_date": "2026-10-26",
+      "delivery_date": "2026-10-25"
+    },
+    "recipient": {
+      "name": "Example Buyer GmbH",
+      "address": {
+        "street": "Example Avenue",
+        "house_number": "2",
+        "postal_code": "10115",
+        "city": "Berlin",
+        "country": "Deutschland",
+        "country_code": "DE"
+      },
+      "vat_id": "DE987654321"
+    },
+    "items": [
+      {
+        "position": 1,
+        "description": "Synthetic consulting service",
+        "quantity": "2",
+        "unit": "stunde",
+        "unit_code": "HUR",
+        "unit_price": {
+          "amount": "100.00"
+        },
+        "tax": "standard"
+      },
+      {
+        "description": "Additional item with a separately chosen tax",
+        "quantity": "1",
+        "unit": "stueck",
+        "unit_code": "C62",
+        "unit_price": {
+          "amount": "50.00"
+        },
+        "tax": "reduced"
+      }
+    ],
+    "payment": {
+      "due_date": "2026-11-25",
+      "payment_terms": "Net 30 days",
+      "bank_account": {
+        "iban": "DE89370400440532013000",
+        "bic": "COBADEFFXXX",
+        "bank_name": "Example Bank",
+        "account_holder": "Example Studio GmbH"
+      }
+    }
+  }
+}

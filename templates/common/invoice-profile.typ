@@ -13,7 +13,7 @@
   assert(choice.format_locale in ("de-DE", "en-GB", "fr-FR"), message: "profile.format_locale: unsupported")
   assert(choice.layout in ("din", "international"), message: "profile.layout: unsupported")
   assert(choice.output_profile == "pdf-preview", message: "profile.output_profile: renderer only supports pdf-preview; request structured output through typstgen")
-  assert(choice.currency == "EUR", message: "profile.currency: only EUR is verified")
+  assert(choice.currency.matches(regex("^[A-Z]{3}$")).len() == 1, message: "profile.currency: expected a three-letter currency code")
   for item in data.items {
     for money in (item.unit_price, item.total) {
       assert(money.at("currency", default: "EUR") == choice.currency, message: "items: currency differs from profile.currency")

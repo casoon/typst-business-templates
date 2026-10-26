@@ -79,8 +79,14 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
         result = validate(request, 'blocked')
         check(expected in json.dumps(result['diagnostics']), 'Missing diagnostic: ' + expected)
 
-    def export(request, name, hybrid=False, legacy=False):
-        resolved = validate(request, 'blocked' if legacy else 'ready_for_preview')
+    def export(request, name, hybrid=False, legacy=False, configuration=None):
+        if configuration is None:
+            resolved = validate(request, 'blocked' if legacy else 'ready_for_preview')
+        else:
+            (root/'invoice-config.json').write_text(json.dumps(configuration))
+            (root/'request.json').write_text(json.dumps(request))
+            resolved = json.loads(run([binary, 'prepare-invoice', '--config', 'invoice-config.json', 'request.json'], root))
+            check(resolved['status']=='ready_for_preview', str(resolved))
         if legacy:
             # Exercise the existing category model, not a released national profile.
             check(resolved['checks']['arithmetic']=='passed','Legacy category model is invalid')
@@ -99,23 +105,29 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
             shutil.copyfile(pdf,args.artifacts_dir/pdf.name)
             (args.artifacts_dir/(name+'.request.json')).write_text(json.dumps(request,indent=2)+'\n')
             (args.artifacts_dir/(name+'.resolved.json')).write_text(json.dumps(resolved,indent=2)+'\n')
+            if configuration is not None:
+                (args.artifacts_dir/(name+'.config.json')).write_text(json.dumps(configuration,indent=2)+'\n')
         reader = PdfReader(pdf)
         text = '\n'.join(p.extract_text() for p in reader.pages)
         check(request['data']['metadata']['invoice_number'] in text, name+': document number lost')
-        if request['selection']['profile_id'] == 'de-small-business':
+        if resolved['selection']['profile_id'] == 'de-small-business':
             check('19 UStG' in text, 'Section 19 note missing')
             check(resolved['normalized']['tax_total'] == '0', 'Small business has nonzero VAT')
-        if request['selection']['language'] == 'en':
+        if resolved['selection']['language'] == 'en':
             check('Invoice' in text and 'Payable in full by' in text, name+': English labels missing')
             check('Geschäftsinhaber' not in text and 'Rückfragen' not in text, name+': German default labels remain')
         if name=='de-payment-account-override':
             check(request['data']['payment']['bank_account']['bank_name'] in text,'PDF kept the company default bank name')
+        for note in resolved['data'].get('notes',[]):
+            check(note in text,name+': configured note missing from PDF')
         if hybrid:
             xml = ET.fromstring(reader.attachments['factur-x.xml'][0])
             ns = {'ram':'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100',
                   'rsm':'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100',
                   'udt':'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100'}
             model=resolved['normalized']
+            for note in resolved['data'].get('notes',[]):
+                check(note in [n.text for n in xml.findall('rsm:ExchangedDocument/ram:IncludedNote/ram:Content',ns)],name+': configured note missing from XML')
             check(xml.find('rsm:ExchangedDocument/ram:ID',ns).text==model['number'],name+': XML identifier differs')
             check(xml.find('rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString',ns).text==model['issue_date'].replace('-',''),name+': XML issue date differs')
             for tag,party in [('SellerTradeParty','seller'),('BuyerTradeParty','buyer')]:
@@ -152,11 +164,13 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
                 check(node.find('.//ram:ApplicableTradeTax/ram:CategoryCode',ns).text == line['tax']['category'], 'XML tax category differs')
                 check(Decimal(node.find('.//ram:NetPriceProductTradePrice/ram:ChargeAmount',ns).text)==Decimal(line['net_price']),'XML unit price differs')
                 if line['net_price']=='0.3333':
-                    shown='0.3333' if request['selection']['format_locale']=='en-GB' else '0,3333'
+                    shown='0.3333' if resolved['selection']['format_locale']=='en-GB' else '0,3333'
                     check(shown in text,name+': PDF rounded the canonical unit price')
-            for amount in [resolved['normalized'][f] for f in ['line_total','tax_total','grand_total']]:
+            pdf_amounts=[model[f] for f in ['line_total','grand_total']]
+            pdf_amounts += [group['amount'] for group in model['breakdown']]
+            for amount in pdf_amounts:
                 printed = f'{Decimal(amount):.2f}'
-                if request['selection']['format_locale'] != 'en-GB': printed = printed.replace('.',',')
+                if resolved['selection']['format_locale'] != 'en-GB': printed = printed.replace('.',',')
                 check(printed in text, name+': PDF canonical total missing '+printed)
             external = {'fixture':name,'mustang':'not_run','pdfa':'not_run'}
             if args.mustang:
@@ -181,6 +195,17 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
                 external['verapdf_version']=run([args.verapdf,'--version'],root).splitlines()[0]
             report['external_validation'].append(external)
         return resolved['normalized']
+
+    configured_request = json.loads((REPO/'examples/invoice-config/invoice.json').read_text())
+    configuration = json.loads((REPO/'invoice-config.json').read_text())
+    configuration['notes']=['Configured payment reference: SYNTH-2026-001']
+    configured_model = export(configured_request,'configured-invoice-eur',hybrid=True,configuration=configuration)
+    check(configured_model['grand_total']=='291.5','Configuration did not calculate mixed VAT totals')
+    configuration['presentation'].update(language='en',format_locale='en-GB',currency='GBP',layout='din')
+    configuration['taxes']['standard']['rate']='20'
+    configuration['taxes']['reduced']['rate']='5'
+    configured_model = export(configured_request,'configured-invoice-gbp',hybrid=True,configuration=configuration)
+    check(configured_model['grand_total']=='292.5' and configured_model['currency']=='GBP','Configuration changes did not reach the shared model')
 
     reference = None
     for language in ['de','en']:
@@ -254,7 +279,7 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
         long['selection']['layout']=layout
         export(long,'de-long-'+layout)
 
-    report['checks']=['profile resolution','missing facts','eligibility dates and waiver','unsupported outputs',
+    report['checks']=['user-owned invoice configuration','profile resolution','missing facts','eligibility dates and waiver','unsupported outputs',
                       'de/en DIN/international invariant','French fr/en draft invariant','multiple rates',
                       'canonical PDF/XML totals, tax groups, parties, dates, currency and payment','optional logos and house numbers','long content']
 

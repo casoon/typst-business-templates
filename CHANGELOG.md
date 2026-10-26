@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 - `locale/` moved into the package (`templates/locale/`).
 
 ### Added
+- **Invoices:** A reusable `invoice-config.json` controls named taxes, required fields, notes,
+  currency and presentation through typstgen's shared invoice preparation API.
 - **Testing:** `scripts/test.sh` builds the coordinated tools in an isolated cache and retains
   synthetic package/invoice PDFs, canonical inputs and external validation reports for manual review.
 - **Invoices:** Shared DE/international rendering with independent language and number formatting,

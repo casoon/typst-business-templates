@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/invoice-config.schema.json",
+  "title": "Invoice configuration",
+  "description": "User-owned version-1 tax and presentation configuration. Rates are explicit inputs; national applicability is not inferred. Monetary totals round half away from zero to two decimal places.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "presentation",
+    "default_tax",
+    "taxes"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "format_locale",
+        "currency",
+        "layout"
+      ],
+      "properties": {
+        "language": {
+          "enum": [
+            "de",
+            "en",
+            "es",
+            "fr",
+            "it",
+            "nl",
+            "pt"
+          ]
+        },
+        "format_locale": {
+          "enum": [
+            "de-DE",
+            "en-GB",
+            "fr-FR"
+          ]
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "layout": {
+          "enum": [
+            "din",
+            "international"
+          ]
+        }
+      }
+    },
+    "default_tax": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Key in taxes used when an invoice line omits tax."
+    },
+    "taxes": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/tax"
+      }
+    },
+    "required_fields": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Required input paths rooted at company, data or facts; * traverses arrays."
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Appended after invoice-specific notes; rendered in PDF and included in CII."
+    },
+    "display_fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "labels"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "tax": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "rate"
+      ],
+      "properties": {
+        "category": {
+          "enum": [
+            "S",
+            "Z",
+            "E",
+            "AE"
+          ],
+          "description": "Standard/reduced taxable, zero-rated, exempt, or reverse charge."
+        },
+        "rate": {
+          "type": "string",
+          "pattern": "^\\d{1,3}(\\.\\d{1,4})?$",
+          "description": "Explicit percentage: S above zero up to 100; Z/E/AE exactly zero."
+        },
+        "exemption_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exemption_reason_code": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {
+                "const": "E"
+              }
+            }
+          },
+          "then": {
+            "anyOf": [
+              {
+                "required": [
+                  "exemption_reason"
+                ]
+              },
+              {
+                "required": [
+                  "exemption_reason_code"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

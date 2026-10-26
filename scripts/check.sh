@@ -81,7 +81,7 @@ repo = pathlib.Path(sys.argv[1])
 schemas = [json.loads(p.read_text()) for p in sorted((repo / "schema").glob("*.json"))]
 registry = Registry().with_resources((s["$id"], Resource.from_contents(s)) for s in schemas)
 problems = []
-for path in sorted([*(repo / "examples").rglob("*.json"), *(repo / "profiles").glob("*.json")]):
+for path in sorted([repo / "invoice-config.json", *(repo / "examples").rglob("*.json"), *(repo / "profiles").glob("*.json")]):
     data = json.loads(path.read_text())
     if "$schema" not in data:
         continue

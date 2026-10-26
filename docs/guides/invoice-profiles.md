@@ -125,11 +125,17 @@ Rule operations are `required`, `equals`, `one_of`, `mapping`, `contains`, `with
 segments and `*` array traversal. Diagnostics include concrete paths, rule IDs and source records.
 The schemas check the catalog shape; typstgen does not pretend a skipped JSON Schema run passed.
 
+## Configuring your own invoices
+
+For user-owned tax rates, required fields, notes and presentation, use
+[invoice configuration](invoice-configuration.md). It prepares invoices without selecting a
+national catalog entry. The catalogs below remain an optional layer for reviewed national rules.
+
 ## Complete synthetic agent flow
 
 Profile tools require the coordinated **unreleased typstgen profiles build**, not the published
 0.5.0 binary. The base package examples remain checked with published typstgen 0.5.0. Use the
-revision `aad498243e13011906e66ec4bbf3874d33734035` recorded in `tool-versions.json` for the profile workflow; no crate publication or
+revision `f76bfc919f01988a2d01199699c6e68b65a29873` recorded in `tool-versions.json` for the profile workflow; no crate publication or
 external release is implied.
 
 1. Call `list_document_profiles` with the package catalog. By default it lists only released
@@ -145,7 +151,7 @@ external release is implied.
 
 Build the coordinated CLI from the typstgen checkout at that revision with `cargo build --locked`.
 Once the branch is available remotely, `cargo install --git https://github.com/casoon/typstgen
---rev aad498243e13011906e66ec4bbf3874d33734035 --locked` selects exactly that source revision.
+--rev f76bfc919f01988a2d01199699c6e68b65a29873 --locked` selects exactly that source revision.
 The CLI still identifies its package version as 0.5.0; the Git revision distinguishes this
 unreleased feature build from the published crate. Do not install the published 0.5.0 crate
 and expect profile commands to exist.

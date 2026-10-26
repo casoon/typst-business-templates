@@ -185,14 +185,20 @@
   #set text(size: 10pt, font: "Helvetica")
   #set par(leading: 0.65em)
 
-  #let vat-note = vat-exemption-note(company)
+  #let vat-note = if choice.at("profile_id", default: "") == "configured-invoice" { none } else { vat-exemption-note(company) }
   #if vat-note != none [
     #vat-note
 
     #v(8pt)
   ]
 
-  #labels.payable_by #date(data.payment.due_date).
+  #for note in data.at("notes", default: ()) [#block(above: 4pt, below: 4pt)[#note]]
+
+  #if data.payment.at("due_date", default: none) != none [
+    #labels.payable_by #date(data.payment.due_date).
+  ] else if data.payment.at("payment_terms", default: none) != none [
+    #data.payment.payment_terms
+  ]
 
   #if "bank_account" in data.payment [
     #v(8pt)

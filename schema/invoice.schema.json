@@ -248,6 +248,13 @@
           "description": "Payment means code reserved for future adapters; not emitted by legacy CII."
         }
       }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Invoice notes rendered in PDF and included in CII XML."
     }
   },
   "$defs": {

@@ -158,6 +158,13 @@ embeds an architecture diagram.
 
 [`examples/README.md`](examples/README.md) explains the project layout.
 
+## Invoice configuration
+
+For invoices with your own tax rates, required fields and notes, copy
+[`invoice-config.json`](invoice-config.json) into your project. The coordinated typstgen build
+reads it with `prepare-invoice --config invoice-config.json invoice.json`; the returned data
+drives both the PDF and CII XML. See [invoice configuration](docs/guides/invoice-configuration.md).
+
 ## Development
 
 For a complete local test with retained PDFs and external validator reports:
