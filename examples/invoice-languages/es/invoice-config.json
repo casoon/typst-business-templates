@@ -1,0 +1,25 @@
+{
+  "$schema": "../../../schema/invoice-config.schema.json",
+  "version": 1,
+  "tax_model": "vat",
+  "presentation": {
+    "language": "es",
+    "format_locale": "es-ES",
+    "currency": "EUR",
+    "layout": "international",
+    "paper": "a4"
+  },
+  "default_tax": "standard",
+  "taxes": {
+    "standard": {
+      "category": "S",
+      "rate": "20"
+    }
+  },
+  "required_fields": [
+    "data.metadata.delivery_date"
+  ],
+  "notes": [
+    "Demostración: empresas, datos bancarios y tipos impositivos ficticios."
+  ]
+}

@@ -63,6 +63,7 @@
         "house_number": { "type": "string" },
         "postal_code": { "type": "string" },
         "city": { "type": "string" },
+        "region": { "type": "string", "description": "State or region for US-style addresses." },
         "country": { "type": "string", "description": "Country name, e.g. Deutschland" },
         "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2, e.g. DE" }
       }
@@ -74,17 +75,22 @@
         "name": { "type": "string" },
         "company": { "type": ["string", "null"] },
         "address": { "$ref": "#/$defs/address" },
-        "vat_id": { "type": "string", "description": "Buyer's VAT ID, needed for reverse charge" }
+        "vat_id": { "type": "string", "description": "Buyer's VAT ID, needed for reverse charge" },
+        "registration_number": {"type": "string", "description": "Explicit legal registration identifier, e.g. French SIREN. Used by case profiles; never inferred."},
+        "electronic_address": {"type": "object", "required": ["value", "scheme_id"], "properties": {"value": {"type": "string"}, "scheme_id": {"type": "string"}}, "description": "Electronic endpoint and identifier scheme for future structured adapters; not implemented by the legacy CII path."},
+        "email": {"type": "string", "description": "Buyer contact email used by the current CII pipeline."}
       }
     },
     "bank_account": {
       "type": "object",
-      "required": ["iban"],
+      "anyOf": [{"required": ["iban"]}, {"required": ["account_number", "routing_number"]}],
       "properties": {
         "bank_name": { "type": "string" },
         "account_holder": { "type": "string" },
         "iban": { "type": "string" },
-        "bic": { "type": "string" }
+        "bic": { "type": "string" },
+        "account_number": { "type": "string" },
+        "routing_number": { "type": "string" }
       }
     }
   }

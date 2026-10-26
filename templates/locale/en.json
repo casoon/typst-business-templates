@@ -36,7 +36,32 @@
     "bic": "BIC",
     "reference": "Reference",
     "thank_you": "Thank you for your business!",
-    "regards": "Best regards"
+    "regards": "Best regards",
+    "contact": "Contact:",
+    "delivery_date": "Supply date",
+    "payable_by": "Payable in full by",
+    "retention_of_title": "Delivered goods remain our property until paid in full.",
+    "business_owner": "Business owner",
+    "vat_id": "VAT ID",
+    "tax_id": "Tax number",
+    "account_holder": "Account holder",
+    "units": {
+      "C62": "pcs.",
+      "HUR": "h",
+      "DAY": "days",
+      "KGM": "kg",
+      "MTR": "m",
+      "KMT": "km",
+      "LTR": "l",
+      "LS": "LS",
+      "MON": "MON",
+      "ANN": "ANN",
+      "CT": "CT",
+      "PX": "PX"
+    },
+    "sales_tax": "Sales Tax",
+    "account_number": "Account number",
+    "routing_number": "Routing number"
   },
   "offer": {
     "title": "Quotation",
@@ -82,10 +107,32 @@
     "security_hint_2": "Do not share credentials with third parties",
     "security_hint_3": "Change passwords regularly",
     "security_hint_4": "Use two-factor authentication where possible",
-    "security_hint_5": "Report suspicious activities immediately"
+    "security_hint_5": "Report suspicious activities immediately",
+    "masked_notice": "Password fields are masked. Notes and other free text are unchanged."
   },
   "documentation": {
     "title": "DOCUMENTATION",
     "document_number": "Document Number"
+  },
+  "publication": {
+    "duration": "Duration",
+    "result": "Result",
+    "participation": "Participation",
+    "required": "Required",
+    "recommended": "Recommended",
+    "optional": "Optional"
+  },
+  "task_list": {
+    "phase": "Phase",
+    "responsible": "Responsible",
+    "roles": "Roles",
+    "due": "Due",
+    "depends_on": "Depends on",
+    "condition": "Condition",
+    "additional_tasks": "Additional tasks",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "title": "Task list"
   }
 }

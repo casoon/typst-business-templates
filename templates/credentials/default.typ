@@ -8,8 +8,9 @@
 /// Renders the document. `data` is described by schema/credentials.schema.json,
 /// `company` that of company.json,
 /// `locale` that of locale/<lang>.json.
-#let credentials(data: none, company: (:), locale: none) = [
+#let credentials(data: none, company: (:), locale: none, mask: false) = [
 #set document(..document-metadata(company, data.metadata.at("document_number", default: none), data.metadata.at("created_at", default: none)))
+#assert(type(mask) == bool, message: "credentials.mask: expected boolean")
 #let locale = load-locale(locale, company)
 // Get branding from company data
 #let accent-color = get-accent-color(company)
@@ -161,6 +162,7 @@
 // ============================================================================
 
 // Services and credentials
+#if mask [#locale.credentials.masked_notice #v(1em)]
 #for (index, service) in data.services.enumerate() [
   #if index > 0 [
     #v(2em)
@@ -243,7 +245,9 @@
           inset: 0.3em,
 
           [*#l-username:*], [#raw(cred.username)],
-          [*#l-password:*], [#raw(cred.password)],
+          [*#l-password:*], [#if "password" in cred and cred.password != none and cred.password != "" {
+            raw(if mask { "********" } else { cred.password })
+          }],
 
           ..if "credential_type" in cred and cred.credential_type != none {
             ([*#l-type:*], [#cred.credential_type])

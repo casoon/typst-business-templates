@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/document-profiles.schema.json",
+  "title": "Versioned document profile catalog",
+  "type": "object",
+  "required": [
+    "version",
+    "profiles",
+    "output_adapters"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/profile"
+      }
+    },
+    "output_adapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "syntax"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "syntax": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "abstract",
+            "released",
+            "draft",
+            "unsupported"
+          ]
+        },
+        "extends": {
+          "type": "object",
+          "required": [
+            "id",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "replace_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "format_locales": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "currencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "layouts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "url",
+              "checked_on"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "checked_on": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        },
+        "effective_from": {
+          "type": "string",
+          "format": "date"
+        },
+        "effective_until": {
+          "type": "string",
+          "format": "date"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "path",
+              "op"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "op": {
+                "enum": [
+                  "required",
+                  "equals",
+                  "one_of",
+                  "contains",
+                  "mapping",
+                  "within"
+                ]
+              },
+              "value": {},
+              "values": {
+                "type": "array"
+              },
+              "key": {
+                "type": "string"
+              },
+              "value_key": {
+                "type": "string"
+              },
+              "mapping": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array"
+                }
+              },
+              "start_path": {
+                "type": "string"
+              },
+              "end_path": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "equals"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "contains"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "one_of"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "values"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "mapping"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "key",
+                    "value_key",
+                    "mapping"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "op": {
+                      "const": "within"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "start_path",
+                    "end_path"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

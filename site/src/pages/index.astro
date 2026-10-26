@@ -16,38 +16,38 @@ import tools from '../../../tool-versions.json';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import { example } from '../showcase';
 
-const hero = example('invoice');
-const gallery = ['offer', 'reminder', 'letter', 'credentials', 'concept', 'diagram-roadmap'].map(example);
+const hero = example('invoice-us');
+// brochure shares publication/default.typ rather than having its own folder.
+const templateCount = Object.keys(import.meta.glob('../../../templates/*/default.typ', { query: '?raw' })).length + 1;
+const schemaCount = Object.keys(import.meta.glob('../../../schema/*.schema.json')).length;
+const invoiceGallery = ['invoice-de', 'invoice-en', 'invoice-fr', 'invoice-es', 'invoice-it', 'invoice-nl', 'invoice-pt', 'invoice-us'].map(example);
+const gallery = ['publication-guide', 'publication-intake', 'publication-brochure', 'credentials', 'concept', 'diagram-roadmap'].map(example);
 
-const quickstart = `cargo install typstgen
-git clone https://github.com/casoon/typst-business-templates
-cd typst-business-templates/examples/it-consultant
-typstgen compile documents/invoices/2025/invoice.typ
-# → documents/invoices/2025/invoice.pdf
-typstgen compile documents/invoices/2025/invoice.typ \\
-  --zugferd documents/invoices/2025/invoice.json \\
-  --company data/company.json --pdf-standard a-3b
-# → the same PDF as ZUGFeRD e-invoice`;
+const quickstart = `cd examples/invoice-languages
+typstgen prepare-invoice \\
+  --config en-US/invoice-config.json \\
+  en-US/invoice.json > en-US/resolved.json
+typstgen compile invoice.typ \\
+  --input resolved=en-US/resolved.json \\
+  -o en-US/invoice.pdf`;
 ---
 
 <Base>
   <Hero
-    title="Business documents as a Typst package."
-    lead="Templates for invoices, offers, reminders, letters, credentials, concepts, contracts and more. Keep invoices as JSON and long documents as Typst markup; typstgen compiles them to PDF with your company data and turns invoices into ZUGFeRD e-invoices."
+    title="Configurable invoices and business documents."
+    lead="Create invoices in seven languages with explicit VAT or sales-tax configuration. Reuse your company data and logo across offers, contracts, printable forms and brochures."
   >
     <Install
-      label="Install"
+      label="Get the examples"
       commands={[
-        { label: 'typstgen', command: 'cargo install typstgen' },
-        { label: 'package', command: 'git clone https://github.com/casoon/typst-business-templates' },
-        { label: 'diagrams', command: 'cargo install chartlet' },
+        { label: 'repository', command: 'git clone https://github.com/casoon/typst-business-templates' },
       ]}
     />
     <Badges>
       <Badge>MIT</Badge>
-      <Badge>business-templates {config.version}</Badge>
+      <Badge>{config.version} development package</Badge>
       <Badge>Typst 0.15</Badge>
-      <Badge>typstgen {tools.typstgen}</Badge>
+      <Badge>pinned typstgen source build</Badge>
     </Badges>
     <figure slot="output" class="hero-doc">
       <a href={url(`showcase/${hero.slug}/`)}>
@@ -60,45 +60,75 @@ typstgen compile documents/invoices/2025/invoice.typ \\
         />
       </a>
       <figcaption>
-        Sample invoice from <code>{hero.file.split('/').slice(0, 2).join('/')}</code>, compiled by
-        typstgen {tools.typstgen}.
+        US Letter · USD · separate sales-tax components · shared SVG logo.
       </figcaption>
     </figure>
   </Hero>
 
   <Facts
     items={[
-      { value: '19', label: 'document templates' },
-      { value: '7', label: 'languages for concepts, contracts and other documents' },
-      { value: 'EN 16931', label: 'e-invoices built by typstgen' },
-      { value: '11', label: 'JSON schemas for data files' },
+      { value: String(templateCount), label: 'document templates' },
+      { value: '7', label: 'invoice and document languages' },
+      { value: String(invoiceGallery.length), label: 'editable invoice demos with PDFs' },
+      { value: String(schemaCount), label: 'JSON schemas for data and configuration' },
     ]}
   />
+
+  <section class="readiness" aria-label="Development status">
+    <p>
+      The package is development source. Configured invoices require the pinned typstgen build;
+      the published {tools.typstgen} compiler supports the existing plain-template path.{' '}
+      <a href={url('docs/getting-started/installation/')}>Installation options</a> ·
+      <a href={url('docs/reference/project-status/')}>Capabilities and limits</a>
+    </p>
+  </section>
 
   <Features
     items={[
       {
-        title: 'Your documents are plain files',
-        body: 'Invoices and offers are JSON with a four-line Typst file next to them, long documents are Typst markup. Company data is one company.json. Everything diffs and versions in Git.',
+        title: 'One configuration for invoice construction',
+        body: 'Choose named taxes, required fields, notes, language, number format, currency and paper. typstgen calculates missing totals and checks supplied values. You select the applicable treatment; an address does not choose it for you.',
       },
       {
-        title: 'German business conventions built in',
-        body: 'DIN 5008 address block, VAT breakdown, dunning levels and a company footer with tax and bank data. Kleinunternehmer invoices print the § 19 UStG note, and totals that do not add up stop the build.',
+        title: 'VAT and explicit sales-tax components',
+        body: 'Keep taxable, zero, exempt and reverse-charge categories separate. Sales-tax configurations give each component its own taxable basis and rounded amount, with US labels and payment fields.',
       },
       {
-        title: 'E-invoices from the same data',
-        body: 'typstgen builds the ZUGFeRD / Factur-X XML (EN 16931) from the invoice JSON and embeds it in a PDF/A-3. The template sets the document date the standard requires.',
+        title: 'Shared values for PDF and VAT XML',
+        body: 'The existing CII/Factur-X adapter uses the canonical VAT invoice data. External Mustang and PDF/A checks exercise the supported examples. XRechnung, Peppol and transmission remain outside the implemented adapters.',
       },
       {
-        title: 'Diagrams with chartlet',
-        body: 'Flow charts, org charts, timelines and architecture diagrams come from a JSON spec, rendered to SVG by chartlet and placed in any document like an image.',
+        title: 'Compact publications and printable forms',
+        body: 'Build A4 guides and intake forms with labelled writing fields, choices, notes, phases and tables. Use landscape brochures for short overviews. Credentials can mask passwords, and partial locale overrides retain package defaults.',
+      },
+      {
+        title: 'Typst content and chartlet diagrams',
+        body: 'Write contracts, concepts and documentation as Typst markup. Reuse company data and branding; add flow charts, timelines and architecture diagrams rendered by chartlet.',
       },
     ]}
   />
 
   <BuildOutput
-    heading="Compiled by typstgen"
-    caption="First pages of documents from the example projects, compiled by typstgen 0.5.0; diagrams rendered by chartlet 0.19. Each links to its source file and the full PDF."
+    heading="Seven languages, plus a US variant"
+    caption="Eight real invoice PDFs from one shared template, each with editable configuration, invoice data and a fictional SVG logo. Tax rates and company details are illustrative, not national tax presets."
+    file="examples/invoice-languages/"
+  >
+    <ul class="gallery">
+      {invoiceGallery.map((doc) => (
+        <li>
+          <a href={url(`showcase/${doc.slug}/`)}>
+            <img src={url(`showcase/${doc.slug}.webp`)} width={doc.size.width} height={doc.size.height}
+              alt={doc.alt} loading="lazy" decoding="async" />
+            <span>{doc.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </BuildOutput>
+
+  <BuildOutput
+    heading="Guides, forms and other documents"
+    caption="Outputs from the example projects: compact publications, printable forms, landscape brochures, credentials, concepts and chartlet diagrams. Each entry includes its source and full PDF."
     file="examples/"
   >
     <ul class="gallery">
@@ -123,11 +153,11 @@ typstgen compile documents/invoices/2025/invoice.typ \\
   </BuildOutput>
 
   <Quickstart
-    lead="From a clone to a PDF and an e-invoice. The example projects point typstgen at the package and the fonts in the repository; the documentation shows how to set up your own project."
+    lead="Install the pinned development compiler from the documentation, then prepare and render an existing language demo. The same configuration path works in the CLI, Rust library and MCP."
     steps={[
-      'Install <code>typstgen</code> with Cargo.',
-      'Clone the repository and open an example project, or set up your own with a <code>typstgen.toml</code> and <code>data/company.json</code>.',
-      'Run <code>typstgen compile</code> on a document; add <code>--zugferd</code> for an e-invoice.',
+      'Choose a demo and install the coordinated typstgen revision from <code>tool-versions.json</code>.',
+      'Edit the demo’s invoice configuration and input: company, customer, descriptions and selected tax keys.',
+      'Prepare canonical invoice values and compile the shared wrapper. VAT invoices can also use the existing Factur-X path.',
     ]}
   >
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
@@ -135,6 +165,16 @@ typstgen compile documents/invoices/2025/invoice.typ \\
 </Base>
 
 <style>
+  .readiness {
+    max-width: var(--max);
+    margin: -36px auto 48px;
+    padding: 0 24px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .readiness a { color: var(--heading); text-decoration: underline; }
+
   .hero-doc {
     max-width: 440px;
     margin: 0 auto;

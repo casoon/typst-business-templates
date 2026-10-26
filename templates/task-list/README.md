@@ -82,3 +82,11 @@ Siehe:
 `company` bestimmt Akzentfarbe, Schrift und Sprache (`company.language`), `locale` überschreibt die
 Übersetzungen. Für ein eigenes Layout das Template aus `templates/task-list/` in das eigene Projekt
 kopieren und dort ändern.
+
+## Phases and responsibilities
+
+Use the existing `assignee` field for responsibility and optional `phase` for a phase label.
+Both render as text and omit empty/null values. No extra table column is added.
+A caller-defined `roles: ((name: "Sponsor", description: "Accepts the result"),)` legend
+explains responsibilities without relying on colors. Standard labels follow the locale.
+See `examples/publication/tasks.typ` for a multipage synthetic example.

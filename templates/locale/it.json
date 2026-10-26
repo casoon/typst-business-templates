@@ -36,7 +36,32 @@
     "bic": "BIC",
     "reference": "Riferimento",
     "thank_you": "Grazie per la vostra fiducia!",
-    "regards": "Cordiali saluti"
+    "regards": "Cordiali saluti",
+    "contact": "Contatto:",
+    "delivery_date": "Data della prestazione",
+    "payable_by": "Pagamento integrale entro il",
+    "retention_of_title": "I beni consegnati restano di nostra proprietà fino al pagamento completo.",
+    "business_owner": "Titolare",
+    "vat_id": "Partita IVA",
+    "tax_id": "Codice fiscale",
+    "account_holder": "Intestatario del conto",
+    "units": {
+      "C62": "pz.",
+      "HUR": "h",
+      "DAY": "giorni",
+      "KGM": "kg",
+      "MTR": "m",
+      "KMT": "km",
+      "LTR": "l",
+      "LS": "LS",
+      "MON": "MON",
+      "ANN": "ANN",
+      "CT": "CT",
+      "PX": "PX"
+    },
+    "sales_tax": "Imposta sulle vendite",
+    "account_number": "Numero di conto",
+    "routing_number": "Numero di routing"
   },
   "offer": {
     "title": "Preventivo",
@@ -82,10 +107,32 @@
     "security_hint_2": "Non condividere le credenziali con terzi",
     "security_hint_3": "Cambiare regolarmente le password",
     "security_hint_4": "Utilizzare l'autenticazione a due fattori quando possibile",
-    "security_hint_5": "Segnalare immediatamente qualsiasi attività sospetta"
+    "security_hint_5": "Segnalare immediatamente qualsiasi attività sospetta",
+    "masked_notice": "I campi password sono mascherati. Le note e gli altri testi restano invariati."
   },
   "documentation": {
     "title": "Documentazione",
     "document_number": "N° documento"
+  },
+  "publication": {
+    "duration": "Durata",
+    "result": "Risultato",
+    "participation": "Partecipazione",
+    "required": "Obbligatorio",
+    "recommended": "Consigliato",
+    "optional": "Facoltativo"
+  },
+  "task_list": {
+    "phase": "Fase",
+    "responsible": "Responsabile",
+    "roles": "Ruoli",
+    "due": "Scadenza",
+    "depends_on": "Dipende da",
+    "condition": "Condizione",
+    "additional_tasks": "Altre attività",
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Bassa",
+    "title": "Elenco attività"
   }
 }

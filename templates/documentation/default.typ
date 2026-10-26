@@ -12,6 +12,7 @@
 //   )
 
 #import "../common/styles.typ": *
+#import "../common/formatting.typ": prose-metadata
 #import "../common/footers.typ": document-footer
 #import "../common/title-page.typ": document-title-page
 
@@ -38,6 +39,7 @@
 ) = {
   // Use passed company/locale or empty defaults
   let company = if company != none { company } else { (:) }
+  set document(..prose-metadata(company, title, document_number, created_at, authors: authors))
   let locale = load-locale(locale, company)
   
   // Get branding from company data

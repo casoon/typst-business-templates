@@ -2,6 +2,7 @@
 // Based on concept/documentation structure
 
 #import "../common/styles.typ": *
+#import "../common/formatting.typ": prose-metadata
 #import "../common/footers.typ": document-footer
 #import "../common/title-page.typ": parties-title-page
 
@@ -24,6 +25,7 @@
   body
 ) = {
   let company = if company != none { company } else { (:) }
+  set document(..prose-metadata(company, title, document_number, created_at))
   let locale = load-locale(locale, company)
   
   let accent-color = get-accent-color(company)

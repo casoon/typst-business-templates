@@ -6,12 +6,40 @@ order: 1
 
 ## typstgen
 
+There are two supported development workflows. Use the coordinated source build for invoice
+configuration and profile commands; use the published compiler for the existing plain-template
+examples and VAT export. The package itself is unreleased local source.
+
+### Configured invoices and profile tools
+
+From the cloned `typst-business-templates` repository, install the exact revision declared by
+the package into a project-local tool directory:
+
 ```sh
-cargo install typstgen
+revision="$(python3 -c 'import json; print(json.load(open("tool-versions.json"))["typstgen_profiles_revision"])')"
+cargo install typstgen --git https://github.com/casoon/typstgen \
+  --rev "$revision" --locked --debug \
+  --root ".cache/test-tools/typstgen-$revision"
+export PATH="$PWD/.cache/test-tools/typstgen-$revision/bin:$PATH"
+python3 examples/invoice-languages/build.py
+```
+
+This does not replace a globally installed compiler. The binary still reports package version
+0.5.0; the Git revision identifies the development features. `scripts/test.sh` also installs
+this pinned build and runs the complete acceptance workflow, including external validators.
+
+See [Invoice configuration](../../guides/invoice-configuration/) and the
+[eight PDF demos](../../../showcase/) for the practical path.
+
+### Existing plain-template examples
+
+```sh
+cargo install typstgen --version 0.5.0 --locked
 ```
 
 typstgen embeds the Typst compiler, so no separate `typst` binary is needed. Other install options
 are in the [typstgen documentation](https://casoon.github.io/typstgen/).
+The published 0.5.0 crate does not contain `prepare-invoice` or the profile commands.
 
 ## chartlet (optional)
 
@@ -77,3 +105,7 @@ The accounting documents use Helvetica. Without it, Typst falls back to an insta
 font and prints a warning.
 
 Continue with the [Quickstart](../quickstart/).
+
+The current package is unreleased. Pin a repository commit for reproducibility; historical
+`v0.7.x` releases contain docgen. See [Versions](../../reference/releases/) and
+[Migration](../../guides/migration/).

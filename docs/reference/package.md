@@ -21,7 +21,7 @@ The package is installed locally, see [Installation](../../getting-started/insta
 ## Accounting functions
 
 ```typst
-invoice(data: none, company: none)
+invoice(data: none, company: none, profile: none, locale: none)
 offer(data: none, company: none)
 credit-note(data: none, company: none)
 reminder(data: none, company: none)
@@ -30,14 +30,14 @@ order-confirmation(data: none, company: none)
 quotation-request(data: none, company: none)
 time-sheet(data: none, company: none)
 letter(data: none, company: none, [body])
-credentials(data: none, company: (:), locale: none)
+credentials(data: none, company: (:), locale: none, mask: false)
 ```
 
 | Parameter | Type | Content |
 | --- | --- | --- |
 | `data` | dictionary | the document, usually `json("…")`; shape per [schema](#json-schemas) |
 | `company` | dictionary | `company.json`; `company.logo` may be replaced by image bytes |
-| `locale` | dictionary | `credentials` only: labels, default `templates/locale/<company.language>.json` |
+| `locale` | dictionary | `invoice`/`credentials`: partial overrides over the selected package catalog |
 | body | content | `letter` only, optional: the letter text with headings, lists and tables, after `data.content` |
 
 `company.language` defaults to `de`. `invoice`, `offer`, `credit-note` and
@@ -69,7 +69,7 @@ Template-specific parameters, with defaults:
 | `specification` | `title`, `document_number`, `subject`, `client_name`, `project_name`, `version: "1.0"`, `status: "Entwurf"`, `tags: ()`, `authors: ()`, `created_at`, `last_updated`, `show_toc: true` |
 | `proposal` | `title`, `document_number`, `client_name`, `project_name`, `budget`, `timeline`, `version: "1.0"`, `status: "Angebot"`, `tags: ()`, `created_at`, `valid_until`, `authors: ()`, `show_toc: true` |
 | `sla` | `title`, `document_number`, `service_provider`, `customer`, `effective_date`, `termination_date`, `review_period`, `version: "1.0"`, `status: "Aktiv"`, `created_at`, `show_toc: true` |
-| `task-list` | `title: "Aufgabenliste"`, `subtitle`, `project`, `client`, `document-number`, `created` (today), `tasks: ()`, `categories: ()`, `notes` |
+| `task-list` | `title: "Aufgabenliste"`, `subtitle`, `project`, `client`, `document-number`, `created` (today), `tasks: ()`, `categories: ()`, `roles: ()`, `notes` |
 | `handout` | `title`, `handout-type: "Aufgabenblatt"`, `category`, `subject`, `target-group: "Oberstufe"`, `ai-context`, `competencies: ()`, `duration`, `materials: ()`, `version: "1.0"` |
 
 Parameters without a default shown default to `none`. Dates are strings and printed as given.
@@ -77,7 +77,7 @@ Parameters without a default shown default to `none`. Dates are strings and prin
 `task-list` is usually called directly with an empty body (`#task-list(…)[]`). A task is a
 dictionary with `title` and optionally `status` (`todo`, `in-progress`, `done`, `blocked`),
 `priority` (`high`, `medium`, `low`), `due`, `assignee`, `tags`, `description`, `depends-on`,
-`condition` and `subtasks`; a category has `name`, optional `description` and `tasks`.
+`condition`, `phase` and `subtasks`; a category has `name`, optional `description` and `tasks`.
 
 ## Handout helpers
 
@@ -112,6 +112,9 @@ JSON Schema draft 2020-12, in
 | [`letter`](https://casoon.github.io/typst-business-templates/schema/letter.schema.json) | `data` of `letter` |
 | [`credentials`](https://casoon.github.io/typst-business-templates/schema/credentials.schema.json) | `data` of `credentials` |
 | [`common`](https://casoon.github.io/typst-business-templates/schema/common.schema.json) | shared definitions: `date`, `decimal`, `money`, `vat_rate`, `address`, `recipient`, `bank_account` |
+| [`invoice-config`](https://casoon.github.io/typst-business-templates/schema/invoice-config.schema.json) | tax model, named taxes/components, required fields, notes and presentation |
+| [`document-profiles`](https://casoon.github.io/typst-business-templates/schema/document-profiles.schema.json) | optional versioned rule catalog |
+| [`document-request`](https://casoon.github.io/typst-business-templates/schema/document-request.schema.json) | explicit profile selection, invoice data and confirmed facts |
 
 Every field carries a description, including which fields the templates do not render and which
 only typstgen reads. A JSON file names its schema with `"$schema"` for editor support; the
@@ -132,5 +135,30 @@ Paths are relative to the working directory, so run typstgen from the project fo
 ## Locales
 
 `templates/locale/` contains `de`, `en`, `es`, `fr`, `it`, `nl` and `pt`, all with the same keys.
-A custom `locale:` dictionary follows the same shape; missing keys fall back to built-in
-defaults.
+A custom `locale:` dictionary recursively overlays the catalog selected by the document/company
+language. Missing/null labels inherit; empty strings suppress labels. Known type conflicts and
+unsupported languages fail. `load-locale(locale, company, language: none)` is exported for
+caller-composed components. See [Migration](../../guides/migration/#partial-translations).
+
+## Publication functions and components
+
+`publication` and `brochure` accept a content body with the compact frame and identity
+parameters. The package exports printable fields, choices, notices, phases, tables, priorities,
+cards and numbered steps. See [Publications](../../guides/publications/) for signatures,
+page dimensions, PDF structure and overflow limits.
+
+## Metadata and credentials
+
+Running-text title/author/number/date mapping and the `credentials(mask: true)` password-field
+contract are described in [Migration](../../guides/migration/). Masking does not redact free text.
+Task responsibility reuses `assignee`; optional `phase` and a `roles: ((name: ..., description:
+...),)` legend are visible text. Empty phase/assignee values add no column or label.
+
+## Invoice profiles
+
+The rendering selection separates language, format locale, currency, DIN/international layout
+and A4/US Letter. The user-owned configuration chooses VAT categories or additive sales-tax
+components; canonical calculation and optional rule-catalog resolution belong to typstgen.
+See [Invoice configuration](../../guides/invoice-configuration/) and
+[Capabilities and limits](../project-status/).
+See [Invoice profiles](../../guides/invoice-profiles/) for the versioned contracts and release states.

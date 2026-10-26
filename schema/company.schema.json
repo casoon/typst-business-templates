@@ -54,17 +54,8 @@
       ]
     },
     "address": {
-      "description": "Postal address of the company. The DIN 5008 sender line reads street, house_number, postal_code and city unconditionally.",
-      "allOf": [
-        {
-          "$ref": "common.schema.json#/$defs/address"
-        },
-        {
-          "required": [
-            "house_number"
-          ]
-        }
-      ]
+      "$ref": "common.schema.json#/$defs/address",
+      "description": "Postal address. street may include the house number; a separate house_number is optional."
     },
     "contact": {
       "type": "object",
@@ -99,7 +90,7 @@
       "description": "VAT identification number (USt-IdNr.), e.g. DE123456789; seller VAT ID in ZUGFeRD."
     },
     "bank_account": {
-      "description": "Bank details for payment. When present, the accounting footer prints bank_name, account_holder, iban and bic; ZUGFeRD uses it as payee account.",
+      "description": "Bank details for payment. The invoice footer supports IBAN/BIC or account_number/routing_number; CII uses IBAN accounts.",
       "allOf": [
         {
           "$ref": "common.schema.json#/$defs/bank_account"
@@ -107,9 +98,7 @@
         {
           "required": [
             "bank_name",
-            "account_holder",
-            "iban",
-            "bic"
+            "account_holder"
           ]
         }
       ]
@@ -249,6 +238,34 @@
           "description": "Group documents in per-year folders."
         }
       }
+    },
+    "registration_number": {
+      "type": "string",
+      "description": "Explicit legal registration identifier, e.g. French SIREN. Used by case profiles; never inferred."
+    },
+    "electronic_address": {
+      "type": "object",
+      "required": [
+        "value",
+        "scheme_id"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "scheme_id": {
+          "type": "string"
+        }
+      },
+      "description": "Electronic endpoint and identifier scheme for future structured adapters; not implemented by the legacy CII path."
+    },
+    "legal_form": {
+      "type": "string",
+      "description": "Legal form, supplied explicitly for the French preview profile."
+    },
+    "share_capital": {
+      "type": "string",
+      "description": "Share capital with currency, supplied explicitly for the French preview profile."
     }
   }
 }

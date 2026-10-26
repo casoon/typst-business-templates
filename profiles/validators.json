@@ -1,0 +1,22 @@
+{
+  "checked_on": "2026-10-26",
+  "mustang": {
+    "version": "2.26.0",
+    "url": "https://github.com/ZUGFeRD/mustangproject/releases/download/core-2.26.0/Mustang-CLI-2.26.0.jar",
+    "sha256": "42d7868cb68264874a7b8cab4c3587b03b23ccc7cd72373da917f66758bb9736"
+  },
+  "verapdf": {
+    "version": "1.30.0",
+    "purpose": "PDF/A-3b verification"
+  },
+  "peppol_bis": {
+    "version": "3.0.21",
+    "url": "https://docs.peppol.eu/poacc/billing/3.0/bis/",
+    "status": "specified_not_implemented"
+  },
+  "xrechnung": {
+    "version": "3.0.2",
+    "url": "https://xeinkauf.de/xrechnung/",
+    "status": "specified_not_implemented"
+  }
+}

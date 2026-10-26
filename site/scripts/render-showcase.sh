@@ -14,6 +14,9 @@ trap 'rm -rf "$tmp"' EXIT
 
 # slug=project/source (relative to examples/)
 sources=(
+  publication-guide=publication/guide.typ
+  publication-intake=publication/intake.typ
+  publication-brochure=publication/brochure.typ
   invoice=it-consultant/documents/invoices/2025/invoice.typ
   offer=it-consultant/documents/offers/2025/offer.typ
   credit-note=it-consultant/documents/credit-notes/2025/credit-note-001.typ
@@ -35,6 +38,15 @@ for entry in "${sources[@]}"; do
   pdfs+=("$slug=$slug.pdf")
 done
 
+# Language demos use the same pinned compiler and the shared wrapper as acceptance checks.
+python3 "$repo/examples/invoice-languages/build.py" --typstgen "$(command -v typstgen)" --output-dir "$tmp/languages"
+for language in de en fr es it nl pt en-US; do
+  slug="invoice-$language"
+  if [ "$language" = en-US ]; then slug=invoice-us; fi
+  cp "$tmp/languages/$language/invoice.pdf" "$tmp/$slug.pdf"
+  pdfs+=("$slug=$slug.pdf")
+done
+
 # Diagrams: chartlet specs, rendered by examples/diagrams/build.sh.
 "$repo/examples/diagrams/build.sh"
 for name in flow timeline swimlane quadrant roadmap; do
@@ -42,7 +54,6 @@ for name in flow timeline swimlane quadrant roadmap; do
   pdfs+=("diagram-$name=diagram-$name.pdf")
 done
 
-rm -rf "$out"
 mkdir -p "$out"
 for entry in "${pdfs[@]}"; do
   slug="${entry%%=*}"

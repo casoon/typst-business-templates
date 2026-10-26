@@ -1,0 +1,76 @@
+{
+  "company": {
+    "name": "Example Studio LLC",
+    "address": {
+      "street": "100 Example Avenue",
+      "postal_code": "00000",
+      "city": "Example City",
+      "region": "NY",
+      "country": "United States",
+      "country_code": "US"
+    },
+    "tax_id": "00-0000000",
+    "contact": {
+      "email": "hello@example.invalid"
+    },
+    "default_terms": {
+      "vat_exempt": false
+    },
+    "bank_account": {
+      "bank_name": "Example Bank",
+      "account_holder": "Example Studio LLC",
+      "routing_number": "000000000",
+      "account_number": "DEMO-000123"
+    },
+    "business_owner": "Alex Example",
+    "logo": "logo.svg"
+  },
+  "data": {
+    "metadata": {
+      "invoice_number": "DEMO-US-2026-001",
+      "invoice_date": "2026-10-26",
+      "delivery_date": "2026-10-25"
+    },
+    "recipient": {
+      "name": "Example Client",
+      "address": {
+        "street": "200 Sample Street",
+        "postal_code": "00001",
+        "city": "Sample City",
+        "region": "NY",
+        "country": "United States",
+        "country_code": "US"
+      }
+    },
+    "items": [
+      {
+        "position": 1,
+        "description": "Concept and design",
+        "quantity": "2",
+        "unit": "stunde",
+        "unit_code": "HUR",
+        "unit_price": {
+          "amount": "1249.50"
+        },
+        "tax": "standard"
+      },
+      {
+        "description": "Technical implementation",
+        "quantity": "1",
+        "unit": "stueck",
+        "unit_code": "C62",
+        "unit_price": {
+          "amount": "300.00"
+        },
+        "tax": "standard"
+      }
+    ],
+    "payment": {
+      "due_date": "2026-11-25"
+    },
+    "salutation": {
+      "greeting": "Hello,",
+      "introduction": "Thank you for your order. We invoice the following services."
+    }
+  }
+}

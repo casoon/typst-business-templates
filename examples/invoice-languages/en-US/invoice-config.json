@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../schema/invoice-config.schema.json",
+  "version": 1,
+  "tax_model": "sales-tax",
+  "presentation": {
+    "language": "en",
+    "format_locale": "en-US",
+    "currency": "USD",
+    "layout": "international",
+    "paper": "us-letter",
+    "currency_display": "auto"
+  },
+  "default_tax": "standard",
+  "taxes": {
+    "standard": {
+      "components": [
+        {
+          "id": "state",
+          "label": "State tax",
+          "rate": "5"
+        },
+        {
+          "id": "local",
+          "label": "Local tax",
+          "rate": "2"
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Demonstration: businesses, accounts and tax rates are fictional."
+  ]
+}

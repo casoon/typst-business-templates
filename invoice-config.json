@@ -1,0 +1,28 @@
+{
+  "$schema": "./schema/invoice-config.schema.json",
+  "version": 1,
+  "presentation": {
+    "language": "de",
+    "format_locale": "de-DE",
+    "currency": "EUR",
+    "layout": "international"
+  },
+  "default_tax": "standard",
+  "taxes": {
+    "standard": {
+      "category": "S",
+      "rate": "19"
+    },
+    "reduced": {
+      "category": "S",
+      "rate": "7"
+    }
+  },
+  "required_fields": [
+    "company.address.country_code",
+    "data.recipient.address.country_code",
+    "data.metadata.delivery_date"
+  ],
+  "notes": [],
+  "display_fields": []
+}

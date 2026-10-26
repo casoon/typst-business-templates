@@ -116,7 +116,7 @@ from `templates/locale/<language>.json`:
 | `pt` | Portuguese |
 
 Translated labels — title page, table of contents, page numbers, headers — appear in the
-running-text documents and the credentials sheet. To change individual labels, pass your own
+running-text documents, invoices and the credentials sheet. To change individual labels, pass your own
 dictionary in the shape of
 [`de.json`](https://github.com/casoon/typst-business-templates/blob/main/templates/locale/de.json):
 
@@ -128,6 +128,10 @@ dictionary in the shape of
 )
 ```
 
-The other accounting documents (invoice, offer, credit note, reminder, delivery note, order
+Invoices select language independently of tax treatment, layout, currency and formatting through
+[invoice configuration](../invoice-configuration/). Position descriptions and supplied notes
+remain caller-authored text. The [showcase](../../../showcase/) includes all seven invoice languages.
+
+The other accounting documents (offer, credit note, reminder, delivery note, order
 confirmation, quotation request, time sheet, letter) print German labels whatever the language,
 and the handout has German labels too. The text you write yourself is never translated.

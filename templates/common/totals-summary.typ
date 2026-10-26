@@ -249,8 +249,9 @@
       problems.push("totals.subtotal: " + str(subtotal) + " ≠ sum of item totals = " + str(round2(sum)))
     }
   }
-  let breakdown = totals.at("vat_breakdown", default: ()).map(group => _decimal(group.at("amount", default: none)))
-  let vat-total = _decimal(totals.at("vat_total", default: none))
+  let sales-tax = data.at("tax_model", default: "vat") == "sales-tax"
+  let breakdown = totals.at(if sales-tax { "tax_breakdown" } else { "vat_breakdown" }, default: ()).map(group => _decimal(group.at("amount", default: none)))
+  let vat-total = _decimal(totals.at(if sales-tax { "tax_total" } else { "vat_total" }, default: none))
   if vat-total == none and breakdown.len() > 0 and none not in breakdown { vat-total = breakdown.sum() }
   if vat-total != none and breakdown.len() > 0 and none not in breakdown and round2(breakdown.sum()) != round2(vat-total) {
     problems.push("totals.vat_total: " + str(vat-total) + " ≠ sum of vat_breakdown = " + str(round2(breakdown.sum())))

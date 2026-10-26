@@ -3,6 +3,7 @@
 // Based on credentials template structure
 
 #import "../common/styles.typ": *
+#import "../common/formatting.typ": prose-metadata
 #import "../common/title-page.typ": standard-title-page
 #import "../common/locale-helpers.typ": get-locale-string
 
@@ -27,6 +28,7 @@
   // Content
   tasks: (),
   categories: (),
+  roles: (),
   notes: none,
   
   body
@@ -36,7 +38,9 @@
     let logo-width = if "logo_width" in company { eval(company.logo_width) } else { 150pt }
     company.insert("_logo_image", image(logo-source(company.logo), width: logo-width))
   }
+  set document(..prose-metadata(company, title, document-number, created))
   let locale = load-locale(locale, company)
+  let labels = locale.task_list
   let accent-color = get-accent-color(company)
   let fonts = get-font-preset(company)
   let l-page = get-locale-string(locale, "common", "page", "Seite")
@@ -118,7 +122,7 @@
   let meta = (:)
   if project != none { meta.insert(l-project, project) }
   if client != none { meta.insert(l-client, client) }
-  meta.insert("Datum", created)
+  meta.insert(locale.common.date, created)
   
   // Render standard title page
   if show-title-page {
@@ -126,7 +130,7 @@
       company: company,
       title: title,
       subtitle: subtitle,
-      document-type: "Aufgabenliste",
+      document-type: labels.title,
       document-number: document-number,
       accent-color: accent-color,
       metadata: meta,
@@ -142,11 +146,11 @@
   // Priority badge
   let priority-badge(level) = {
     let (bg, label) = if level == "high" or level == "hoch" {
-      (red.lighten(80%), "HOCH")
+      (red.lighten(80%), upper(labels.high))
     } else if level == "medium" or level == "mittel" {
-      (orange.lighten(80%), "MITTEL")
+      (orange.lighten(80%), upper(labels.medium))
     } else if level == "low" or level == "niedrig" {
-      (green.lighten(80%), "NIEDRIG")
+      (green.lighten(80%), upper(labels.low))
     } else {
       (gray.lighten(80%), upper(level))
     }
@@ -204,11 +208,14 @@
           }
           
           if "due" in task and task.due != none {
-            meta.push(text(size: size-xs, fill: color-text-light)[Fällig: #task.due])
+            meta.push(text(size: size-xs, fill: color-text-light)[#labels.due: #task.due])
           }
           
-          if "assignee" in task and task.assignee != none {
-            meta.push(text(size: size-xs, fill: color-text-light)[#task.assignee])
+          if task.at("assignee", default: none) not in (none, "") {
+            meta.push(text(size: size-small)[#labels.responsible: #task.assignee])
+          }
+          if task.at("phase", default: none) not in (none, "") {
+            meta.push(text(size: size-small)[#labels.phase: #task.phase])
           }
           
           if meta.len() > 0 [
@@ -240,14 +247,14 @@
           if "depends-on" in task and task.depends-on != none [
             #v(0.2em)
             #text(size: size-xs, fill: orange)[
-              Abhängig von: #task.depends-on
+              #labels.depends_on: #task.depends-on
             ]
           ]
           
           if "condition" in task and task.condition != none [
             #v(0.2em)
             #text(size: size-xs, fill: accent-color, style: "italic")[
-              Bedingung: #task.condition
+              #labels.condition: #task.condition
             ]
           ]
         }
@@ -266,6 +273,11 @@
   // CONTENT RENDERING
   // ============================================================================
   
+  if roles.len() > 0 {
+    heading(level: 1, labels.roles)
+    for role in roles { block[#strong(role.name): #role.description] }
+  }
+
   // Render categories
   if categories.len() > 0 {
     for category in categories [
@@ -289,7 +301,7 @@
   // Render standalone tasks
   if tasks.len() > 0 {
     if categories.len() > 0 [
-      = Weitere Aufgaben
+      = #labels.additional_tasks
     ]
     
     for task in tasks {
@@ -300,7 +312,7 @@
   // Additional notes section
   if notes != none [
     #pagebreak(weak: true)
-    = Notizen
+    = #locale.common.notes
     #notes
   ]
   

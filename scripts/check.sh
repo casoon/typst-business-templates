@@ -4,13 +4,20 @@
 # specs (if chartlet is installed), every example JSON matches the schema named in its "$schema",
 # and every locale has the same keys as de.json.
 # Runs locally and in CI (.github/workflows/check.yml). Needs typstgen and python3 with
-# jsonschema (python3 -m pip install jsonschema referencing).
+# jsonschema and pypdf (python3 -m pip install jsonschema referencing pypdf).
 set -uo pipefail
 
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 failed=0
+if [ "${1:-}" = "--artifacts-dir" ] && [ "$#" -eq 2 ]; then
+  mkdir -p "$2"
+  set -- --artifacts-dir "$(cd "$2" && pwd)"
+elif [ "$#" -ne 0 ]; then
+  echo "Usage: scripts/check.sh [--artifacts-dir DIRECTORY]" >&2
+  exit 2
+fi
 
 fail() {
   echo "FAIL $1" >&2
@@ -74,7 +81,7 @@ repo = pathlib.Path(sys.argv[1])
 schemas = [json.loads(p.read_text()) for p in sorted((repo / "schema").glob("*.json"))]
 registry = Registry().with_resources((s["$id"], Resource.from_contents(s)) for s in schemas)
 problems = []
-for path in sorted((repo / "examples").rglob("*.json")):
+for path in sorted([repo / "invoice-config.json", *(repo / "examples").rglob("*.json"), *(repo / "profiles").glob("*.json")]):
     data = json.loads(path.read_text())
     if "$schema" not in data:
         continue
@@ -110,6 +117,8 @@ if problems:
     sys.exit("\n".join(problems))
 PY
 [ -s "$tmp/err" ] || echo "ok   templates/locale (same keys as de.json)"
+
+python3 "$repo/scripts/check-package.py" "$@" 2>"$tmp/err" || fail "package contracts"
 
 if [ "$failed" -gt 0 ]; then
   echo "$failed check(s) failed" >&2

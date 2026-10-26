@@ -1,0 +1,704 @@
+{
+  "$schema": "../schema/document-profiles.schema.json",
+  "version": "1",
+  "profiles": [
+    {
+      "id": "invoice-core",
+      "version": "1",
+      "status": "abstract",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": null,
+      "languages": [
+        "de",
+        "en",
+        "fr"
+      ],
+      "format_locales": [
+        "de-DE",
+        "en-GB",
+        "fr-FR"
+      ],
+      "currencies": [
+        "EUR"
+      ],
+      "layouts": [
+        "din",
+        "international"
+      ],
+      "outputs": [
+        "pdf-preview"
+      ],
+      "transmission": {
+        "status": "not_implemented",
+        "required_route": "determine separately"
+      },
+      "required": [
+        "data.metadata.invoice_number",
+        "data.metadata.invoice_date",
+        "data.metadata.delivery_date",
+        "data.metadata.applied_tax_case",
+        "data.items.*.vat_rate.code",
+        "data.items.*.total.amount",
+        "data.totals.subtotal.amount",
+        "data.totals.total.amount",
+        "company.address.country_code",
+        "data.recipient.address.country_code",
+        "data.totals.total.currency"
+      ],
+      "rules": [
+        {
+          "id": "CURRENCY-EUR",
+          "path": "data.totals.total.currency",
+          "op": "equals",
+          "value": "EUR"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "de-invoice-base",
+      "version": "1",
+      "extends": {
+        "id": "invoice-core",
+        "version": "1"
+      },
+      "status": "abstract",
+      "country": "DE",
+      "effective_from": "2025-01-01",
+      "effective_until": "2026-12-31",
+      "languages": [
+        "de",
+        "en"
+      ],
+      "required": [
+        "facts.buyer_type",
+        "facts.place_of_supply",
+        "facts.supply_kind",
+        "facts.evidence_refs"
+      ],
+      "rules": [
+        {
+          "id": "DE-SELLER",
+          "path": "company.address.country_code",
+          "op": "equals",
+          "value": "DE"
+        },
+        {
+          "id": "DE-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "equals",
+          "value": "DE"
+        },
+        {
+          "id": "DE-B2B",
+          "path": "facts.buyer_type",
+          "op": "equals",
+          "value": "business"
+        },
+        {
+          "id": "DE-PLACE",
+          "path": "facts.place_of_supply",
+          "op": "equals",
+          "value": "DE"
+        },
+        {
+          "id": "DE-SUPPLY",
+          "path": "facts.supply_kind",
+          "op": "one_of",
+          "values": [
+            "goods",
+            "services"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "checked_on": "2026-10-26"
+        }
+      ],
+      "business_case": "domestic-b2b"
+    },
+    {
+      "id": "de-standard",
+      "version": "1",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "released",
+      "tax_case": "domestic-standard",
+      "scope": "Domestic B2B standard/reduced rates, no allowances, advance payments, special sectors or territories; PDF preview only. Rate applicability is a caller-confirmed fact.",
+      "required": [
+        "facts.rate_applicability_confirmed"
+      ],
+      "rules": [
+        {
+          "id": "DE-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-standard"
+        },
+        {
+          "id": "DE-RATE-APPLICABILITY",
+          "path": "facts.rate_applicability_confirmed",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "DE-RATES",
+          "path": "data.items.*.vat_rate",
+          "op": "mapping",
+          "key": "code",
+          "value_key": "percentage",
+          "mapping": {
+            "Standard": [
+              "19"
+            ],
+            "Reduced": [
+              "7"
+            ]
+          }
+        },
+        {
+          "id": "DE-NO-EXEMPTION",
+          "path": "company.default_terms.vat_exempt",
+          "op": "one_of",
+          "values": [
+            false,
+            null
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__12.html",
+          "checked_on": "2026-10-26"
+        }
+      ]
+    },
+    {
+      "id": "de-small-business",
+      "version": "1",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "released",
+      "tax_case": "domestic-small-business",
+      "scope": "Domestic B2B section 19, confirmed eligibility interval and no waiver; no inference from invoice turnover; PDF preview only.",
+      "required": [
+        "facts.small_business_eligible",
+        "facts.waived_exemption",
+        "facts.regime_valid_from",
+        "facts.regime_valid_until",
+        "company.default_terms.vat_note",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "DE-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-small-business"
+        },
+        {
+          "id": "DE-19-ELIGIBILITY",
+          "path": "facts.small_business_eligible",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "DE-19-WAIVER",
+          "path": "facts.waived_exemption",
+          "op": "equals",
+          "value": false
+        },
+        {
+          "id": "DE-19-PERIOD",
+          "path": "data.metadata.delivery_date",
+          "op": "within",
+          "start_path": "facts.regime_valid_from",
+          "end_path": "facts.regime_valid_until"
+        },
+        {
+          "id": "DE-19-NOTE",
+          "path": "company.default_terms.vat_note",
+          "op": "contains",
+          "value": "§ 19 UStG"
+        },
+        {
+          "id": "DE-19-REGIME",
+          "path": "company.default_terms.vat_exempt",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "DE-19-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "SmallBusiness",
+            "Kleinunternehmer"
+          ]
+        },
+        {
+          "id": "DE-19-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "DE-19-REASON",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "§ 19 UStG"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__19.html",
+          "checked_on": "2026-10-26"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustdv_1980/__34a.html",
+          "checked_on": "2026-10-26"
+        }
+      ]
+    },
+    {
+      "id": "fr-domestic-standard",
+      "version": "1-draft",
+      "extends": {
+        "id": "invoice-core",
+        "version": "1"
+      },
+      "status": "draft",
+      "country": "FR",
+      "tax_case": "domestic-standard",
+      "languages": [
+        "fr",
+        "en"
+      ],
+      "layouts": [
+        "international"
+      ],
+      "effective_from": "2026-09-01",
+      "effective_until": "2026-12-31",
+      "scope": "Mainland domestic B2B ordinary services at 20%, no VAT-on-debits option, identical billing/delivery address, no prior purchase order; preview only, national electronic issuance not implemented.",
+      "transmission": {
+        "status": "not_implemented",
+        "required_route": "French approved platform where applicable",
+        "receipt_from": "2026-09-01",
+        "large_and_intermediate_issue_from": "2026-09-01",
+        "sme_micro_issue_from": "2027-09-01"
+      },
+      "required": [
+        "company.vat_id",
+        "company.registration_number",
+        "company.legal_form",
+        "company.share_capital",
+        "data.recipient.vat_id",
+        "data.recipient.registration_number",
+        "data.payment.early_payment_discount",
+        "data.payment.late_payment_interest",
+        "data.payment.recovery_fee",
+        "facts.seller_size",
+        "facts.evidence_refs",
+        "facts.rate_applicability_confirmed"
+      ],
+      "rules": [
+        {
+          "id": "FR-SELLER",
+          "path": "company.address.country_code",
+          "op": "equals",
+          "value": "FR"
+        },
+        {
+          "id": "FR-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "equals",
+          "value": "FR"
+        },
+        {
+          "id": "FR-B2B",
+          "path": "facts.buyer_type",
+          "op": "equals",
+          "value": "business"
+        },
+        {
+          "id": "FR-PLACE",
+          "path": "facts.place_of_supply",
+          "op": "equals",
+          "value": "FR"
+        },
+        {
+          "id": "FR-MAINLAND",
+          "path": "facts.territory",
+          "op": "equals",
+          "value": "mainland"
+        },
+        {
+          "id": "FR-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "fr-domestic-standard"
+        },
+        {
+          "id": "FR-SUPPLY",
+          "path": "facts.supply_kind",
+          "op": "equals",
+          "value": "services"
+        },
+        {
+          "id": "FR-RATES",
+          "path": "data.items.*.vat_rate",
+          "op": "mapping",
+          "key": "code",
+          "value_key": "percentage",
+          "mapping": {
+            "Standard": [
+              "20"
+            ]
+          }
+        },
+        {
+          "id": "FR-DEBITS",
+          "path": "facts.vat_on_debits",
+          "op": "equals",
+          "value": false
+        },
+        {
+          "id": "FR-ORDER",
+          "path": "facts.prior_purchase_order",
+          "op": "equals",
+          "value": false
+        },
+        {
+          "id": "FR-ADDRESS",
+          "path": "facts.same_billing_delivery_address",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "FR-FEE",
+          "path": "data.payment.recovery_fee",
+          "op": "equals",
+          "value": "40"
+        },
+        {
+          "id": "FR-SIZE",
+          "path": "facts.seller_size",
+          "op": "one_of",
+          "values": [
+            "large",
+            "intermediate",
+            "sme",
+            "micro"
+          ]
+        },
+        {
+          "id": "FR-RATE-APPLICABILITY",
+          "path": "facts.rate_applicability_confirmed",
+          "op": "equals",
+          "value": true
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.economie.gouv.fr/entreprises/factures-mentions-obligatoires",
+          "checked_on": "2026-10-26"
+        },
+        {
+          "url": "https://www.impots.gouv.fr/facturation-electronique-et-plateformes-agreees",
+          "checked_on": "2026-10-26"
+        },
+        {
+          "url": "https://www.economie.gouv.fr/tout-savoir-sur-la-facturation-electronique-pour-les-entreprises",
+          "checked_on": "2026-10-26"
+        },
+        {
+          "url": "https://www.douane.gouv.fr/fiche/les-taux-de-tva",
+          "checked_on": "2026-10-26"
+        }
+      ],
+      "display_fields": [
+        {
+          "path": "company.registration_number",
+          "labels": {
+            "fr": "SIREN fournisseur",
+            "en": "Seller registration"
+          }
+        },
+        {
+          "path": "company.legal_form",
+          "labels": {
+            "fr": "Forme juridique",
+            "en": "Legal form"
+          }
+        },
+        {
+          "path": "company.share_capital",
+          "labels": {
+            "fr": "Capital social",
+            "en": "Share capital"
+          }
+        },
+        {
+          "path": "company.vat_id",
+          "labels": {
+            "fr": "TVA fournisseur",
+            "en": "Seller VAT ID"
+          }
+        },
+        {
+          "path": "data.recipient.registration_number",
+          "labels": {
+            "fr": "SIREN client",
+            "en": "Buyer registration"
+          }
+        },
+        {
+          "path": "data.recipient.vat_id",
+          "labels": {
+            "fr": "TVA client",
+            "en": "Buyer VAT ID"
+          }
+        },
+        {
+          "path": "facts.supply_kind",
+          "labels": {
+            "fr": "Nature de l’opération",
+            "en": "Supply kind"
+          }
+        },
+        {
+          "path": "data.payment.early_payment_discount",
+          "labels": {
+            "fr": "Escompte",
+            "en": "Early payment discount"
+          }
+        },
+        {
+          "path": "data.payment.late_payment_interest",
+          "labels": {
+            "fr": "Intérêts de retard",
+            "en": "Late payment interest"
+          }
+        },
+        {
+          "path": "data.payment.recovery_fee",
+          "labels": {
+            "fr": "Indemnité de recouvrement (EUR)",
+            "en": "Recovery fee (EUR)"
+          }
+        }
+      ],
+      "business_case": "domestic-b2b"
+    },
+    {
+      "id": "de-zero",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "true-zero",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "de-exempt",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "exempt",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "de-reverse-charge",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "reverse-charge",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "eu-goods",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "intra-community-goods",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "eu-services",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "cross-border-services",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "third-country-export",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "export",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "eu-b2c-oss",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "b2c-oss",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    },
+    {
+      "id": "eu-cross-border-small-business",
+      "version": "planned",
+      "status": "unsupported",
+      "document_type": "invoice",
+      "country": null,
+      "tax_case": "cross-border-small-business",
+      "languages": [],
+      "format_locales": [],
+      "currencies": [],
+      "layouts": [],
+      "outputs": [],
+      "required": [],
+      "rules": [],
+      "sources": [],
+      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+    }
+  ],
+  "output_adapters": [
+    {
+      "id": "pdf-preview",
+      "status": "implemented",
+      "syntax": "PDF",
+      "validator": null
+    },
+    {
+      "id": "factur-x-en16931",
+      "version": "legacy-typstgen-0.5.0",
+      "status": "legacy_pipeline",
+      "syntax": "CII D16B",
+      "guideline": "urn:cen.eu:en16931:2017",
+      "requires": [
+        "PDF/A-3",
+        "factur-x.xml",
+        "external EN16931 validator",
+        "hybrid PDF validation"
+      ]
+    },
+    {
+      "id": "xrechnung",
+      "version": "3.0.2",
+      "status": "specified_not_implemented",
+      "syntax": "UBL 2.1",
+      "customization_id": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+      "requires": [
+        "buyer_reference",
+        "seller.electronic_address",
+        "buyer.electronic_address",
+        "KoSIT validation"
+      ],
+      "required_field_paths": [
+        "data.metadata.buyer_reference",
+        "company.electronic_address.value",
+        "company.electronic_address.scheme_id",
+        "data.recipient.electronic_address.value",
+        "data.recipient.electronic_address.scheme_id",
+        "data.payment.method_code",
+        "data.items.*.unit_code"
+      ]
+    },
+    {
+      "id": "peppol-bis-billing",
+      "version": "3.0.21",
+      "status": "specified_not_implemented",
+      "syntax": "UBL 2.1",
+      "customization_id": "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
+      "profile_id": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
+      "requires": [
+        "electronic address scheme IDs",
+        "buyer or order reference",
+        "payment and unit codes",
+        "Peppol business rule validation",
+        "separate network transmission"
+      ],
+      "required_field_paths": [
+        "company.electronic_address.value",
+        "company.electronic_address.scheme_id",
+        "data.recipient.electronic_address.value",
+        "data.recipient.electronic_address.scheme_id",
+        "data.payment.method_code",
+        "data.items.*.unit_code"
+      ],
+      "reference_requirement": "data.metadata.buyer_reference or data.metadata.order_reference"
+    }
+  ]
+}
