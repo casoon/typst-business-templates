@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "type": "flow",
+  "title": "One repeatable document build",
+  "description": "Structured JSON supplies content and company data. A reusable Typst template defines the layout. Fixed compiler, font, asset and timestamp inputs make the typstgen compilation reproducible. The output is a standardized business PDF.",
+  "width": 900,
+  "height": 320,
+  "flow": {
+    "orientation": "landscape",
+    "nodes": [
+      {
+        "id": "data",
+        "label": "JSON data",
+        "sublabel": "content + company",
+        "kind": "io"
+      },
+      {
+        "id": "template",
+        "label": "Typst template",
+        "sublabel": "reusable layout"
+      },
+      {
+        "id": "inputs",
+        "label": "Fixed inputs",
+        "sublabel": "fonts, assets, time"
+      },
+      {
+        "id": "compile",
+        "label": "typstgen",
+        "sublabel": "pinned Typst engine"
+      },
+      {
+        "id": "pdf",
+        "label": "Business PDF",
+        "sublabel": "standardized output",
+        "kind": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "data",
+        "to": "compile"
+      },
+      {
+        "from": "template",
+        "to": "compile"
+      },
+      {
+        "from": "inputs",
+        "to": "compile"
+      },
+      {
+        "from": "compile",
+        "to": "pdf"
+      }
+    ],
+    "mainPath": [
+      "data",
+      "compile",
+      "pdf"
+    ]
+  }
+}

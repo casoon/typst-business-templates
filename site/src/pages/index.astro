@@ -15,9 +15,9 @@ import config from 'virtual:casoon-pages/config';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import { example } from '../showcase';
 
-const hero = example('invoice-us');
 // brochure shares publication/default.typ rather than having its own folder.
 const templateCount = Object.keys(import.meta.glob('../../../templates/*/default.typ', { query: '?raw' })).length + 1;
+const schemaCount = Object.keys(import.meta.glob('../../../schema/*.schema.json')).length;
 const invoiceGallery = ['invoice-de', 'invoice-en', 'invoice-fr', 'invoice-es', 'invoice-it', 'invoice-nl', 'invoice-pt', 'invoice-us'].map(example);
 const gallery = ['publication-guide', 'publication-intake', 'publication-brochure', 'credentials', 'concept', 'diagram-roadmap'].map(example);
 
@@ -28,29 +28,32 @@ python3 examples/invoice-languages/build.py`;
 
 <Base>
   <Hero
-    title="Business documents from your own data."
-    lead="Typst templates for freelancers, agencies and developers who create invoices and project documents regularly. Keep your company details in one place, choose your invoice language and taxes, and produce PDFs with your own logo."
+    layout="editorial"
+    title="Deterministic PDFs from JSON and Typst."
+    lead="Use structured JSON data and reusable Typst templates to generate standardized business PDFs. Fix the data, templates, fonts, assets, compiler version and build timestamp for reproducible output."
   >
     <div class="hero-actions">
       <Button href={url('showcase/')}>View PDF examples</Button>
-      <Button href={url('docs/getting-started/installation/')} variant="secondary">Start building</Button>
+      <Button href={url('docs/guides/json-documents/')} variant="secondary">Start with JSON</Button>
     </div>
     <Badges>
       <Badge>MIT</Badge>
       <Badge>{config.version} development package</Badge>
     </Badges>
-    <figure slot="output" class="hero-doc">
-      <a href={url(`showcase/${hero.slug}/`)}>
-        <img
-          src={url(`showcase/${hero.slug}.webp`)}
-          width={hero.size.width}
-          height={hero.size.height}
-          alt={hero.alt}
-          fetchpriority="high"
-        />
-      </a>
+    <figure slot="output" class="workflow">
+      <picture class="workflow-light">
+        <source media="(max-width: 640px)" srcset={url('diagrams/document-build-narrow-light.svg')} width="360" height="420" />
+        <img src={url('diagrams/document-build-wide-light.svg')} width="900" height="320"
+          alt="JSON data and a reusable Typst template, with fixed build inputs, are compiled by typstgen into a standardized PDF."
+          fetchpriority="high" />
+      </picture>
+      <picture class="workflow-dark">
+        <source media="(max-width: 640px)" srcset={url('diagrams/document-build-narrow-dark.svg')} width="360" height="420" />
+        <img src={url('diagrams/document-build-wide-dark.svg')} width="900" height="320"
+          alt="JSON data and a reusable Typst template, with fixed build inputs, are compiled by typstgen into a standardized PDF." />
+      </picture>
       <figcaption>
-        US Letter · USD · separate sales-tax components · shared SVG logo.
+        Pin the data, templates, fonts, assets, compiler and timestamp to reproduce a build.
       </figcaption>
     </figure>
   </Hero>
@@ -58,9 +61,8 @@ python3 examples/invoice-languages/build.py`;
   <Facts
     items={[
       { value: String(templateCount), label: 'document templates' },
-      { value: '7', label: 'invoice languages' },
-      { value: String(invoiceGallery.length), label: 'editable invoice demos with PDFs' },
-      { value: 'A4 + Letter', label: 'invoice paper formats' },
+      { value: String(schemaCount), label: 'JSON schemas for structured input' },
+      { value: 'JSON + Typst', label: 'data and layout kept in versionable files' },
     ]}
   />
 
@@ -75,8 +77,8 @@ python3 examples/invoice-languages/build.py`;
   <Features
     items={[
       {
-        title: 'Reuse your company details',
-        body: 'Load your name, address, logo and contact details from shared company data. Carry the same identity into invoices, offers, contracts and project documents.',
+        title: 'One layout, standardized documents',
+        body: 'Define the document in a reusable Typst template and load structured content and company data from JSON. Version the source files and repeat the same build for each document.',
       },
       {
         title: 'Invoice in the language your client reads',
@@ -159,7 +161,8 @@ python3 examples/invoice-languages/build.py`;
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin: 32px 0 24px;
+    margin: 0;
+    width: 100%;
   }
 
   .readiness {
@@ -172,11 +175,38 @@ python3 examples/invoice-languages/build.py`;
   }
   .readiness a { color: var(--heading); text-decoration: underline; }
 
-  .hero-doc {
-    max-width: 440px;
-    margin: 0 auto;
+  .workflow {
+    margin: 0;
   }
-  .hero-doc img,
+  .workflow picture {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .workflow-light { display: block; }
+  .workflow-dark { display: none; }
+  :global(:root[data-theme='dark']) .workflow-light { display: none; }
+  :global(:root[data-theme='dark']) .workflow-dark { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .workflow-light { display: none; }
+    :global(:root:not([data-theme='light'])) .workflow-dark { display: block; }
+  }
+  .workflow img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 900 / 320;
+  }
+  .workflow figcaption {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  @media (max-width: 640px) {
+    .workflow img { aspect-ratio: 360 / 420; }
+  }
   .gallery img {
     display: block;
     width: 100%;
@@ -185,12 +215,6 @@ python3 examples/invoice-languages/build.py`;
     border-radius: 6px;
     background: #fff;
     box-shadow: var(--shadow);
-  }
-  .hero-doc figcaption {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 13px;
-    text-align: center;
   }
   .gallery {
     display: grid;

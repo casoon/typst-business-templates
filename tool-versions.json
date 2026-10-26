@@ -1,5 +1,5 @@
 {
-  "$comment": "Versions of the tools the templates are built and checked against. Read by .github/workflows/check.yml and by site/src/pages/index.astro, so the numbers exist once.",
+  "$comment": "Versions used by compatibility checks, acceptance tools and example/site generators, so the numbers exist once.",
   "typstgen": "0.5.0",
   "chartlet": "0.21.0",
   "typstgen_profiles_revision": "98715ba5041a9b86a30cae6cdeee8d5881f9ca19",
