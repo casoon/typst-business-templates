@@ -65,6 +65,8 @@ All notable changes to this project will be documented in this file.
 - **Optional fields:** the order confirmation no longer requires `order_number` or `terms`, and
   document footers leave out the status line when no status is set
 - **Letter example:** the subject was outside `metadata`, where the template does not read it
+- **Project page:** the caption under the hero invoice made the page wider than a phone screen;
+  it now names the example folder and takes the typstgen version from `tool-versions.json`
 
 ## [0.7.2] - 2026-05-07
 
