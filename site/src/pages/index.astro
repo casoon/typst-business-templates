@@ -60,7 +60,8 @@ typstgen compile documents/invoices/2025/invoice.typ \\
         />
       </a>
       <figcaption>
-        First page of <code>{hero.file.replace('examples/', '')}</code>, compiled by typstgen 0.5.0.
+        Sample invoice from <code>{hero.file.split('/').slice(0, 2).join('/')}</code>, compiled by
+        typstgen {tools.typstgen}.
       </figcaption>
     </figure>
   </Hero>
