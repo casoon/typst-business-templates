@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.1.0": quotation-request
+#import "@local/business-templates:0.2.0": quotation-request
 
 #quotation-request(
   data: json("quotation-request-001.json"),

@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: Configurable invoices, business documents, publications and the boundaries of the current development package.
+description: Configurable invoices, business documents, publications and the boundaries of the current package.
 order: 0
 ---
 
@@ -39,9 +39,9 @@ Invoices support seven languages, DIN/international layout, A4/US Letter and ind
 currency/format choices. Other accounting templates retain their existing German/DIN contract.
 Running-text documents and credentials have their documented branding and locale options.
 
-## Development package and boundaries
+## Package version and boundaries
 
-Package 0.1.0 is unreleased local development source. Configured invoices and profile tools
+Package 0.2.0 is distributed as the `templates-v0.2.0` source release for local installation. Configured invoices and profile tools
 require the source revision in `tool-versions.json`; published typstgen 0.5.0 covers the older
 plain-template and VAT-export path. See [Installation](getting-started/installation/) for
 both paths, and [Capabilities and limits](reference/project-status/) for the implementation map.

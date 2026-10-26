@@ -2,7 +2,7 @@
 // Based on casoon-documents structure
 //
 // USAGE (Package Import):
-//   #import "@local/business-templates:0.1.0": concept
+//   #import "@local/business-templates:0.2.0": concept
 //   #let company = json("/data/company.json")
 //   #show: concept.with(
 //     title: "My Concept",

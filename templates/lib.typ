@@ -1,6 +1,6 @@
 // Entry point of the Typst package `business-templates`.
 //
-// #import "@local/business-templates:0.1.0": invoice
+// #import "@local/business-templates:0.2.0": invoice
 // #invoice(data: json("RE-2026-001.json"), company: json("company.json"))
 //
 // Accounting documents take `data` as described by the JSON schemas in schema/ and

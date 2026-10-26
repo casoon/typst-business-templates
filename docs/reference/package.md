@@ -7,13 +7,13 @@ order: 1
 | | |
 | --- | --- |
 | Name | `business-templates` |
-| Version | `0.1.0` |
+| Version | `0.2.0` |
 | Entry point | `templates/lib.typ` |
 | Compiler | Typst 0.15 or later |
 | License | MIT |
 
 ```typst
-#import "@local/business-templates:0.1.0": invoice, concept
+#import "@local/business-templates:0.2.0": invoice, concept
 ```
 
 The package is installed locally, see [Installation](../../getting-started/installation/#the-package).
@@ -127,7 +127,7 @@ The keys a project typically sets ([full reference](https://casoon.github.io/typ
 | Key | Example | Purpose |
 | --- | --- | --- |
 | `template_paths` | `["."]` | the project folder becomes the root for absolute paths such as `/data/company.json` |
-| `package_path` | `"../../packages"` | folder containing `local/business-templates/0.1.0`, if the package is not in the Typst package directory |
+| `package_path` | `"../../packages"` | folder containing `local/business-templates/0.2.0`, if the package is not in the Typst package directory |
 | `font_paths` | `["fonts"]` | folders with the preset fonts |
 
 Paths are relative to the working directory, so run typstgen from the project folder.

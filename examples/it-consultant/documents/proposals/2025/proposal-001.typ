@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.1.0": proposal
+#import "@local/business-templates:0.2.0": proposal
 
 #show: proposal.with(
   title: "Cloud Migration - Infrastructure Modernisierung",
