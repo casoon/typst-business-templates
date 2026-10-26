@@ -3,51 +3,41 @@ import {
   Badge,
   Badges,
   BuildOutput,
+  Button,
   CodeBlock,
   Facts,
   Features,
   Hero,
-  Install,
   Quickstart,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
 import config from 'virtual:casoon-pages/config';
-import tools from '../../../tool-versions.json';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import { example } from '../showcase';
 
 const hero = example('invoice-us');
 // brochure shares publication/default.typ rather than having its own folder.
 const templateCount = Object.keys(import.meta.glob('../../../templates/*/default.typ', { query: '?raw' })).length + 1;
-const schemaCount = Object.keys(import.meta.glob('../../../schema/*.schema.json')).length;
 const invoiceGallery = ['invoice-de', 'invoice-en', 'invoice-fr', 'invoice-es', 'invoice-it', 'invoice-nl', 'invoice-pt', 'invoice-us'].map(example);
 const gallery = ['publication-guide', 'publication-intake', 'publication-brochure', 'credentials', 'concept', 'diagram-roadmap'].map(example);
 
-const quickstart = `cd examples/invoice-languages
-typstgen prepare-invoice \\
-  --config en-US/invoice-config.json \\
-  en-US/invoice.json > en-US/resolved.json
-typstgen compile invoice.typ \\
-  --input resolved=en-US/resolved.json \\
-  -o en-US/invoice.pdf`;
+const quickstart = `git clone https://github.com/casoon/typst-business-templates
+cd typst-business-templates
+python3 examples/invoice-languages/build.py`;
 ---
 
 <Base>
   <Hero
-    title="Configurable invoices and business documents."
-    lead="Create invoices in seven languages with explicit VAT or sales-tax configuration. Reuse your company data and logo across offers, contracts, printable forms and brochures."
+    title="Business documents from your own data."
+    lead="Typst templates for freelancers, agencies and developers who create invoices and project documents regularly. Keep your company details in one place, choose your invoice language and taxes, and produce PDFs with your own logo."
   >
-    <Install
-      label="Get the examples"
-      commands={[
-        { label: 'repository', command: 'git clone https://github.com/casoon/typst-business-templates' },
-      ]}
-    />
+    <div class="hero-actions">
+      <Button href={url('showcase/')}>View PDF examples</Button>
+      <Button href={url('docs/getting-started/installation/')} variant="secondary">Start building</Button>
+    </div>
     <Badges>
       <Badge>MIT</Badge>
       <Badge>{config.version} development package</Badge>
-      <Badge>Typst 0.15</Badge>
-      <Badge>pinned typstgen source build</Badge>
     </Badges>
     <figure slot="output" class="hero-doc">
       <a href={url(`showcase/${hero.slug}/`)}>
@@ -68,42 +58,41 @@ typstgen compile invoice.typ \\
   <Facts
     items={[
       { value: String(templateCount), label: 'document templates' },
-      { value: '7', label: 'invoice and document languages' },
+      { value: '7', label: 'invoice languages' },
       { value: String(invoiceGallery.length), label: 'editable invoice demos with PDFs' },
-      { value: String(schemaCount), label: 'JSON schemas for data and configuration' },
+      { value: 'A4 + Letter', label: 'invoice paper formats' },
     ]}
   />
 
   <section class="readiness" aria-label="Development status">
     <p>
-      The package is development source. Configured invoices require the pinned typstgen build;
-      the published {tools.typstgen} compiler supports the existing plain-template path.{' '}
-      <a href={url('docs/getting-started/installation/')}>Installation options</a> ·
-      <a href={url('docs/reference/project-status/')}>Capabilities and limits</a>
+      This is a development package. Use the documented compiler version to rebuild the examples.{' '}
+      <a href={url('docs/getting-started/installation/')}>Setup guide</a>{' · '}
+      <a href={url('docs/reference/project-status/')}>What is supported</a>
     </p>
   </section>
 
   <Features
     items={[
       {
-        title: 'One configuration for invoice construction',
-        body: 'Choose named taxes, required fields, notes, language, number format, currency and paper. typstgen calculates missing totals and checks supplied values. You select the applicable treatment; an address does not choose it for you.',
+        title: 'Reuse your company details',
+        body: 'Load your name, address, logo and contact details from shared company data. Carry the same identity into invoices, offers, contracts and project documents.',
       },
       {
-        title: 'VAT and explicit sales-tax components',
-        body: 'Keep taxable, zero, exempt and reverse-charge categories separate. Sales-tax configurations give each component its own taxable basis and rounded amount, with US labels and payment fields.',
+        title: 'Invoice in the language your client reads',
+        body: 'Choose from seven invoice languages, A4 or US Letter, and separate currency and number formats. Supply your own descriptions and notes; translated labels come from the package.',
       },
       {
-        title: 'Shared values for PDF and VAT XML',
-        body: 'The existing CII/Factur-X adapter uses the canonical VAT invoice data. External Mustang and PDF/A checks exercise the supported examples. XRechnung, Peppol and transmission remain outside the implemented adapters.',
+        title: 'Keep invoice amounts consistent',
+        body: 'Calculate line amounts and tax totals from the rates you configure, and check any totals you supply. VAT invoices can use the same values for PDF and Factur-X XML; sales-tax components are listed separately.',
       },
       {
-        title: 'Compact publications and printable forms',
-        body: 'Build A4 guides and intake forms with labelled writing fields, choices, notes, phases and tables. Use landscape brochures for short overviews. Credentials can mask passwords, and partial locale overrides retain package defaults.',
+        title: 'Guides, forms and project documents',
+        body: 'Use 21 templates for business correspondence and project work. Assemble compact guides, printable intake forms and landscape brochures with reusable Typst components.',
       },
       {
-        title: 'Typst content and chartlet diagrams',
-        body: 'Write contracts, concepts and documentation as Typst markup. Reuse company data and branding; add flow charts, timelines and architecture diagrams rendered by chartlet.',
+        title: 'Fit document generation into your project',
+        body: 'Keep JSON data and Typst sources in Git. Compile with the CLI, integrate through Rust or use MCP tools for checking and previews. Add chartlet diagrams when your documents need them.',
       },
     ]}
   />
@@ -153,11 +142,12 @@ typstgen compile invoice.typ \\
   </BuildOutput>
 
   <Quickstart
-    lead="Install the pinned development compiler from the documentation, then prepare and render an existing language demo. The same configuration path works in the CLI, Rust library and MCP."
+    title="Make an example your own"
+    lead="Open a PDF first, then edit its data and configuration. Install the compiler from the setup guide before rebuilding the examples."
     steps={[
-      'Choose a demo and install the coordinated typstgen revision from <code>tool-versions.json</code>.',
-      'Edit the demo’s invoice configuration and input: company, customer, descriptions and selected tax keys.',
-      'Prepare canonical invoice values and compile the shared wrapper. VAT invoices can also use the existing Factur-X path.',
+      'Choose a PDF example and open the configuration and invoice data alongside it.',
+      'Replace the sample company details, logo and descriptions, then choose the taxes and language your invoice needs.',
+      'Rebuild the PDFs with the documented compiler and keep the editable inputs with your project.',
     ]}
   >
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
@@ -165,6 +155,13 @@ typstgen compile invoice.typ \\
 </Base>
 
 <style>
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 32px 0 24px;
+  }
+
   .readiness {
     max-width: var(--max);
     margin: -36px auto 48px;

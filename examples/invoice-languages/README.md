@@ -9,13 +9,13 @@ not national tax presets.
 
 | Demo | PDF | Configuration | Input |
 | --- | --- | --- | --- |
-| Deutsch | [Rechnung](de/invoice.pdf) | [Config](de/invoice-config.json) | [Input](de/invoice.json) |
+| German | [Rechnung](de/invoice.pdf) | [Config](de/invoice-config.json) | [Input](de/invoice.json) |
 | English | [Invoice](en/invoice.pdf) | [Config](en/invoice-config.json) | [Input](en/invoice.json) |
-| Français | [Facture](fr/invoice.pdf) | [Config](fr/invoice-config.json) | [Input](fr/invoice.json) |
-| Español | [Factura](es/invoice.pdf) | [Config](es/invoice-config.json) | [Input](es/invoice.json) |
-| Italiano | [Fattura](it/invoice.pdf) | [Config](it/invoice-config.json) | [Input](it/invoice.json) |
-| Nederlands | [Factuur](nl/invoice.pdf) | [Config](nl/invoice-config.json) | [Input](nl/invoice.json) |
-| Português | [Fatura](pt/invoice.pdf) | [Config](pt/invoice-config.json) | [Input](pt/invoice.json) |
+| French | [Facture](fr/invoice.pdf) | [Config](fr/invoice-config.json) | [Input](fr/invoice.json) |
+| Spanish | [Factura](es/invoice.pdf) | [Config](es/invoice-config.json) | [Input](es/invoice.json) |
+| Italian | [Fattura](it/invoice.pdf) | [Config](it/invoice-config.json) | [Input](it/invoice.json) |
+| Dutch | [Factuur](nl/invoice.pdf) | [Config](nl/invoice-config.json) | [Input](nl/invoice.json) |
+| Portuguese | [Fatura](pt/invoice.pdf) | [Config](pt/invoice-config.json) | [Input](pt/invoice.json) |
 | English (US) | [US invoice](en-US/invoice.pdf) | [Config](en-US/invoice-config.json) | [Input](en-US/invoice.json) |
 
 The seven EUR examples use A4 and the same illustrative 20% rate to make presentation
