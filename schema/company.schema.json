@@ -54,17 +54,8 @@
       ]
     },
     "address": {
-      "description": "Postal address of the company. The DIN 5008 sender line reads street, house_number, postal_code and city unconditionally.",
-      "allOf": [
-        {
-          "$ref": "common.schema.json#/$defs/address"
-        },
-        {
-          "required": [
-            "house_number"
-          ]
-        }
-      ]
+      "$ref": "common.schema.json#/$defs/address",
+      "description": "Postal address. street may include the house number; a separate house_number is optional."
     },
     "contact": {
       "type": "object",
@@ -99,7 +90,7 @@
       "description": "VAT identification number (USt-IdNr.), e.g. DE123456789; seller VAT ID in ZUGFeRD."
     },
     "bank_account": {
-      "description": "Bank details for payment. When present, the accounting footer prints bank_name, account_holder, iban and bic; ZUGFeRD uses it as payee account.",
+      "description": "Bank details for payment. The invoice footer supports IBAN/BIC or account_number/routing_number; CII uses IBAN accounts.",
       "allOf": [
         {
           "$ref": "common.schema.json#/$defs/bank_account"
@@ -107,9 +98,7 @@
         {
           "required": [
             "bank_name",
-            "account_holder",
-            "iban",
-            "bic"
+            "account_holder"
           ]
         }
       ]

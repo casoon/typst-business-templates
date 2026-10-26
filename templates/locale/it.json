@@ -58,7 +58,10 @@
       "ANN": "ANN",
       "CT": "CT",
       "PX": "PX"
-    }
+    },
+    "sales_tax": "Imposta sulle vendite",
+    "account_number": "Numero di conto",
+    "routing_number": "Numero di routing"
   },
   "offer": {
     "title": "Preventivo",

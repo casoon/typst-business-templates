@@ -58,7 +58,10 @@
       "ANN": "ANN",
       "CT": "CT",
       "PX": "PX"
-    }
+    },
+    "sales_tax": "Sales Tax",
+    "account_number": "Account number",
+    "routing_number": "Routing number"
   },
   "offer": {
     "title": "Quotation",

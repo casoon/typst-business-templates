@@ -58,7 +58,10 @@
       "ANN": "ANN",
       "CT": "CT",
       "PX": "PX"
-    }
+    },
+    "sales_tax": "Imposto sobre vendas",
+    "account_number": "Número da conta",
+    "routing_number": "Número de roteamento"
   },
   "offer": {
     "title": "Orçamento",

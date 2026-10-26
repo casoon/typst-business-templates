@@ -163,7 +163,9 @@ embeds an architecture diagram.
 For invoices with your own tax rates, required fields and notes, copy
 [`invoice-config.json`](invoice-config.json) into your project. The coordinated typstgen build
 reads it with `prepare-invoice --config invoice-config.json invoice.json`; the returned data
-drives both the PDF and CII XML. See [invoice configuration](docs/guides/invoice-configuration.md).
+drives the PDF and, for VAT invoices, CII XML. See [invoice configuration](docs/guides/invoice-configuration.md).
+The [language gallery](examples/invoice-languages/README.md) contains PDFs and editable inputs
+for all seven languages plus a US Letter/USD example with separate sales-tax components.
 
 ## Development
 

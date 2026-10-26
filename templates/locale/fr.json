@@ -58,7 +58,10 @@
       "ANN": "ANN",
       "CT": "CT",
       "PX": "PX"
-    }
+    },
+    "sales_tax": "Taxe sur les ventes",
+    "account_number": "Numéro de compte",
+    "routing_number": "Numéro de routage"
   },
   "offer": {
     "title": "Devis",

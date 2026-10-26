@@ -58,7 +58,10 @@
       "ANN": "ANN",
       "CT": "CT",
       "PX": "PX"
-    }
+    },
+    "sales_tax": "Verkoopbelasting",
+    "account_number": "Rekeningnummer",
+    "routing_number": "Routingnummer"
   },
   "offer": {
     "title": "Offerte",

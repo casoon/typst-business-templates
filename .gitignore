@@ -1,6 +1,7 @@
 # Compiled documents (the website showcase is committed)
 *.pdf
 !site/public/showcase/*.pdf
+!examples/invoice-languages/*/invoice.pdf
 
 # OS
 .DS_Store
@@ -26,6 +27,7 @@ plan/
 # Generated profile validation reports
 examples/invoice-profiles/resolved.json
 examples/invoice-config/resolved.json
+examples/invoice-languages/*/resolved.json
 
 # Reproducible local test tools and generated review artifacts
 .cache/test-tools/

@@ -136,6 +136,8 @@
 #let accounting-footer(
   company: none,
   locale: none,
+  tax-model: "vat",
+  format-locale: "de-DE",
 ) = {
   let labels = load-locale(locale, (:)).invoice
   context [
@@ -161,7 +163,7 @@
             ]
             #if company != none and "address" in company [
               #company.address.street #company.address.at("house_number", default: "")\
-              #company.address.postal_code #company.address.city
+              #if format-locale == "en-US" [#company.address.city#if company.address.at("region", default: "") != "" [, #company.address.region] #company.address.postal_code] else [#company.address.postal_code #company.address.city]
             ]
           ],
 
@@ -186,9 +188,9 @@
             #if company != none and "business_owner" in company and company.business_owner != none [
               #company.business_owner\
             ]
-            #labels.vat_id:\
-            #if company != none and "vat_id" in company and company.vat_id != none [
-              #company.vat_id
+            #if tax-model == "vat" [
+              #labels.vat_id:\
+              #if company != none and "vat_id" in company and company.vat_id != none [#company.vat_id]
             ]
             #if locale != none and company.at("tax_id", default: none) != none [
               #linebreak()#labels.tax_id: #company.tax_id
@@ -198,10 +200,12 @@
           // Column 4: Bank Account
           [
             #if company != none and "bank_account" in company and company.bank_account != none [
-              Bank: #company.bank_account.bank_name\
-              #labels.account_holder: #company.bank_account.account_holder\
-              IBAN: #company.bank_account.iban\
-              BIC/SWIFT-Code: #company.bank_account.bic
+              #labels.bank: #company.bank_account.at("bank_name", default: "")\
+              #labels.account_holder: #company.bank_account.at("account_holder", default: "")\
+              #if company.bank_account.at("iban", default: none) != none [IBAN: #company.bank_account.iban\ ]
+              #if company.bank_account.at("bic", default: none) != none [BIC/SWIFT: #company.bank_account.bic\ ]
+              #if company.bank_account.at("routing_number", default: none) != none [#labels.routing_number: #company.bank_account.routing_number\ ]
+              #if company.bank_account.at("account_number", default: none) != none [#labels.account_number: #company.bank_account.account_number]
             ]
           ],
         )

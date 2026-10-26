@@ -92,7 +92,7 @@ Configured invoices use these explicit tax notes rather than the legacy company-
 `default_terms.vat_note` switch. Distinct categories and exemption reasons retain separate
 tax groups even when their percentages are equal.
 
-Amounts use exact decimal arithmetic with up to four input decimal places. Each line amount
+VAT amounts use exact decimal arithmetic with up to four input decimal places. Each line amount
 and each tax-group amount rounds half away from zero to two decimal places. This version
 uses that fixed accounting convention for every configured currency; it does not perform
 currency conversion, cash rounding, gross-price calculation or document allowances.
@@ -134,7 +134,7 @@ The wrapper renders `resolved.data`, `resolved.company` and `resolved.selection`
 the existing invoice template. The result also contains the exact configuration, normalized
 invoice and diagnostics. A blocked result exits unsuccessfully; do not render it.
 
-For a hybrid Factur-X invoice, write `resolved.data` and `resolved.company` to JSON files and
+For a VAT invoice as hybrid Factur-X, write `resolved.data` and `resolved.company` to JSON files and
 pass those same files to `compile --zugferd data.json --company company.json --pdf-standard a-3b`.
 This keeps the PDF and CII values aligned. External validators remain separate checks.
 
@@ -145,11 +145,77 @@ object; the same workspace access rules apply to this configuration file.
 ## Presentation and scope
 
 Languages are `de`, `en`, `es`, `fr`, `it`, `nl`, `pt`; layouts are `din` and `international`.
-Format styles are `de-DE` (comma decimals, German dates), `en-GB` (dot decimals, ISO dates)
-and `fr-FR` (comma decimals, ISO dates). The style is independent of seller and buyer countries.
-Currency is an uppercase three-letter code and follows the two-decimal convention above.
+The style is independent of seller and buyer countries:
+
+| Format locale | Decimal separator | Date |
+| --- | --- | --- |
+| `de-DE` | comma | `26.10.26` |
+| `en-GB` | dot | `26/10/2026` |
+| `en-US` | dot with comma thousands | `10/26/2026` |
+| `fr-FR`, `es-ES`, `it-IT`, `pt-PT` | comma | `26/10/2026` |
+| `nl-NL` | comma | `26-10-2026` |
+
+`presentation.paper` is `a4` (default) or `us-letter`. `currency_display` is `auto` (default),
+`code` or `symbol`; auto uses dollar prefixes for USD with `en-US`, while code retains the
+three-letter currency suffix. Explicit symbol currently supports USD. `tax_label` optionally
+overrides the invoice tax-column label. Currency follows the two-decimal convention above.
+
+The [language gallery](../../examples/invoice-languages/README.md) contains eight PDFs with
+editable inputs and configuration files. It uses one shared invoice wrapper.
 
 This is a configuration format for invoice construction. It does not infer which tax treatment
 or national requirements apply: the result records `checks.jurisdiction = "not_assessed"`.
 The existing [versioned catalogs](invoice-profiles.md) provide an optional reviewed-rule path.
 Configuration does not implement new XRechnung/Peppol adapters or invoice transmission.
+
+
+## US sales-tax components
+
+Set `tax_model` to `sales-tax` when the invoice uses additive sales-tax components.
+Omitting it preserves the existing `vat` behavior. A US presentation can use:
+
+```json
+{
+  "version": 1,
+  "tax_model": "sales-tax",
+  "presentation": {
+    "language": "en",
+    "format_locale": "en-US",
+    "currency": "USD",
+    "layout": "international",
+    "paper": "us-letter"
+  },
+  "default_tax": "general",
+  "taxes": {
+    "general": {
+      "components": [
+        { "id": "state", "label": "State tax", "rate": "5" },
+        { "id": "local", "label": "Local tax", "rate": "2" }
+      ]
+    },
+    "untaxed": { "components": [] }
+  }
+}
+```
+
+These rates are illustrative configuration values. Choose the applicable component set per
+line using `tax`, or use `default_tax`. Each component applies to the same net basis; there
+is no compounding. Its basis sums the rounded net amounts of lines that selected it. Its
+amount rounds once, half away from zero to cents. A component ID shared by multiple sets
+must have the same label and rate. Untaxed lines use an empty component set.
+
+The result contains separate `tax_components` on each line, a combined line `tax_rate`, and
+`totals.tax_total` plus `totals.tax_breakdown` with component ID, label, rate, basis and amount.
+Supplied totals must match. Sales-tax input does not use `vat_rate`, `vat_total` or
+`vat_breakdown`. The PDF uses Sales Tax labels and displays each component separately.
+`company.tax_id` may hold a supplied registration number; the sales-tax builder does not
+require a VAT ID or invent a tax-registration requirement.
+
+For US address display use `address.region` for the state; `en-US` prints city, state and
+postal code. Bank data may use `routing_number` and `account_number` instead of IBAN/BIC.
+The common calculation model still does not infer rates from addresses, determine nexus or
+product taxability, convert currencies, calculate gross prices or apply document allowances.
+
+Sales-tax output records `checks.en16931 = "not_applicable"`. Its `data.tax_model` marker
+prevents the existing CII adapter from exporting these components as VAT. The existing
+VAT/Factur-X workflow continues to use `tax_model: "vat"` or the omitted default.

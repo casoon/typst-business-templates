@@ -58,7 +58,10 @@
       "ANN": "ANN",
       "CT": "CT",
       "PX": "PX"
-    }
+    },
+    "sales_tax": "Verkaufssteuer",
+    "account_number": "Kontonummer",
+    "routing_number": "Routingnummer"
   },
   "offer": {
     "title": "Angebot",

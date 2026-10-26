@@ -2,7 +2,7 @@
 // Based on casoon-documents simple.typ template
 
 #import "../common/styles.typ": get-language, load-locale, logo-source
-#import "../common/invoice-profile.typ": invoice-presentation, invoice-money, invoice-price, invoice-date, invoice-party, invoice-reference, invoice-sums, invoice-unit
+#import "../common/invoice-profile.typ": invoice-presentation, invoice-money, invoice-price, invoice-date, invoice-party, invoice-reference, invoice-sums, invoice-unit, invoice-dollar
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -17,14 +17,17 @@
 #let choice = invoice-presentation(profile, company, data)
 #let texts = load-locale(locale, company, language: choice.language)
 #let labels = texts.invoice
-#let money = invoice-money.with(format-locale: choice.format_locale)
-#let price = invoice-price.with(format-locale: choice.format_locale)
+#let sales-tax = data.at("tax_model", default: "vat") == "sales-tax"
+#if sales-tax { labels.vat = labels.sales_tax }
+#if choice.at("tax_label", default: none) != none { labels.vat = choice.tax_label }
+#let money = invoice-money.with(format-locale: choice.format_locale, currency: choice.currency, currency-display: choice.currency_display)
+#let price = invoice-price.with(format-locale: choice.format_locale, currency: choice.currency, currency-display: choice.currency_display)
 #let date = invoice-date.with(format-locale: choice.format_locale)
 #set document(..document-metadata(company, data.metadata.at("invoice_number", default: none), data.metadata.at("invoice_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
 #set page(
-  paper: "a4",
+  paper: choice.paper,
   margin: (left: 50pt, right: 45pt, top: 50pt, bottom: 80pt),
 
   header: context {
@@ -33,7 +36,7 @@
       #grid(columns: (1fr, auto), [#data.metadata.invoice_number], [#texts.common.page #counter(page).display("1 / 1", both: true)])
     ]
   },
-  footer: if show-footer { accounting-footer(company: company, locale: texts) }
+  footer: if show-footer { accounting-footer(company: company, locale: texts, tax-model: data.at("tax_model", default: "vat"), format-locale: choice.format_locale) }
 )
 
 #set text(
@@ -56,11 +59,11 @@
     #v(8pt)
   ]
   #grid(columns: (1fr, 1fr), column-gutter: 20pt,
-    [#invoice-party(company)],
+    [#invoice-party(company, format-locale: choice.format_locale)],
     [#invoice-reference(data, labels, texts.common, date)],
   )
   #v(16pt)
-  #invoice-party(data.recipient)
+  #invoice-party(data.recipient, format-locale: choice.format_locale)
   #v(16pt)
 ]
 
@@ -102,7 +105,7 @@
   #set text(size: 8pt, font: "Helvetica")
 
   #grid(
-    columns: (24pt, 1fr, 36pt, 36pt, 36pt, 62pt, 62pt),
+    columns: (32pt, 1fr, 36pt, 36pt, 44pt, 62pt, 62pt),
     column-gutter: 4pt,
     align: (center, left, center, center, center, right, right),
     row-gutter: 8pt,
@@ -127,16 +130,16 @@
     #set text(size: 8pt, font: "Helvetica")
 
     #grid(
-      columns: (24pt, 1fr, 36pt, 36pt, 36pt, 62pt, 62pt),
+      columns: (32pt, 1fr, 36pt, 36pt, 44pt, 62pt, 62pt),
     column-gutter: 4pt,
       align: (center, left, center, center, center, right, right),
       row-gutter: 5pt,
 
       [#item.position],
-      [#item.description #if item.vat_rate.at("exemption_reason", default: none) != none [#linebreak()#item.vat_rate.exemption_reason]],
+      [#item.description #if not sales-tax and item.vat_rate.at("exemption_reason", default: none) != none [#linebreak()#item.vat_rate.exemption_reason]],
       [#item.quantity],
       invoice-unit(item, labels),
-      [#item.vat_rate.percentage%],
+      [#if sales-tax [#item.tax_rate%] else [#item.vat_rate.percentage%]],
       [#price(item.unit_price.amount)],
       [#text(weight: "bold")[#money(item.total.amount)]],
     )
@@ -173,7 +176,7 @@
 #v(5pt)
 
 // Totals section (right-aligned)
-#invoice-sums(data, labels, money, choice.currency)
+#invoice-sums(data, labels, money, if invoice-dollar(choice.currency, choice.format_locale, choice.currency_display) { "" } else { choice.currency })
 
 #v(5pt)
 
@@ -202,15 +205,17 @@
 
   #if "bank_account" in data.payment [
     #v(8pt)
-    *#labels.iban:* #data.payment.bank_account.iban
+    #if data.payment.bank_account.at("iban", default: none) != none [*#labels.iban:* #data.payment.bank_account.iban]
     #if "bic" in data.payment.bank_account [#linebreak()*#labels.bic:* #data.payment.bank_account.bic]
+    #if "routing_number" in data.payment.bank_account [#linebreak()*#labels.routing_number:* #data.payment.bank_account.routing_number]
+    #if "account_number" in data.payment.bank_account [#linebreak()*#labels.account_number:* #data.payment.bank_account.account_number]
   ]
   #for field in data.at("profile_fields", default: ()) [
     #block(above: 4pt, below: 4pt)[*#field.label:* #field.value]
   ]
   #v(8pt)
 
-  #labels.retention_of_title
+  #if not sales-tax [#labels.retention_of_title]
 
   #v(12pt)
 

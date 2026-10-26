@@ -58,6 +58,23 @@
         "allow_draft": {
           "type": "boolean",
           "default": false
+        },
+        "paper": {
+          "enum": [
+            "a4",
+            "us-letter"
+          ]
+        },
+        "currency_display": {
+          "enum": [
+            "auto",
+            "code",
+            "symbol"
+          ]
+        },
+        "tax_label": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
@@ -117,6 +134,23 @@
         "allow_draft": {
           "type": "boolean",
           "default": false
+        },
+        "paper": {
+          "enum": [
+            "a4",
+            "us-letter"
+          ]
+        },
+        "currency_display": {
+          "enum": [
+            "auto",
+            "code",
+            "symbol"
+          ]
+        },
+        "tax_label": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },

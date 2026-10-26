@@ -63,6 +63,7 @@
         "house_number": { "type": "string" },
         "postal_code": { "type": "string" },
         "city": { "type": "string" },
+        "region": { "type": "string", "description": "State or region for US-style addresses." },
         "country": { "type": "string", "description": "Country name, e.g. Deutschland" },
         "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2, e.g. DE" }
       }
@@ -82,12 +83,14 @@
     },
     "bank_account": {
       "type": "object",
-      "required": ["iban"],
+      "anyOf": [{"required": ["iban"]}, {"required": ["account_number", "routing_number"]}],
       "properties": {
         "bank_name": { "type": "string" },
         "account_holder": { "type": "string" },
         "iban": { "type": "string" },
-        "bic": { "type": "string" }
+        "bic": { "type": "string" },
+        "account_number": { "type": "string" },
+        "routing_number": { "type": "string" }
       }
     }
   }

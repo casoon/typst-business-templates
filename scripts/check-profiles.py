@@ -13,6 +13,7 @@ from pathlib import Path
 import subprocess
 import shutil
 import tempfile
+import sys
 import xml.etree.ElementTree as ET
 
 from pypdf import PdfReader
@@ -279,7 +280,30 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
         long['selection']['layout']=layout
         export(long,'de-long-'+layout)
 
-    report['checks']=['user-owned invoice configuration','profile resolution','missing facts','eligibility dates and waiver','unsupported outputs',
+    # The user-facing demos use the same builder and one shared Typst wrapper.
+    demo_root = REPO/'examples/invoice-languages'
+    generated = root/'language-demos'
+    run([sys.executable,str(demo_root/'build.py'),'--typstgen',binary,'--output-dir',str(generated)],root)
+    titles={'de':'Rechnung','en':'Invoice','en-US':'Invoice','es':'Factura','fr':'Facture','it':'Fattura','nl':'Factuur','pt':'Fatura'}
+    for language,title in titles.items():
+        for source in [generated/language/'invoice.pdf',demo_root/language/'invoice.pdf']:
+            reader=PdfReader(source)
+            text=' '.join(' '.join(page.extract_text().split()) for page in reader.pages)
+            check(len(reader.pages)==1,str(source)+': demo should fit on one page')
+            check(title in text,str(source)+': translated title missing')
+            check('else [' not in text,str(source)+': template code leaked into the invoice')
+            width,height=(612,792) if language=='en-US' else (595.28,841.89)
+            check(abs(float(reader.pages[0].mediabox.width)-width)<0.1 and abs(float(reader.pages[0].mediabox.height)-height)<0.1,str(source)+': wrong paper size')
+            if language=='en-US':
+                for value in ['$1,249.50','$2,994.93','10/26/2026','11/25/2026','State tax','Local tax','Sales Tax','Example City, NY 00000','Routing number','Account number']:
+                    check(value in text,str(source)+': missing '+value)
+                check('VAT' not in text and 'EUR' not in text and 'IBAN' not in text,str(source)+': VAT/European payment labels remain')
+            else:
+                check(('3358.80' if language=='en' else '3358,80') in text,str(source)+': incorrect demo total')
+        if args.artifacts_dir:
+            shutil.copyfile(generated/language/'invoice.pdf',args.artifacts_dir/('demo-'+language+'.pdf'))
+
+    report['checks']=['eight committed and rebuilt language/US demos','user-owned invoice configuration','profile resolution','missing facts','eligibility dates and waiver','unsupported outputs',
                       'de/en DIN/international invariant','French fr/en draft invariant','multiple rates',
                       'canonical PDF/XML totals, tax groups, parties, dates, currency and payment','optional logos and house numbers','long content']
 
