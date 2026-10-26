@@ -15,6 +15,10 @@ a symlink to `templates/` changes as the checkout changes.
 
 ## From docgen
 
+The German [historical practice article](https://insights.casoon.de/artikel/typst-praxisprojekte-reporting-geschaeftsdokumente/)
+describes the earlier document/reporting workflow. It uses docgen; follow this guide for the
+current setup and supported commands.
+
 Replace `docgen` with the pinned typstgen tool and install `templates/` as
 `local/business-templates/0.2.0`. Replace `sys.inputs` template wrappers with explicit package
 calls; use the examples as reference. Typstgen has no replacement for the old client/project

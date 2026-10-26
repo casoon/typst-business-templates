@@ -54,6 +54,9 @@ checks remain separate results.
 
 ## Reference and examples
 
+The [common questions](getting-started/faq/) cover local data, MCP, operating systems and
+compiler choices.
+
 The [package reference](reference/package/) describes exports, schemas and locale behavior.
 [Document types](reference/document-types/) lists all templates.
 [Branding](guides/branding/) covers logos, fonts and partial locale overrides;
