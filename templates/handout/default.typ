@@ -7,7 +7,7 @@
 //   Page 2+: Schülerblatt (student material) — visually engaging
 //
 // USAGE (Package Import):
-//   #import "@local/business-templates:0.1.0": handout
+//   #import "@local/business-templates:0.2.0": handout
 //   #show: handout.with(
 //     title: "Argumentationsanalyse im KI-Zeitalter",
 //     handout-type: "Aufgabenblatt",

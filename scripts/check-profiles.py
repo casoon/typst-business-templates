@@ -95,7 +95,7 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
             resolved['company']=request['company']
         for field in ['data', 'company', 'selection']:
             (root/(field+'.json')).write_text(json.dumps(resolved[field]))
-        (root/'invoice.typ').write_text('#import "@local/business-templates:0.1.0": invoice\n#let company = json("company.json")\n#if company.at("logo", default: none) != none { company.insert("logo", read(company.logo, encoding: none)) }\n#invoice(data: json("data.json"), company: company, profile: json("selection.json"))')
+        (root/'invoice.typ').write_text('#import "@local/business-templates:0.2.0": invoice\n#let company = json("company.json")\n#if company.at("logo", default: none) != none { company.insert("logo", read(company.logo, encoding: none)) }\n#invoice(data: json("data.json"), company: company, profile: json("selection.json"))')
         pdf = root/(name+'.pdf')
         command = [binary, 'compile', 'invoice.typ', '-o', str(pdf), '--creation-timestamp', '1792972800']
         if hybrid:

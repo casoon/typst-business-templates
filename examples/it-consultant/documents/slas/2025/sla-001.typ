@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.1.0": sla
+#import "@local/business-templates:0.2.0": sla
 
 #show: sla.with(
   title: "Service Level Agreement - Cloud Infrastructure Support",

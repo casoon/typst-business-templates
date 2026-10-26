@@ -61,7 +61,7 @@ quotation request, time sheet, letter, credentials) keep their data in JSON, and
 file passes it to the template:
 
 ```typst
-#import "@local/business-templates:0.1.0": invoice
+#import "@local/business-templates:0.2.0": invoice
 
 #invoice(
   data: json("invoice.json"),
@@ -73,7 +73,7 @@ Running text (concept, documentation, contract, proposal, protocol, SLA, specifi
 in Typst with the template as a show rule:
 
 ```typst
-#import "@local/business-templates:0.1.0": concept
+#import "@local/business-templates:0.2.0": concept
 
 #show: concept.with(
   title: "IT-Security Konzept",

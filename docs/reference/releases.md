@@ -8,8 +8,8 @@ order: 3
 
 | Artifact | Version/tag | Meaning |
 | --- | --- | --- |
-| Current Typst package | `business-templates` 0.1.0, unreleased | `templates/typst.toml`; local import `@local/business-templates:0.1.0` |
-| First/future Typst package release tags | `templates-v0.1.0`, then `templates-vX.Y.Z` | Tag version equals the manifest version; these tags are reserved, not yet published |
+| Current Typst package | `business-templates` 0.2.0 | Source release `templates-v0.2.0`; local import `@local/business-templates:0.2.0` |
+| Typst package release tags | `templates-vX.Y.Z` | Tag version equals the manifest version; the first release is `templates-v0.2.0` |
 | Historical repository releases | `v0.7.x` and older | docgen CLI/Rust crate; historical tags retain their original contents and meaning |
 | Minimum compiler | Typst 0.15.0 | `compiler` in the package manifest |
 | Verified tooling | typstgen 0.5.0, chartlet 0.21.0 | `tool-versions.json`; chartlet is optional outside diagram checks |
@@ -19,7 +19,7 @@ The Typst package follows Semantic Versioning independently of the discontinued 
 0.x, a breaking public contract increments the minor version, compatible fixes/additions may
 increment the patch; 1.0 establishes the stable API. Package tags use `templates-v` to avoid
 colliding with historical `v0.x` tags. Do not relabel or retag historical artifacts.
-The current checkout is development source. Archive its exact commit when installing locally.
+Install the tagged source release, or archive an exact commit when testing newer development source.
 Installation paths, imports and the manifest must use the same package version.
 
 ## Release checklist
@@ -28,7 +28,7 @@ Installation paths, imports and the manifest must use the same package version.
 - Select the package version, update `templates/typst.toml`, local package directory/symlink,
   example imports and current installation/reference documentation together.
 - Move the package's unreleased entries to the version/date and start an empty `[Unreleased]`.
-  Older version sections continue to document docgen history.
+  The [historical changelog](../docgen-changelog/) preserves docgen history separately.
 - Run the `keep-a-changelog` skill's `scripts/check_changelog.py CHANGELOG.md --release X.Y.Z`.
 - Run `scripts/check.sh` with the pinned tools and Python `jsonschema`, `referencing`, `pypdf`.
   Review PDFs visually, including long content, metadata, optional branding and page breaks.

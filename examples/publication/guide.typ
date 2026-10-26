@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.1.0": publication, process-phase, notice, quiet-table
+#import "@local/business-templates:0.2.0": publication, process-phase, notice, quiet-table
 #let company = (name: "Example Studio", language: "en", contact: (email: "hello@example.invalid"), branding: (font_preset: "inter", accent_color: "#244B62"))
 #show: publication.with(title: "Project guide: from the first conversation to a documented handover", subtitle: "A synthetic project", document-type: "Guide", document-number: "GUIDE-2026-001", created: "2026-10-26", company: company)
 

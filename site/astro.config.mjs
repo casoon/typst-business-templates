@@ -14,7 +14,7 @@ export default defineConfig({
       tagline: 'Deterministic documents with Typst',
       website: 'https://typst-business-templates.casoon.de',
       repo: 'casoon/typst-business-templates',
-      version: '0.1.0',
+      version: '0.2.0',
       license: 'MIT',
       packages: [
         { label: 'typstgen', href: 'https://github.com/casoon/typstgen' },

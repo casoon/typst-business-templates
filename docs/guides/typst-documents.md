@@ -10,7 +10,7 @@ show rule: `concept`, `contract`, `documentation`, `proposal`, `protocol`, `sla`
 the file is the document.
 
 ```typst
-#import "@local/business-templates:0.1.0": concept
+#import "@local/business-templates:0.2.0": concept
 
 #show: concept.with(
   title: "IT-Security Konzept Rechtsanwaltskanzlei",
@@ -63,7 +63,7 @@ contents …) from the language; see [Branding and languages](../branding/).
 show rule; the trailing `[]` is the (empty) body:
 
 ```typst
-#import "@local/business-templates:0.1.0": task-list
+#import "@local/business-templates:0.2.0": task-list
 
 #task-list(
   title: "Projekt Aufgabenliste",
@@ -109,7 +109,7 @@ The package exports helper functions for the body:
 | `kriterium(name, beschreibung, gewicht: none)` | row of an assessment rubric |
 
 ```typst
-#import "@local/business-templates:0.1.0": handout, aufgabe, hinweis, antwortfeld
+#import "@local/business-templates:0.2.0": handout, aufgabe, hinweis, antwortfeld
 
 #show: handout.with(
   title: "Argumente prüfen",

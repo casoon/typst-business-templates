@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.1.0": specification
+#import "@local/business-templates:0.2.0": specification
 
 #show: specification.with(
   title: "API Migration Spezifikation",

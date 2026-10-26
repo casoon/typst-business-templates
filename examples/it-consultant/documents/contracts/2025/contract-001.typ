@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.1.0": contract
+#import "@local/business-templates:0.2.0": contract
 
 #show: contract.with(
   title: "Dienstleistungsvertrag IT-Beratung",

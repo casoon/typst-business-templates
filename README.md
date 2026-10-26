@@ -55,11 +55,10 @@ infer applicable tax rules or transmission requirements.
 [Configuration guide](docs/guides/invoice-configuration.md) ·
 [Optional reviewed profiles](docs/guides/invoice-profiles.md)
 
-## Installation and development status
+## Installation and version
 
-The Typst package is **0.1.0 development source**, installed locally as
-`@local/business-templates:0.1.0`. Pin a repository commit; there is no published Typst package
-release or Universe upload yet.
+The Typst package is **0.2.0**, distributed as the source release `templates-v0.2.0` and installed
+locally as `@local/business-templates:0.2.0`. It is not published on Typst Universe.
 
 Configured invoices and profile tools require the **coordinated typstgen source revision** in
 [`tool-versions.json`](tool-versions.json). Installing the published typstgen 0.5.0 does not
@@ -70,7 +69,7 @@ Existing plain-template examples remain compatible with published typstgen 0.5.0
 
 ```sh
 cargo install typstgen --version 0.5.0 --locked
-git clone https://github.com/casoon/typst-business-templates
+git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates
 cd typst-business-templates/examples/it-consultant
 typstgen compile documents/invoices/2025/invoice.typ
 ```

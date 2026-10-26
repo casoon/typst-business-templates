@@ -21,7 +21,7 @@ const schemaCount = Object.keys(import.meta.glob('../../../schema/*.schema.json'
 const invoiceGallery = ['invoice-de', 'invoice-en', 'invoice-fr', 'invoice-es', 'invoice-it', 'invoice-nl', 'invoice-pt', 'invoice-us'].map(example);
 const gallery = ['publication-guide', 'publication-intake', 'publication-brochure', 'credentials', 'concept', 'diagram-roadmap'].map(example);
 
-const quickstart = `git clone https://github.com/casoon/typst-business-templates
+const quickstart = `git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates
 cd typst-business-templates
 python3 examples/invoice-languages/build.py`;
 ---
@@ -38,7 +38,7 @@ python3 examples/invoice-languages/build.py`;
     </div>
     <Badges>
       <Badge>MIT</Badge>
-      <Badge>{config.version} development package</Badge>
+      <Badge>{config.version} template package</Badge>
     </Badges>
     <figure slot="output" class="workflow">
       <picture class="workflow-light">
@@ -66,9 +66,9 @@ python3 examples/invoice-languages/build.py`;
     ]}
   />
 
-  <section class="readiness" aria-label="Development status">
+  <section class="readiness" aria-label="Package version and compatibility">
     <p>
-      This is a development package. Use the documented compiler version to rebuild the examples.{' '}
+      Template package {config.version}. Use the matching source release and documented compiler to rebuild the examples.{' '}
       <a href={url('docs/getting-started/installation/')}>Setup guide</a>{' · '}
       <a href={url('docs/reference/project-status/')}>What is supported</a>
     </p>

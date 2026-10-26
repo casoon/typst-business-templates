@@ -6,9 +6,9 @@ order: 1
 
 ## typstgen
 
-There are two supported development workflows. Use the coordinated source build for invoice
+There are two supported build workflows. Use the coordinated source build for invoice
 configuration and profile commands; use the published compiler for the existing plain-template
-examples and VAT export. The package itself is unreleased local source.
+examples and VAT export. The template package is distributed as a versioned source release.
 
 ### Configured invoices and profile tools
 
@@ -53,10 +53,10 @@ cargo install chartlet
 
 The package is the `templates/` folder of the repository (`templates/typst.toml`, entry point
 `templates/lib.typ`). It is not on Typst Universe; install it as a local package under the name
-`business-templates`, version `0.1.0`:
+`business-templates`, version `0.2.0`:
 
 ```sh
-git clone https://github.com/casoon/typst-business-templates.git
+git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates.git
 ```
 
 Then either copy or symlink `templates/` into your Typst package directory:
@@ -65,26 +65,26 @@ Then either copy or symlink `templates/` into your Typst package directory:
 # macOS
 mkdir -p ~/Library/Application\ Support/typst/packages/local/business-templates
 ln -s "$PWD/typst-business-templates/templates" \
-  ~/Library/Application\ Support/typst/packages/local/business-templates/0.1.0
+  ~/Library/Application\ Support/typst/packages/local/business-templates/0.2.0
 
-# Linux: ~/.local/share/typst/packages/local/business-templates/0.1.0
-# Windows: %APPDATA%\typst\packages\local\business-templates\0.1.0
+# Linux: ~/.local/share/typst/packages/local/business-templates/0.2.0
+# Windows: %APPDATA%\typst\packages\local\business-templates\0.2.0
 ```
 
-or point typstgen at any folder that contains `local/business-templates/0.1.0` with
+or point typstgen at any folder that contains `local/business-templates/0.2.0` with
 `package_path` in your project's `typstgen.toml`:
 
 ```toml
 package_path = "/path/to/packages"
 ```
 
-The repository does the latter for its examples: `packages/local/business-templates/0.1.0` is a
+The repository does the latter for its examples: `packages/local/business-templates/0.2.0` is a
 link to `templates/`, and the example projects set `package_path = "../../packages"`.
 
 Documents then import from the package:
 
 ```typst
-#import "@local/business-templates:0.1.0": invoice
+#import "@local/business-templates:0.2.0": invoice
 ```
 
 The package needs Typst 0.15 or later (`compiler = "0.15.0"` in `typst.toml`).
@@ -106,6 +106,6 @@ font and prints a warning.
 
 Continue with the [Quickstart](../quickstart/).
 
-The current package is unreleased. Pin a repository commit for reproducibility; historical
+Use the `templates-v0.2.0` source release for reproducibility; historical
 `v0.7.x` releases contain docgen. See [Versions](../../reference/releases/) and
 [Migration](../../guides/migration/).

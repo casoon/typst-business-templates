@@ -4,7 +4,7 @@
 // The letter text comes as Typst content (headings, lists, tables), or as
 // data.content (a string) for short letters from JSON.
 //
-//   #import "@local/business-templates:0.1.0": letter
+//   #import "@local/business-templates:0.2.0": letter
 //   #letter(
 //     data: (
 //       metadata: (date: "2026-10-08", subject: "…", reference_number: "CAS-BRF-2026-001"),

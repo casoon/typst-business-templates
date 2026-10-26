@@ -7,7 +7,7 @@ order: 5
 ## Compact A4 publication
 
 ```typst
-#import "@local/business-templates:0.1.0": publication, writing-field, choice-group
+#import "@local/business-templates:0.2.0": publication, writing-field, choice-group
 #show: publication.with(
   title: "Project briefing",
   subtitle: "Preparation for the first meeting",
@@ -60,7 +60,7 @@ consistent design. Labels and arbitrary bodies can be ordinary Typst content.
 `process-phase` and `priority-tag` use translated default labels. For example:
 
 ```typst
-#import "@local/business-templates:0.1.0": process-phase, quiet-table, priority-tag
+#import "@local/business-templates:0.2.0": process-phase, quiet-table, priority-tag
 #priority-tag("required", company: (language: "en"))
 #process-phase("Review", duration: "One meeting", result: "Agreed scope",
   participation: "Project sponsor", company: (language: "en"))[
@@ -81,7 +81,7 @@ A4 default. `publication` defaults to 210 × 297 mm. Both accept explicit `width
 there is no automatic slide sizing, content shrinking or poster layout.
 
 ```typst
-#import "@local/business-templates:0.1.0": brochure, numbered-step
+#import "@local/business-templates:0.2.0": brochure, numbered-step
 #show: brochure.with(title: "Project overview", language: "en",
   foreground: white, background: rgb("#182C39"), accent: rgb("#C4E6FC"))
 #numbered-step(1, "Prepare")[Collect the source material.]

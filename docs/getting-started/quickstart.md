@@ -130,7 +130,7 @@ the subtotal, the VAT or the total does not add up, the build stops with the off
 `invoices/RE-2026-001.typ` passes both files to the template:
 
 ```typst
-#import "@local/business-templates:0.1.0": invoice
+#import "@local/business-templates:0.2.0": invoice
 
 #invoice(
   data: json("RE-2026-001.json"),
