@@ -6,6 +6,28 @@ order: 2
 
 This assumes typstgen and the package are [installed](../installation/).
 
+## Configured invoice path
+
+For editable taxes, automatic totals, seven invoice languages or US Letter/USD, start with
+the coordinated compiler from the installation guide. The repository's language demos are
+ready to open in the [showcase](../../../showcase/). From `examples/invoice-languages/`:
+
+```sh
+typstgen prepare-invoice --config en-US/invoice-config.json en-US/invoice.json > en-US/resolved.json
+typstgen compile invoice.typ --input resolved=en-US/resolved.json -o en-US/invoice.pdf
+```
+
+Change the language folder to use another demo. The configuration chooses taxes and
+presentation; the input supplies company, recipient and positions. The shared wrapper also
+loads the fictional SVG logo. See [Invoice configuration](../../guides/invoice-configuration/)
+for the input contract and VAT/sales-tax boundaries.
+
+## Existing JSON with supplied totals
+
+The following workflow remains compatible with published typstgen 0.5.0. Here the caller
+supplies totals; the template checks them. Configured invoice preparation can calculate these
+values before rendering instead.
+
 ## 1. Project layout
 
 ```

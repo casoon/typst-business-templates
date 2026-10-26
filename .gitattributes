@@ -1,0 +1,2 @@
+# Generated showcase PDFs are binary artifacts, not text diffs.
+site/public/showcase/*.pdf binary

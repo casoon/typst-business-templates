@@ -1,64 +1,56 @@
 ---
 title: Overview
-description: What the business-templates Typst package contains, which tools it works with, and how this documentation is organised.
+description: Configurable invoices, business documents, publications and the boundaries of the current development package.
 order: 0
 ---
 
-typst-business-templates is the [Typst](https://typst.app/) package `business-templates`: 21
-templates for business documents — invoices, offers, credit notes, reminders, letters,
-credentials, concepts, contracts, documentation and more. Two tools from the same author go with
-it:
+`business-templates` is a Typst package with 21 document templates. It combines JSON-driven
+accounting documents with Typst-authored contracts, concepts, documentation, compact guides,
+printable forms and landscape brochures. Company data and content remain ordinary files.
 
-- **[typstgen](https://casoon.github.io/typstgen/)** compiles the documents to PDF and, for
-  invoices, embeds ZUGFeRD / Factur-X data. Any Typst compiler works for plain PDFs; the examples
-  and this documentation use typstgen.
-- **[chartlet](https://casoon.github.io/chartlet/)** renders diagrams from a JSON spec to SVG,
-  which the documents embed as images.
+## Choose a workflow
 
-## What it covers
-
-- Ten accounting documents with a DIN 5008 address block and a four-column company footer. Their
-  data lives in JSON files, described by [JSON schemas](reference/package/#json-schemas).
-- Nine documents written in Typst, with a title page and optional table of contents.
-  See [Document types](reference/document-types/).
-- Totals check: invoice, offer, credit note and order confirmation refuse to compile if the
-  amounts in the JSON do not add up.
-- E-invoices: typstgen turns an invoice into a PDF/A-3 with `factur-x.xml` (EN 16931) from the
-  same JSON.
-- Company data, colours, logo and one of eleven font presets from `company.json`; labels of the
-  running-text documents in seven languages.
-
-## Where it stops
-
-| The package does | The package does not |
+| What you need | Start here |
 | --- | --- |
-| Lay out the document from the data you give it | Calculate totals or VAT — the JSON carries the numbers, the templates only check them |
-| Stop the build when totals do not add up | Assign document numbers or keep counters, clients or projects |
-| Produce a ZUGFeRD invoice together with typstgen | Fully validate it — typstgen's checks are not an EN 16931 validator; use one such as [Mustang](https://www.mustangproject.org/) before sending |
-| | Send documents, track payments or book anything |
-| | Produce XRechnung or ZUGFeRD credit notes |
+| Editable tax rates, VAT/sales-tax components, required fields, language and paper | [Invoice configuration](guides/invoice-configuration/) |
+| A PDF to inspect before installing anything | [Showcase](../showcase/): seven invoice languages, a US variant and other document families |
+| Existing invoice JSON with supplied totals | [Quickstart](getting-started/quickstart/) and [accounting documents](guides/json-documents/) |
+| Compact A4 guides, intake forms and landscape pages | [Publications](guides/publications/) |
+| Long documents authored in Typst | [Documents in Typst](guides/typst-documents/) |
+| Reviewed, explicitly bounded national rules | [Optional invoice profiles](guides/invoice-profiles/) |
 
-## How the docs are organised
+## Roles of the tools
 
-- **Getting started**: [install](getting-started/installation/) typstgen and the package, then
-  compile a [first invoice](getting-started/quickstart/).
-- **Guides**: [accounting documents from JSON](guides/json-documents/),
-  [documents written in Typst](guides/typst-documents/), [diagrams with chartlet](guides/diagrams/)
-  and [branding and languages](guides/branding/).
-- **Reference**: the [package](reference/package/) (functions, parameters, schemas) and the
-  [document types](reference/document-types/).
+The Typst package renders the document and checks supplied totals.
+[typstgen](https://casoon.github.io/typstgen/) compiles Typst and, in the coordinated
+source build, prepares configured invoices using exact decimal arithmetic. VAT PDFs and CII
+XML use the same canonical invoice values. Sales-tax configurations return PDF rendering data
+with independent component amounts and are excluded from the CII adapter.
+[chartlet](https://casoon.github.io/chartlet/) supplies diagrams as SVG.
 
-Every document in the [showcase](../showcase/) was compiled from the example file shown next to
-it. The example projects are in
-[`examples/`](https://github.com/casoon/typst-business-templates/tree/main/examples).
+Invoices support seven languages, DIN/international layout, A4/US Letter and independent
+currency/format choices. Other accounting templates retain their existing German/DIN contract.
+Running-text documents and credentials have their documented branding and locale options.
 
-## docgen and the Rust crate
+## Development package and boundaries
 
-Earlier versions shipped `docgen`, a CLI with project scaffolding, numbering and client
-management, and a Rust library crate. Both are discontinued: the templates are now a plain Typst
-package, and compiling and e-invoices are done by typstgen.
+Package 0.1.0 is unreleased local development source. Configured invoices and profile tools
+require the source revision in `tool-versions.json`; published typstgen 0.5.0 covers the older
+plain-template and VAT-export path. See [Installation](getting-started/installation/) for
+both paths, and [Capabilities and limits](reference/project-status/) for the implementation map.
 
-Compact guides, intake forms and landscape pages: [Publications](guides/publications/).
-Existing projects: [Migration](guides/migration/) and [Versions](reference/releases/).
+The configurable builder does not determine applicable law, rates, taxability, nexus or
+national delivery requirements. XRechnung/Peppol adapters, transmission and additional reviewed
+cross-border cases are not implemented. Numbering, accounting, payment tracking and client
+management are outside the package. External invoice checks and compilation/accessibility
+checks remain separate results.
 
-Invoice selection, case prerequisites and tooling integration: [Invoice profiles](guides/invoice-profiles/).
+## Reference and examples
+
+The [package reference](reference/package/) describes exports, schemas and locale behavior.
+[Document types](reference/document-types/) lists all templates.
+[Branding](guides/branding/) covers logos, fonts and partial locale overrides;
+[Migration](guides/migration/) covers existing projects;
+[Versions](reference/releases/) distinguishes this package from discontinued docgen releases.
+
+Every [showcase](../showcase/) entry links to its source configuration or document and full PDF.

@@ -37,7 +37,7 @@ credentials(data: none, company: (:), locale: none, mask: false)
 | --- | --- | --- |
 | `data` | dictionary | the document, usually `json("…")`; shape per [schema](#json-schemas) |
 | `company` | dictionary | `company.json`; `company.logo` may be replaced by image bytes |
-| `locale` | dictionary | `credentials` only: labels, default `templates/locale/<company.language>.json` |
+| `locale` | dictionary | `invoice`/`credentials`: partial overrides over the selected package catalog |
 | body | content | `letter` only, optional: the letter text with headings, lists and tables, after `data.content` |
 
 `company.language` defaults to `de`. `invoice`, `offer`, `credit-note` and
@@ -112,6 +112,9 @@ JSON Schema draft 2020-12, in
 | [`letter`](https://casoon.github.io/typst-business-templates/schema/letter.schema.json) | `data` of `letter` |
 | [`credentials`](https://casoon.github.io/typst-business-templates/schema/credentials.schema.json) | `data` of `credentials` |
 | [`common`](https://casoon.github.io/typst-business-templates/schema/common.schema.json) | shared definitions: `date`, `decimal`, `money`, `vat_rate`, `address`, `recipient`, `bank_account` |
+| [`invoice-config`](https://casoon.github.io/typst-business-templates/schema/invoice-config.schema.json) | tax model, named taxes/components, required fields, notes and presentation |
+| [`document-profiles`](https://casoon.github.io/typst-business-templates/schema/document-profiles.schema.json) | optional versioned rule catalog |
+| [`document-request`](https://casoon.github.io/typst-business-templates/schema/document-request.schema.json) | explicit profile selection, invoice data and confirmed facts |
 
 Every field carries a description, including which fields the templates do not render and which
 only typstgen reads. A JSON file names its schema with `"$schema"` for editor support; the
@@ -153,6 +156,9 @@ Task responsibility reuses `assignee`; optional `phase` and a `roles: ((name: ..
 
 ## Invoice profiles
 
-The optional rendering selection separates document language, format locale, EUR currency and
-DIN/international layout. Fiscal profile resolution and canonical data belong to typstgen.
+The rendering selection separates language, format locale, currency, DIN/international layout
+and A4/US Letter. The user-owned configuration chooses VAT categories or additive sales-tax
+components; canonical calculation and optional rule-catalog resolution belong to typstgen.
+See [Invoice configuration](../../guides/invoice-configuration/) and
+[Capabilities and limits](../project-status/).
 See [Invoice profiles](../../guides/invoice-profiles/) for the versioned contracts and release states.

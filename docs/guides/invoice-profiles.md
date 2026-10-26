@@ -128,7 +128,7 @@ The schemas check the catalog shape; typstgen does not pretend a skipped JSON Sc
 ## Configuring your own invoices
 
 For user-owned tax rates, required fields, notes and presentation, use
-[invoice configuration](invoice-configuration.md). It prepares invoices without selecting a
+[invoice configuration](../invoice-configuration/). It prepares invoices without selecting a
 national catalog entry. The catalogs below remain an optional layer for reviewed national rules.
 
 ## Complete synthetic agent flow

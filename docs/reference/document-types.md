@@ -23,6 +23,8 @@ Schemas are published at `https://casoon.github.io/typst-business-templates/sche
 
 Letterhead with logo and a metadata box, DIN 5008 address block with return address line, and a
 four-column company footer (address, contact, tax data, bank account). Helvetica, German labels.
+Invoices additionally support seven languages, international layout, A4/US Letter and
+configured VAT or sales-tax components; see [Invoice configuration](../../guides/invoice-configuration/).
 
 | Function | Document | Call | Schema | Contents |
 | --- | --- | --- | --- | --- |

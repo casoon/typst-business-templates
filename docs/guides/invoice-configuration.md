@@ -160,12 +160,12 @@ The style is independent of seller and buyer countries:
 three-letter currency suffix. Explicit symbol currently supports USD. `tax_label` optionally
 overrides the invoice tax-column label. Currency follows the two-decimal convention above.
 
-The [language gallery](../../examples/invoice-languages/README.md) contains eight PDFs with
+The [invoice showcase](../../../showcase/) contains eight PDFs with
 editable inputs and configuration files. It uses one shared invoice wrapper.
 
 This is a configuration format for invoice construction. It does not infer which tax treatment
 or national requirements apply: the result records `checks.jurisdiction = "not_assessed"`.
-The existing [versioned catalogs](invoice-profiles.md) provide an optional reviewed-rule path.
+The existing [versioned catalogs](../invoice-profiles/) provide an optional reviewed-rule path.
 Configuration does not implement new XRechnung/Peppol adapters or invoice transmission.
 
 

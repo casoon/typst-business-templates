@@ -13,6 +13,7 @@ order: 3
 | Historical repository releases | `v0.7.x` and older | docgen CLI/Rust crate; historical tags retain their original contents and meaning |
 | Minimum compiler | Typst 0.15.0 | `compiler` in the package manifest |
 | Verified tooling | typstgen 0.5.0, chartlet 0.21.0 | `tool-versions.json`; chartlet is optional outside diagram checks |
+| Configured invoices/profile tooling | Coordinated typstgen Git revision | `typstgen_profiles_revision` in `tool-versions.json`; source build still identifies as 0.5.0 and is not the published crate |
 
 The Typst package follows Semantic Versioning independently of the discontinued crate. During
 0.x, a breaking public contract increments the minor version, compatible fixes/additions may

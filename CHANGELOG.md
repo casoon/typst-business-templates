@@ -58,6 +58,8 @@ All notable changes to this project will be documented in this file.
   builds the e-invoices, validates the JSON and compares the locale keys
 
 ### Changed
+- **Documentation:** README, installation and capability reference distinguish published tooling
+  from coordinated development features; Pages includes language/US invoices and publications.
 - **Diagrams:** rendered with chartlet 0.21 instead of 0.19. The checked-in SVGs of the
   architecture, flow and swimlane examples gained a fuller description for screen readers, naming
   the most connected node, loops and bottlenecks; the drawings themselves are unchanged.

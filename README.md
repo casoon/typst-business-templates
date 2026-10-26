@@ -2,200 +2,100 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Invoices, offers, contracts and other business documents as a Typst package.**
+**Configurable invoices and business documents from files you own.**
 
-`business-templates` is a [Typst](https://typst.app/) package with 21 templates for small
-businesses: accounting documents with a DIN 5008 address block, and longer documents with a
-title page. Compile them with [typstgen](https://github.com/casoon/typstgen), which also turns an
-invoice into a ZUGFeRD e-invoice. Diagrams come from [chartlet](https://github.com/casoon/chartlet).
+`business-templates` provides 21 Typst templates: invoices, offers, letters, contracts,
+credentials, compact publications, printable forms and landscape brochures. Company data,
+logos and document content stay in your project. [typstgen](https://github.com/casoon/typstgen)
+prepares configured invoices and compiles the documents; [chartlet](https://github.com/casoon/chartlet)
+supplies diagrams.
 
-Created by [casoon.de](https://www.casoon.de).
+**[Documentation](https://casoon.github.io/typst-business-templates/)** ·
+**[Capabilities and limits](docs/reference/project-status.md)** ·
+**[Demo gallery](examples/invoice-languages/README.md)**
 
-**Website and documentation:** [casoon.github.io/typst-business-templates](https://casoon.github.io/typst-business-templates/)
+## Open a real example
 
-> **docgen and the Rust crate are discontinued.** Earlier versions shipped the `docgen` CLI and
-> the `typst-business-templates` crate. Both are replaced by typstgen, which compiles the same
-> templates and JSON files. Client and project management, numbering and `--encrypt` were not
-> carried over.
+Eight committed PDFs cover Deutsch, English, Français, Español, Italiano, Nederlands and
+Português, plus an English US variant. Each has editable invoice data and configuration;
+all use one shared template and a fictional SVG logo.
 
-## Quick start
+- [German invoice](examples/invoice-languages/de/invoice.pdf): A4, EUR, German labels.
+- [US invoice](examples/invoice-languages/en-US/invoice.pdf): Letter, USD, US dates and separate
+  state/local tax components.
+- [All eight demos and rebuild instructions](examples/invoice-languages/README.md).
 
-```bash
+The businesses, accounts and tax rates in these examples are fictional. A language demo is
+not a reviewed national tax preset.
+
+## Configure an invoice
+
+Copy [`invoice-config.json`](invoice-config.json) into your project. It declares named tax
+rates or sales-tax components, required input fields, notes, language, number/date format,
+currency, paper and layout. Each item selects a tax key; omitted totals are calculated by
+`typstgen prepare-invoice`. Supplied totals are checked against the same decimal model.
+
+The returned data drives the PDF and, for VAT invoices, the existing CII/Factur-X adapter.
+Sales-tax invoices produce PDF and component data. Selecting a country or language does not
+infer applicable tax rules or transmission requirements.
+
+[Configuration guide](docs/guides/invoice-configuration.md) ·
+[Optional reviewed profiles](docs/guides/invoice-profiles.md)
+
+## Installation and development status
+
+The Typst package is **0.1.0 development source**, installed locally as
+`@local/business-templates:0.1.0`. Pin a repository commit; there is no published Typst package
+release or Universe upload yet.
+
+Configured invoices and profile tools require the **coordinated typstgen source revision** in
+[`tool-versions.json`](tool-versions.json). Installing the published typstgen 0.5.0 does not
+provide these commands. The [installation guide](docs/getting-started/installation.md)
+distinguishes both toolchains and shows the pinned installation.
+
+Existing plain-template examples remain compatible with published typstgen 0.5.0:
+
+```sh
 cargo install typstgen --version 0.5.0 --locked
 git clone https://github.com/casoon/typst-business-templates
 cd typst-business-templates/examples/it-consultant
 typstgen compile documents/invoices/2025/invoice.typ
 ```
 
-The PDF is written next to its source. Every example project has a `typstgen.toml` that points
-to the package in this repository and to the fonts in `fonts/`.
+## Beyond invoices
 
-## Use the package in your own project
+- [Accounting documents](docs/guides/json-documents.md): offers, credit notes, reminders,
+  delivery notes, order confirmations, requests, time sheets and letters.
+- [Documents in Typst](docs/guides/typst-documents.md): concepts, contracts, documentation,
+  proposals, protocols, specifications and tasks.
+- [Publications](docs/guides/publications.md): compact A4 guides, intake forms, printable
+  components and landscape brochures.
+- [Branding and languages](docs/guides/branding.md): company data, logo, fonts and partial
+  translation overrides. Credentials can mask password fields.
+- [Diagrams](docs/guides/diagrams.md): chartlet SVGs embedded in documents.
+- [Package reference](docs/reference/package.md): exports, JSON schemas and configuration.
 
-Copy or link `templates/` into your Typst package directory as
-`local/business-templates/0.1.0`, or set `package_path` in your project's `typstgen.toml`:
+The full [example projects](examples/README.md) demonstrate both JSON-driven and Typst-authored
+documents. [Migration](docs/guides/migration.md) describes existing consumers; a real consumer
+migration remains a separate integration step.
 
-```toml
-# typstgen.toml — run typstgen in the project folder
-template_paths = ["."]                                  # project folder = root for /data/…
-package_path = "path/to/packages"                       # contains local/business-templates/0.1.0
-font_paths = ["path/to/typst-business-templates/fonts"]
+## Checks
+
+```sh
+./scripts/test.sh
 ```
 
-An invoice is its data in JSON plus a short Typst file:
+The script builds pinned tools in a project-local cache, runs package/profile checks and
+external VAT invoice validation, rebuilds all eight language demos and retains PDFs/reports
+under `output/test/`. It needs Cargo, Python 3, Java and veraPDF. See the
+[acceptance workflow](docs/guides/invoice-profiles.md#local-acceptance-test) for prerequisites.
+`./scripts/check.sh` is the compatibility check for an already installed compiler.
 
-```typst
-// documents/invoices/2026/RE-2026-001.typ
-#import "@local/business-templates:0.1.0": invoice
+## Earlier docgen versions
 
-#invoice(
-  data: json("RE-2026-001.json"),
-  company: json("/data/company.json"),
-)
-```
+The old `docgen` CLI and Rust crate are discontinued. Client/project management, numbering
+and encryption are not part of this Typst package. Historical tags retain their meaning;
+see [versions and release preparation](docs/reference/releases.md).
 
-A concept, contract or documentation is written in Typst:
-
-```typst
-#import "@local/business-templates:0.1.0": concept
-
-#show: concept.with(
-  title: "Online-Shop Konzept",
-  document_number: "KO-2026-001",
-  company: json("/data/company.json"),
-)
-
-= Ausgangssituation
-…
-```
-
-See [migration](docs/guides/migration.md) for existing projects and
-[versions and releases](docs/reference/releases.md) for the package/docgen version mapping.
-The package in this checkout is unreleased; pin its commit when installing.
-
-## Templates
-
-| Kind | Functions | Arguments |
-| --- | --- | --- |
-| Accounting | `invoice`, `offer`, `credit-note`, `reminder`, `delivery-note`, `order-confirmation`, `quotation-request`, `time-sheet`, `letter` | `data:` (JSON), `company:` |
-| Accounting | `credentials` | `data:`, `company:`, `locale:` |
-| Documents | `concept`, `contract`, `documentation`, `proposal`, `protocol`, `sla`, `specification`, `task-list`, `handout`, `publication`, `brochure` | named parameters, `company:`, the body as content |
-
-- **Company data** from `company.json`: address, contact, tax and bank data for the footer, logo.
-- **Branding and seven languages** for the running-text documents and credentials: accent and
-  primary colour, one of eleven font presets, labels in `de`, `en`, `es`, `fr`, `it`, `nl`, `pt`
-  chosen by `language` in `company.json` (`locale:` overrides them). The other accounting
-  documents are German, in Helvetica, with a DIN 5008 layout. Invoice language, number format
-  and DIN/international layout are independently selectable.
-- **Totals are checked.** Invoice, offer, credit note and order confirmation stop the build if an
-  item total, the subtotal, the VAT or the total does not add up, to the cent.
-- **Kleinunternehmer:** with `default_terms.vat_exempt` in `company.json`, invoice and credit note
-  print the § 19 UStG note.
-- **PDF metadata:** accounting documents carry the document number as title, the company as
-  author and the document date.
-
-A logo in `company.json` is a path, which a package cannot read. Pass the image bytes instead:
-
-```typst
-#let company = json("/data/company.json")
-#company.insert("logo", read("/data/logo.png", encoding: none))
-```
-
-Compact A4 guides, printable form components and landscape brochures are described in
-[Publications](docs/guides/publications.md).
-
-## E-invoices (ZUGFeRD / Factur-X)
-
-typstgen embeds the invoice data as `factur-x.xml` (EN 16931), built from the same JSON the
-template renders:
-
-```bash
-typstgen compile invoice.typ --zugferd invoice.json --company data/company.json --pdf-standard a-3b
-```
-
-See the [typstgen e-invoice guide](https://casoon.github.io/typstgen/docs/guides/e-invoices/) for
-the field mapping and VAT codes.
-
-## JSON schemas
-
-[`schema/`](schema/) has a JSON schema for every accounting document and for `company.json`.
-Reference it from a data file for completion and checks in the editor:
-
-```json
-{
-  "$schema": "https://casoon.github.io/typst-business-templates/schema/invoice.schema.json",
-  "metadata": { "invoice_number": "RE-2026-001", "invoice_date": "2026-01-15" }
-}
-```
-
-## Diagrams and charts with chartlet
-
-[chartlet](https://github.com/casoon/chartlet) lays out flow charts, trees, timelines,
-architecture and sequence diagrams and charts from a JSON spec and writes SVG. Render the print
-variant and place it in any document:
-
-```bash
-cargo install chartlet
-chartlet render architecture.json --variant print -o architecture.svg
-```
-
-```typst
-#figure(image("architecture.svg", width: 100%), caption: [Plattform-Architektur])
-```
-
-[`examples/diagrams/`](examples/diagrams/) has eight specs, and the it-consultant documentation
-embeds an architecture diagram.
-
-## Examples
-
-| Folder | Content |
-| --- | --- |
-| [`examples/it-consultant/`](examples/it-consultant/) | Every accounting document plus concept, contract, documentation, proposal, protocol, SLA, specification |
-| [`examples/digitalagentur/`](examples/digitalagentur/) | Invoice, offer, credentials, concept, documentation, task list |
-| [`examples/freelance-designer/`](examples/freelance-designer/) | Kleinunternehmer without VAT |
-| [`examples/handout/`](examples/handout/) | Worksheet with tasks and answer fields |
-| [`examples/diagrams/`](examples/diagrams/) | chartlet specs |
-
-[`examples/README.md`](examples/README.md) explains the project layout.
-
-## Invoice configuration
-
-For invoices with your own tax rates, required fields and notes, copy
-[`invoice-config.json`](invoice-config.json) into your project. The coordinated typstgen build
-reads it with `prepare-invoice --config invoice-config.json invoice.json`; the returned data
-drives the PDF and, for VAT invoices, CII XML. See [invoice configuration](docs/guides/invoice-configuration.md).
-The [language gallery](examples/invoice-languages/README.md) contains PDFs and editable inputs
-for all seven languages plus a US Letter/USD example with separate sales-tax components.
-
-## Development
-
-For a complete local test with retained PDFs and external validator reports:
-
-```bash
-scripts/test.sh
-```
-
-This builds the pinned typstgen/chartlet revisions in `.cache/test-tools/`, installs the pinned
-Python test dependencies in a local virtual environment and verifies the Mustang download
-checksum. It requires Cargo, Python 3, a Java runtime and the veraPDF CLI (on macOS: `brew install
-openjdk verapdf`). It runs package and invoice checks and keeps each run in a fresh `output/test/run-…/` directory.
-The first run downloads/builds the tools; later runs reuse them. No global tool installation is
-replaced. See [the testing workflow](docs/guides/invoice-profiles.md#local-acceptance-test).
-
-The compatibility check with an already installed typstgen is:
-
-```bash
-scripts/check.sh
-```
-
-compiles every example and diagram, builds the example invoices as ZUGFeRD e-invoices, validates
-the example JSON against the schemas and compares the locale keys. It needs typstgen, `pip install
-jsonschema referencing pypdf`, and chartlet for the SVG check. CI runs it on every pull request.
-
-## License
-
-MIT, see [LICENSE](LICENSE). The fonts in [`fonts/`](fonts/) have their own open licenses.
-
-Versioned invoice profiles and the coordinated typstgen development workflow are described in
-[Invoice profiles](docs/guides/invoice-profiles.md). Only explicitly listed cases/output combinations
-are released; France is a preview draft and XRechnung/Peppol adapters are specified but unimplemented.
+Created by [casoon.de](https://www.casoon.de). MIT: [LICENSE](LICENSE).
+Fonts in [`fonts/`](fonts/) have their own open licenses.
