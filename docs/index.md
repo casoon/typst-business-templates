@@ -21,6 +21,12 @@ printable forms and landscape brochures. Company data and content remain ordinar
 
 ## Roles of the tools
 
+The templates and compiler live in separate repositories. This repository contains the
+`business-templates` Typst package, JSON schemas and examples.
+[typstgen](https://github.com/casoon/typstgen) is installed separately and provides the CLI,
+Rust library and MCP server, with the Typst compiler embedded. Follow the
+[setup guide](getting-started/installation/) to select the compatible version.
+
 The Typst package renders the document and checks supplied totals.
 [typstgen](https://casoon.github.io/typstgen/) compiles Typst and, in the coordinated
 source build, prepares configured invoices using exact decimal arithmetic. VAT PDFs and CII

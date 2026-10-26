@@ -74,6 +74,29 @@ python3 examples/invoice-languages/build.py`;
     </p>
   </section>
 
+  <section class="toolchain" aria-labelledby="toolchain-title">
+    <h2 id="toolchain-title">The templates and the compiler</h2>
+    <div class="toolchain-roles">
+      <div>
+        <h3>business-templates — this repository</h3>
+        <p>Reusable Typst layouts, JSON schemas, translations and editable examples.
+          Your data and these templates define the document.</p>
+        <a href={url('docs/reference/package/')}>Explore the template package →</a>
+      </div>
+      <div>
+        <h3>typstgen — a separate project</h3>
+        <p>The PDF builder, with the Typst compiler embedded. Use its CLI, Rust library
+          or MCP server to compile your documents. Its coordinated source build also
+          prepares configured invoices and calculates their totals.</p>
+        <a href="https://casoon.github.io/typstgen/">Explore typstgen →</a>{' · '}
+        <a href="https://github.com/casoon/typstgen">GitHub repository</a>
+      </div>
+    </div>
+    <p class="toolchain-setup">Install the compiler separately using the{' '}
+      <a href={url('docs/getting-started/installation/')}>setup guide</a>.
+      Configured invoices require the pinned source revision documented there.</p>
+  </section>
+
   <Features
     items={[
       {
@@ -174,6 +197,25 @@ python3 examples/invoice-languages/build.py`;
     line-height: 1.65;
   }
   .readiness a { color: var(--heading); text-decoration: underline; }
+
+  .toolchain {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+  .toolchain h2 { margin: 0 0 24px; color: var(--heading); font-size: 28px; }
+  .toolchain-roles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 28px 48px;
+  }
+  .toolchain-roles > div { border-top: 1px solid var(--border); padding-top: 20px; }
+  .toolchain h3 { margin: 0 0 8px; color: var(--heading); font-size: 17px; }
+  .toolchain p { font-size: 14.5px; line-height: 1.65; }
+  .toolchain-roles p { margin: 0 0 12px; }
+  .toolchain a { color: var(--heading); text-decoration: underline; }
+  .toolchain-roles a { font-size: 14.5px; }
+  .toolchain-setup { margin: 24px 0 0; color: var(--muted); }
 
   .workflow {
     margin: 0;
