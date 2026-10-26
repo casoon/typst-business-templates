@@ -47,6 +47,28 @@ source.
 
 ## Structure of the data
 
+The JSON describes document content; the reusable Typst template determines its layout.
+The same template can render successive data files without copying the layout for each document.
+
+## Deterministic builds
+
+Reproducibility depends on the complete input set: JSON data, template sources, images, font
+files, compiler/package versions and build time. Keep those fixed for byte-identical rebuilds.
+Use an explicit timestamp when templates read the current date, and pin the compiler and
+package revisions rather than relying on whichever versions are installed later.
+
+```sh
+typstgen compile document.typ --creation-timestamp 1792972800 --manifest archive.json
+typstgen verify archive.json
+```
+
+The manifest records the PDF hash, file/font hashes, versions and compile options. Verification
+rebuilds the document and checks those inputs and the resulting PDF. See the
+[typstgen archiving guide](https://casoon.github.io/typstgen/docs/guides/archiving/) for the
+full contract. The template's own document date remains part of its source data.
+
+## Document fields
+
 Most types share this outline (the schema of each type has the details and descriptions of every
 field):
 

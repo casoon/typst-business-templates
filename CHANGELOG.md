@@ -58,6 +58,8 @@ All notable changes to this project will be documented in this file.
   builds the e-invoices, validates the JSON and compares the locale keys
 
 ### Changed
+- **Pages:** The hero explains deterministic JSON/Typst document generation with a responsive
+  Chartlet workflow; multilingual invoices remain a concrete application below.
 - **Pages:** English audience-focused copy, direct PDF/setup links and a shorter example workflow
   make the document templates easier to explore before installing the tooling.
 - **Documentation:** README, installation and capability reference distinguish published tooling

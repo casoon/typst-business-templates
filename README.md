@@ -2,15 +2,16 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Business documents from your own data, with your company details and logo.**
+**Deterministic business PDFs from JSON data and reusable Typst templates.**
 
-For freelancers, agencies and developers who create invoices and project documents regularly.
+Keep structured content and company data in JSON, and define the document layout in Typst.
+With the same data, templates, fonts, assets, compiler and timestamp,
+[typstgen](https://github.com/casoon/typstgen) reproduces the document build. The sources can
+be versioned and reviewed alongside your project.
 
-`business-templates` provides 21 Typst templates: invoices, offers, letters, contracts,
-credentials, compact publications, printable forms and landscape brochures. Company data,
-logos and document content stay in your project. [typstgen](https://github.com/casoon/typstgen)
-prepares configured invoices and compiles the documents; [chartlet](https://github.com/casoon/chartlet)
-supplies diagrams.
+`business-templates` provides 21 templates for invoices, offers, letters, contracts,
+credentials, compact publications, printable forms and landscape brochures.
+[chartlet](https://github.com/casoon/chartlet) supplies diagrams when needed.
 
 **[Documentation](https://casoon.github.io/typst-business-templates/)** ·
 **[Capabilities and limits](docs/reference/project-status.md)** ·
@@ -92,6 +93,9 @@ external VAT invoice validation, rebuilds all eight language demos and retains P
 under `output/test/`. It needs Cargo, Python 3, Java and veraPDF. See the
 [acceptance workflow](docs/guides/invoice-profiles.md#local-acceptance-test) for prerequisites.
 `./scripts/check.sh` is the compatibility check for an already installed compiler.
+
+The hero workflow is defined in `site/diagrams/document-build.json`. Regenerate its light/dark
+and wide/narrow Chartlet SVGs with `python3 site/scripts/render-workflow.py`.
 
 ## Earlier docgen versions
 

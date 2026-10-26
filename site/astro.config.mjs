@@ -10,8 +10,8 @@ export default defineConfig({
     casoonPages({
       name: 'typst-business-templates',
       description:
-        'Reusable Typst templates for freelancers, agencies and developers: multilingual invoices, contracts and printable documents built from your own data.',
-      tagline: 'Configurable business documents',
+        'Generate standardized business PDFs from JSON data and reusable Typst templates, with fixed build inputs for reproducible output.',
+      tagline: 'Deterministic documents with Typst',
       website: 'https://typst-business-templates.casoon.de',
       repo: 'casoon/typst-business-templates',
       version: '0.1.0',
