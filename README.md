@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Configurable invoices and business documents from files you own.**
+**Business documents from your own data, with your company details and logo.**
+
+For freelancers, agencies and developers who create invoices and project documents regularly.
 
 `business-templates` provides 21 Typst templates: invoices, offers, letters, contracts,
 credentials, compact publications, printable forms and landscape brochures. Company data,
@@ -14,10 +16,10 @@ supplies diagrams.
 **[Capabilities and limits](docs/reference/project-status.md)** ·
 **[Demo gallery](examples/invoice-languages/README.md)**
 
-## Open a real example
+## See what you can make
 
-Eight committed PDFs cover Deutsch, English, Français, Español, Italiano, Nederlands and
-Português, plus an English US variant. Each has editable invoice data and configuration;
+Eight committed PDFs cover German, English, French, Spanish, Italian, Dutch and
+Portuguese, plus an English US variant. Each has editable invoice data and configuration;
 all use one shared template and a fictional SVG logo.
 
 - [German invoice](examples/invoice-languages/de/invoice.pdf): A4, EUR, German labels.

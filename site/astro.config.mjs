@@ -10,7 +10,7 @@ export default defineConfig({
     casoonPages({
       name: 'typst-business-templates',
       description:
-        'Configurable VAT and sales-tax invoices in seven languages, business documents, printable forms and brochures, compiled with typstgen.',
+        'Reusable Typst templates for freelancers, agencies and developers: multilingual invoices, contracts and printable documents built from your own data.',
       tagline: 'Configurable business documents',
       website: 'https://typst-business-templates.casoon.de',
       repo: 'casoon/typst-business-templates',
