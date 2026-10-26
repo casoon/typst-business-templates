@@ -29,6 +29,8 @@
 #let accounting-header(
   company: none,
   metadata_content: none,
+  contact-label: "Rückfragen an:",
+  logo-placeholder: [Logo hinzufügen in\ company.json],
 ) = {
   // Logo (right side at top)
   place(
@@ -37,7 +39,7 @@
     dy: 0pt,
     if company != none and "logo" in company and company.logo != none [
       #image(logo-source(company.logo), width: 150pt)
-    ] else [
+    ] else if logo-placeholder != none [
       #box(
         width: 150pt,
         height: 50pt,
@@ -46,7 +48,7 @@
         radius: 4pt,
       )[
         #align(center + horizon)[
-          #text(size: 8pt, fill: luma(150))[Logo hinzufügen in\ company.json]
+          #text(size: 8pt, fill: luma(150))[#logo-placeholder]
         ]
       ]
     ]
@@ -64,7 +66,7 @@
 
       // Contact info section
       #if company != none [
-        #text(weight: "bold")[Rückfragen an:]\
+        #text(weight: "bold")[#contact-label]\
         #company.name\
         #if "phone" in company.contact and company.contact.phone != none [
           #company.contact.phone\

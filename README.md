@@ -4,7 +4,7 @@
 
 **Invoices, offers, contracts and other business documents as a Typst package.**
 
-`business-templates` is a [Typst](https://typst.app/) package with 19 templates for small
+`business-templates` is a [Typst](https://typst.app/) package with 21 templates for small
 businesses: accounting documents with a DIN 5008 address block, and longer documents with a
 title page. Compile them with [typstgen](https://github.com/casoon/typstgen), which also turns an
 invoice into a ZUGFeRD e-invoice. Diagrams come from [chartlet](https://github.com/casoon/chartlet).
@@ -21,7 +21,7 @@ Created by [casoon.de](https://www.casoon.de).
 ## Quick start
 
 ```bash
-cargo install typstgen
+cargo install typstgen --version 0.5.0 --locked
 git clone https://github.com/casoon/typst-business-templates
 cd typst-business-templates/examples/it-consultant
 typstgen compile documents/invoices/2025/invoice.typ
@@ -69,19 +69,24 @@ A concept, contract or documentation is written in Typst:
 …
 ```
 
+See [migration](docs/guides/migration.md) for existing projects and
+[versions and releases](docs/reference/releases.md) for the package/docgen version mapping.
+The package in this checkout is unreleased; pin its commit when installing.
+
 ## Templates
 
 | Kind | Functions | Arguments |
 | --- | --- | --- |
 | Accounting | `invoice`, `offer`, `credit-note`, `reminder`, `delivery-note`, `order-confirmation`, `quotation-request`, `time-sheet`, `letter` | `data:` (JSON), `company:` |
 | Accounting | `credentials` | `data:`, `company:`, `locale:` |
-| Documents | `concept`, `contract`, `documentation`, `proposal`, `protocol`, `sla`, `specification`, `task-list`, `handout` | named parameters, `company:`, the body as content |
+| Documents | `concept`, `contract`, `documentation`, `proposal`, `protocol`, `sla`, `specification`, `task-list`, `handout`, `publication`, `brochure` | named parameters, `company:`, the body as content |
 
 - **Company data** from `company.json`: address, contact, tax and bank data for the footer, logo.
 - **Branding and seven languages** for the running-text documents and credentials: accent and
   primary colour, one of eleven font presets, labels in `de`, `en`, `es`, `fr`, `it`, `nl`, `pt`
   chosen by `language` in `company.json` (`locale:` overrides them). The other accounting
-  documents are German, in Helvetica, with a DIN 5008 layout.
+  documents are German, in Helvetica, with a DIN 5008 layout. Invoice language, number format
+  and DIN/international layout are independently selectable.
 - **Totals are checked.** Invoice, offer, credit note and order confirmation stop the build if an
   item total, the subtotal, the VAT or the total does not add up, to the cent.
 - **Kleinunternehmer:** with `default_terms.vat_exempt` in `company.json`, invoice and credit note
@@ -95,6 +100,9 @@ A logo in `company.json` is a path, which a package cannot read. Pass the image 
 #let company = json("/data/company.json")
 #company.insert("logo", read("/data/logo.png", encoding: none))
 ```
+
+Compact A4 guides, printable form components and landscape brochures are described in
+[Publications](docs/guides/publications.md).
 
 ## E-invoices (ZUGFeRD / Factur-X)
 
@@ -158,8 +166,12 @@ scripts/check.sh
 
 compiles every example and diagram, builds the example invoices as ZUGFeRD e-invoices, validates
 the example JSON against the schemas and compares the locale keys. It needs typstgen, `pip install
-jsonschema`, and chartlet for the SVG check. CI runs it on every pull request.
+jsonschema referencing pypdf`, and chartlet for the SVG check. CI runs it on every pull request.
 
 ## License
 
 MIT, see [LICENSE](LICENSE). The fonts in [`fonts/`](fonts/) have their own open licenses.
+
+Versioned invoice profiles and the coordinated typstgen development workflow are described in
+[Invoice profiles](docs/guides/invoice-profiles.md). Only explicitly listed cases/output combinations
+are released; France is a preview draft and XRechnung/Peppol adapters are specified but unimplemented.

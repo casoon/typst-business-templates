@@ -1,6 +1,6 @@
 ---
 title: Document types
-description: The 19 templates, grouped by layout, with the function to call, how it takes its content and the schema of its data.
+description: The 21 templates, grouped by layout, with the function to call, how it takes its content and the schema of its data.
 order: 2
 ---
 
@@ -78,3 +78,13 @@ The [showcase](../../../showcase/) shows a selection, each compiled from the exa
 next to it. All types have an example in
 [`examples/it-consultant/documents/`](https://github.com/casoon/typst-business-templates/tree/main/examples/it-consultant/documents),
 except the task list (in `examples/digitalagentur/`) and the handout (in `examples/handout/`).
+
+## Compact publications
+
+| Function | Default size | Content |
+| --- | --- | --- |
+| `publication` | A4 portrait, 210 × 297 mm | Compact guides and printable intake forms, starting on page one |
+| `brochure` | A4 landscape, 297 × 210 mm | Flowing compact overviews, with optional explicit page breaks |
+
+Both reuse the same frame, branding, language and metadata helpers. See
+[Publications](../../guides/publications/) for printable components and layout limits.

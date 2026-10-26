@@ -1,5 +1,6 @@
 {
   "$comment": "Versions of the tools the templates are built and checked against. Read by .github/workflows/check.yml and by site/src/pages/index.astro, so the numbers exist once.",
   "typstgen": "0.5.0",
-  "chartlet": "0.21.0"
+  "chartlet": "0.21.0",
+  "typstgen_profiles_revision": "8a311cf9dd08a7acca3d35695ae958bed44a71fd"
 }

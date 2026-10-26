@@ -58,6 +58,18 @@
         "show_footer": {
           "type": "boolean",
           "description": "Set to false to hide the company footer. Default: true."
+        },
+        "buyer_reference": {
+          "type": "string",
+          "description": "Reference reserved for versioned output adapters; not emitted by the current legacy CII pipeline."
+        },
+        "order_reference": {
+          "type": "string",
+          "description": "Reference reserved for versioned output adapters; not emitted by the current legacy CII pipeline."
+        },
+        "applied_tax_case": {
+          "type": "string",
+          "description": "Explicit persisted case identity for the selected profile; never inferred from current company status."
         }
       }
     },
@@ -218,6 +230,22 @@
         "bank_account": {
           "$ref": "common.schema.json#/$defs/bank_account",
           "description": "Account to pay into. Not rendered (the footer uses company.json); typstgen uses it for the ZUGFeRD e-invoice."
+        },
+        "early_payment_discount": {
+          "type": "string",
+          "description": "Explicit French preview payment clause/value; displayed by the selected draft profile."
+        },
+        "late_payment_interest": {
+          "type": "string",
+          "description": "Explicit French preview payment clause/value; displayed by the selected draft profile."
+        },
+        "recovery_fee": {
+          "type": "string",
+          "description": "Explicit French preview payment clause/value; displayed by the selected draft profile."
+        },
+        "method_code": {
+          "type": "string",
+          "description": "Payment means code reserved for future adapters; not emitted by legacy CII."
         }
       }
     }

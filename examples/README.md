@@ -97,3 +97,8 @@ bytes, because a path inside the package would point into the package:
 
 Copy a project folder, set `package_path` and `font_paths` in its `typstgen.toml` to your
 locations, and edit `data/company.json`.
+
+## Compact publications
+
+`publication/` contains synthetic A4 guides, printable intake fields, phased task lists and a
+landscape brochure. Run typstgen from that folder with its `typstgen.toml`.

@@ -104,3 +104,15 @@
   if date != none { args.date = to-datetime(date) }
   args
 }
+
+/// Running-text identity: preserve the human title, keep the assigned number in keywords.
+/// Missing dates stay absent rather than using the compilation date.
+#let prose-metadata(company, title, number, date, authors: ()) = {
+  let args = document-metadata(company, none, date)
+  args.title = title
+  args.date = if date == none { none } else { to-datetime(date) }
+  assert(args.date != auto, message: "document date: expected ISO or German calendar date")
+  args.keywords = if number == none { () } else { (str(number),) }
+  if authors.len() > 0 { args.author = authors }
+  args
+}

@@ -74,7 +74,10 @@
         "name": { "type": "string" },
         "company": { "type": ["string", "null"] },
         "address": { "$ref": "#/$defs/address" },
-        "vat_id": { "type": "string", "description": "Buyer's VAT ID, needed for reverse charge" }
+        "vat_id": { "type": "string", "description": "Buyer's VAT ID, needed for reverse charge" },
+        "registration_number": {"type": "string", "description": "Explicit legal registration identifier, e.g. French SIREN. Used by case profiles; never inferred."},
+        "electronic_address": {"type": "object", "required": ["value", "scheme_id"], "properties": {"value": {"type": "string"}, "scheme_id": {"type": "string"}}, "description": "Electronic endpoint and identifier scheme for future structured adapters; not implemented by the legacy CII path."},
+        "email": {"type": "string", "description": "Buyer contact email used by the current CII pipeline."}
       }
     },
     "bank_account": {

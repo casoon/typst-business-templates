@@ -135,7 +135,9 @@
 
 #let accounting-footer(
   company: none,
+  locale: none,
 ) = {
+  let labels = load-locale(locale, (:)).invoice
   context [
     #set text(size: 7pt, font: "Helvetica")
 
@@ -180,13 +182,16 @@
 
           // Column 3: Business Info
           [
-            Geschäftsinhaber:\
+            #labels.business_owner:\
             #if company != none and "business_owner" in company and company.business_owner != none [
               #company.business_owner\
             ]
-            USt-IdNr.:\
+            #labels.vat_id:\
             #if company != none and "vat_id" in company and company.vat_id != none [
               #company.vat_id
+            ]
+            #if locale != none and company.at("tax_id", default: none) != none [
+              #linebreak()#labels.tax_id: #company.tax_id
             ]
           ],
 
@@ -194,7 +199,7 @@
           [
             #if company != none and "bank_account" in company and company.bank_account != none [
               Bank: #company.bank_account.bank_name\
-              Kontoinhaber: #company.bank_account.account_holder\
+              #labels.account_holder: #company.bank_account.account_holder\
               IBAN: #company.bank_account.iban\
               BIC/SWIFT-Code: #company.bank_account.bic
             ]

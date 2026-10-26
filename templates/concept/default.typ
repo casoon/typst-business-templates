@@ -11,6 +11,7 @@
 //   )
 
 #import "../common/styles.typ": *
+#import "../common/formatting.typ": prose-metadata
 #import "../common/title-page.typ": document-title-page
 
 // Document function for flexible use
@@ -43,6 +44,7 @@
   } else { 
     (:) 
   }
+  set document(..prose-metadata(company, title, document_number, created_at, authors: authors))
   let locale = load-locale(locale, company)
   
   // Get branding from company data

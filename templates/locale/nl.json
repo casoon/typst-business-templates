@@ -36,7 +36,29 @@
     "bic": "BIC",
     "reference": "Betalingskenmerk",
     "thank_you": "Bedankt voor uw vertrouwen!",
-    "regards": "Met vriendelijke groet"
+    "regards": "Met vriendelijke groet",
+    "contact": "Contact:",
+    "delivery_date": "Leveringsdatum",
+    "payable_by": "Volledig te betalen voor",
+    "retention_of_title": "Geleverde goederen blijven ons eigendom tot volledige betaling.",
+    "business_owner": "Eigenaar",
+    "vat_id": "Btw-nummer",
+    "tax_id": "Fiscaal nummer",
+    "account_holder": "Rekeninghouder",
+    "units": {
+      "C62": "st.",
+      "HUR": "u",
+      "DAY": "dagen",
+      "KGM": "kg",
+      "MTR": "m",
+      "KMT": "km",
+      "LTR": "l",
+      "LS": "LS",
+      "MON": "MON",
+      "ANN": "ANN",
+      "CT": "CT",
+      "PX": "PX"
+    }
   },
   "offer": {
     "title": "Offerte",
@@ -82,10 +104,32 @@
     "security_hint_2": "Deel inloggegevens niet met derden",
     "security_hint_3": "Wijzig wachtwoorden regelmatig",
     "security_hint_4": "Gebruik tweefactorauthenticatie waar mogelijk",
-    "security_hint_5": "Meld verdachte activiteiten onmiddellijk"
+    "security_hint_5": "Meld verdachte activiteiten onmiddellijk",
+    "masked_notice": "Wachtwoordvelden zijn gemaskeerd. Notities en andere vrije tekst zijn ongewijzigd."
   },
   "documentation": {
     "title": "Documentatie",
     "document_number": "Documentnummer"
+  },
+  "publication": {
+    "duration": "Duur",
+    "result": "Resultaat",
+    "participation": "Deelname",
+    "required": "Verplicht",
+    "recommended": "Aanbevolen",
+    "optional": "Optioneel"
+  },
+  "task_list": {
+    "phase": "Fase",
+    "responsible": "Verantwoordelijke",
+    "roles": "Rollen",
+    "due": "Vervaldatum",
+    "depends_on": "Afhankelijk van",
+    "condition": "Voorwaarde",
+    "additional_tasks": "Overige taken",
+    "high": "Hoog",
+    "medium": "Gemiddeld",
+    "low": "Laag",
+    "title": "Takenlijst"
   }
 }

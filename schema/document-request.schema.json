@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://casoon.github.io/typst-business-templates/schema/document-request.schema.json",
+  "title": "Profile validation envelope",
+  "type": "object",
+  "description": "Explicit selection, invoice data and independently confirmed case facts; external validation/transmission have separate states.",
+  "required": [
+    "selection",
+    "data",
+    "company",
+    "facts"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "selection": {
+      "type": "object",
+      "required": [
+        "profile_id",
+        "profile_version",
+        "language",
+        "format_locale",
+        "currency",
+        "layout",
+        "output_profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format_locale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allow_draft": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "data": {
+      "$ref": "invoice.schema.json"
+    },
+    "company": {
+      "$ref": "company.schema.json"
+    },
+    "facts": {
+      "type": "object",
+      "description": "Case facts required by the selected profile."
+    }
+  },
+  "$defs": {
+    "selection": {
+      "type": "object",
+      "required": [
+        "profile_id",
+        "profile_version",
+        "language",
+        "format_locale",
+        "currency",
+        "layout",
+        "output_profile"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format_locale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allow_draft": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "normalized": {
+      "description": "Canonical invoice values; ISO dates, decimal strings and explicit tax categories.",
+      "type": "object",
+      "required": [
+        "number",
+        "issue_date",
+        "currency",
+        "seller",
+        "buyer",
+        "lines",
+        "breakdown",
+        "line_total",
+        "tax_total",
+        "grand_total"
+      ],
+      "properties": {
+        "number": {
+          "type": "string"
+        },
+        "issue_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "currency": {
+          "const": "EUR"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "quantity",
+              "unit",
+              "net_price",
+              "net_amount",
+              "tax"
+            ],
+            "properties": {
+              "tax": {
+                "type": "object",
+                "required": [
+                  "category",
+                  "rate"
+                ],
+                "properties": {
+                  "category": {
+                    "enum": [
+                      "S",
+                      "Z",
+                      "E",
+                      "AE"
+                    ]
+                  },
+                  "rate": {
+                    "type": "string"
+                  },
+                  "exemption_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "exemption_code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

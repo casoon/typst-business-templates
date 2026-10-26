@@ -29,3 +29,10 @@
 #import "specification/default.typ": specification
 #import "task-list/default.typ": task-list
 #import "handout/default.typ": handout, aufgabe, hinweis, wichtig, kriterium, antwortfeld, textblock
+
+// Compact publications and printable form/checklist components
+#import "publication/default.typ": publication, brochure
+#import "publication/components.typ": writing-field, check-option, choice-group, notice, process-phase, quiet-table, priority-tag, content-card, numbered-step
+
+// Resolve labels for caller-composed printable components.
+#import "common/styles.typ": load-locale

@@ -19,7 +19,7 @@ import { example } from '../showcase';
 const hero = example('invoice');
 const gallery = ['offer', 'reminder', 'letter', 'credentials', 'concept', 'diagram-roadmap'].map(example);
 
-const quickstart = `cargo install typstgen
+const quickstart = `cargo install typstgen --version ${tools.typstgen} --locked
 git clone https://github.com/casoon/typst-business-templates
 cd typst-business-templates/examples/it-consultant
 typstgen compile documents/invoices/2025/invoice.typ
@@ -38,7 +38,7 @@ typstgen compile documents/invoices/2025/invoice.typ \\
     <Install
       label="Install"
       commands={[
-        { label: 'typstgen', command: 'cargo install typstgen' },
+        { label: 'typstgen', command: `cargo install typstgen --version ${tools.typstgen} --locked` },
         { label: 'package', command: 'git clone https://github.com/casoon/typst-business-templates' },
         { label: 'diagrams', command: 'cargo install chartlet' },
       ]}
@@ -67,7 +67,7 @@ typstgen compile documents/invoices/2025/invoice.typ \\
 
   <Facts
     items={[
-      { value: '19', label: 'document templates' },
+      { value: '21', label: 'document templates' },
       { value: '7', label: 'languages for concepts, contracts and other documents' },
       { value: 'EN 16931', label: 'e-invoices built by typstgen' },
       { value: '11', label: 'JSON schemas for data files' },

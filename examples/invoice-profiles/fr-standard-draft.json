@@ -1,0 +1,140 @@
+{
+  "$schema": "../../schema/document-request.schema.json",
+  "selection": {
+    "profile_id": "fr-domestic-standard",
+    "profile_version": "1-draft",
+    "language": "fr",
+    "format_locale": "fr-FR",
+    "currency": "EUR",
+    "layout": "international",
+    "output_profile": "pdf-preview",
+    "allow_draft": true
+  },
+  "data": {
+    "metadata": {
+      "invoice_number": "SYNTH-2026-001",
+      "invoice_date": "2026-10-26",
+      "delivery_date": "2026-10-25",
+      "applied_tax_case": "fr-domestic-standard"
+    },
+    "recipient": {
+      "name": "Example Client SAS",
+      "address": {
+        "street": "Example Avenue",
+        "house_number": "2",
+        "postal_code": "75002",
+        "city": "Paris",
+        "country": "France",
+        "country_code": "FR"
+      },
+      "vat_id": "FR00987654321",
+      "registration_number": "987654321"
+    },
+    "items": [
+      {
+        "position": 1,
+        "description": "Synthetic consulting service",
+        "quantity": "2",
+        "unit": "stunde",
+        "unit_code": "HUR",
+        "unit_price": {
+          "amount": "100.00",
+          "currency": "EUR"
+        },
+        "vat_rate": {
+          "code": "Standard",
+          "percentage": "20"
+        },
+        "total": {
+          "amount": "200.00",
+          "currency": "EUR"
+        }
+      }
+    ],
+    "totals": {
+      "subtotal": {
+        "amount": "200.00",
+        "currency": "EUR"
+      },
+      "vat_breakdown": [
+        {
+          "rate": {
+            "code": "Standard",
+            "percentage": "20"
+          },
+          "base": {
+            "amount": "200.00",
+            "currency": "EUR"
+          },
+          "amount": {
+            "amount": "40.00",
+            "currency": "EUR"
+          }
+        }
+      ],
+      "vat_total": {
+        "amount": "40.00",
+        "currency": "EUR"
+      },
+      "total": {
+        "amount": "240.00",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "due_date": "2026-11-25",
+      "payment_terms": "Net 30 days",
+      "bank_account": {
+        "iban": "DE89370400440532013000",
+        "bic": "COBADEFFXXX",
+        "bank_name": "Example Bank",
+        "account_holder": "Example Studio SARL"
+      },
+      "early_payment_discount": "Aucun escompte",
+      "late_payment_interest": "Taux contractuel synthétique : 12 % par an",
+      "recovery_fee": "40"
+    }
+  },
+  "company": {
+    "name": "Example Studio SARL",
+    "address": {
+      "street": "Example Street",
+      "house_number": "1",
+      "postal_code": "75001",
+      "city": "Paris",
+      "country": "France",
+      "country_code": "FR"
+    },
+    "tax_id": "TEST-TAX-ID",
+    "vat_id": "FR00123456789",
+    "contact": {
+      "email": "hello@example.invalid"
+    },
+    "default_terms": {
+      "vat_exempt": false
+    },
+    "bank_account": {
+      "iban": "DE89370400440532013000",
+      "bic": "COBADEFFXXX",
+      "bank_name": "Example Bank",
+      "account_holder": "Example Studio SARL"
+    },
+    "registration_number": "123456789",
+    "legal_form": "SARL",
+    "share_capital": "10000 EUR"
+  },
+  "facts": {
+    "buyer_type": "business",
+    "place_of_supply": "FR",
+    "supply_kind": "services",
+    "territory": "mainland",
+    "vat_on_debits": false,
+    "prior_purchase_order": false,
+    "same_billing_delivery_address": true,
+    "seller_size": "sme",
+    "evidence_refs": [
+      "synthetic-service-classification"
+    ],
+    "rate_applicability_confirmed": true
+  }
+}

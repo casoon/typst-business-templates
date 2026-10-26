@@ -1,7 +1,8 @@
 // Invoice Template (Rechnung) - CASOON Layout
 // Based on casoon-documents simple.typ template
 
-#import "../common/styles.typ": get-language
+#import "../common/styles.typ": get-language, load-locale, logo-source
+#import "../common/invoice-profile.typ": invoice-presentation, invoice-money, invoice-date, invoice-party, invoice-reference, invoice-sums, invoice-unit
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -11,8 +12,13 @@
 
 /// Renders the document. `data` is described by schema/invoice.schema.json,
 /// `company` that of company.json.
-#let invoice(data: none, company: none) = [
+#let invoice(data: none, company: none, profile: none, locale: none) = [
 #check-totals(data)
+#let choice = invoice-presentation(profile, company, data)
+#let texts = load-locale(locale, company, language: choice.language)
+#let labels = texts.invoice
+#let money = invoice-money.with(format-locale: choice.format_locale)
+#let date = invoice-date.with(format-locale: choice.format_locale)
 #set document(..document-metadata(company, data.metadata.at("invoice_number", default: none), data.metadata.at("invoice_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
 
@@ -20,38 +26,42 @@
   paper: "a4",
   margin: (left: 50pt, right: 45pt, top: 50pt, bottom: 80pt),
 
-  footer: if show-footer { accounting-footer(company: company) }
+  header: context {
+    if counter(page).get().first() > 1 [
+      #set text(size: 8pt)
+      #grid(columns: (1fr, auto), [#data.metadata.invoice_number], [#texts.common.page #counter(page).display("1 / 1", both: true)])
+    ]
+  },
+  footer: if show-footer { accounting-footer(company: company, locale: texts) }
 )
 
 #set text(
   font: "Helvetica",
   size: 10pt,
-  lang: get-language(company)
+  lang: choice.language
 )
 
 // ============================================================================
 // HEADER SECTION
 // ============================================================================
 
-#accounting-header(
-  company: company,
-  metadata_content: invoice-metadata(
-    invoice_number: data.metadata.invoice_number,
-    invoice_date: data.metadata.invoice_date,
-    customer_number: if "customer_number" in data.metadata { data.metadata.customer_number } else { none },
-    performance_period: if "performance_period" in data.metadata { data.metadata.performance_period } else { none },
-    due_date: if "due_date" in data.metadata { data.metadata.due_date } else { none },
+#if choice.layout == "din" {
+  accounting-header(company: company, contact-label: labels.contact, logo-placeholder: none,
+    metadata_content: invoice-reference(data, labels, texts.common, date))
+  din5008-address-block(company: company, recipient: data.recipient, address-width: 250pt)
+} else [
+  #if company.at("logo", default: none) != none [
+    #image(logo-source(company.logo), width: 100pt, height: 40pt, fit: "contain")
+    #v(8pt)
+  ]
+  #grid(columns: (1fr, 1fr), column-gutter: 20pt,
+    [#invoice-party(company)],
+    [#invoice-reference(data, labels, texts.common, date)],
   )
-)
-
-// ============================================================================
-// RECIPIENT ADDRESS (DIN 5008 position at y=160)
-// ============================================================================
-
-#din5008-address-block(
-  company: company,
-  recipient: data.recipient,
-)
+  #v(16pt)
+  #invoice-party(data.recipient)
+  #v(16pt)
+]
 
 // ============================================================================
 // SALUTATION SECTION
@@ -60,12 +70,12 @@
 #block[
   #set text(size: 10pt, font: "Helvetica")
 
-  #text(weight: "bold")[Rechnung]
+  #text(weight: "bold")[#labels.title]
 
   #v(3pt)
 
   #if "project_reference" in data.metadata and data.metadata.project_reference != none [
-    Projekt: #data.metadata.project_reference
+    #texts.common.project: #data.metadata.project_reference
     #v(3pt)
   ]
 
@@ -91,17 +101,18 @@
   #set text(size: 8pt, font: "Helvetica")
 
   #grid(
-    columns: (35pt, 170pt, 45pt, 45pt, 45pt, 70pt, 70pt),
+    columns: (24pt, 1fr, 36pt, 36pt, 36pt, 62pt, 62pt),
+    column-gutter: 4pt,
     align: (center, left, center, center, center, right, right),
     row-gutter: 8pt,
 
-    text(weight: "bold")[Pos.],
-    text(weight: "bold")[Bezeichnung],
-    text(weight: "bold")[Menge],
-    text(weight: "bold")[Einh.],
-    text(weight: "bold")[MwSt.],
-    text(weight: "bold")[Einzelpreis],
-    text(weight: "bold")[Summe],
+    text(weight: "bold")[#labels.position],
+    text(weight: "bold")[#labels.description],
+    text(weight: "bold")[#labels.quantity],
+    text(weight: "bold")[#labels.unit],
+    text(weight: "bold")[#labels.vat],
+    text(weight: "bold")[#labels.unit_price],
+    text(weight: "bold")[#labels.total_price],
   )
 
   #v(5pt)
@@ -115,17 +126,18 @@
     #set text(size: 8pt, font: "Helvetica")
 
     #grid(
-      columns: (35pt, 170pt, 45pt, 45pt, 45pt, 70pt, 70pt),
+      columns: (24pt, 1fr, 36pt, 36pt, 36pt, 62pt, 62pt),
+    column-gutter: 4pt,
       align: (center, left, center, center, center, right, right),
       row-gutter: 5pt,
 
       [#item.position],
-      [#item.description],
+      [#item.description #if item.vat_rate.at("exemption_reason", default: none) != none [#linebreak()#item.vat_rate.exemption_reason]],
       [#item.quantity],
-      format-unit(item.unit, quantity: item.quantity),
+      invoice-unit(item, labels),
       [#item.vat_rate.percentage%],
-      [#format_money(item.unit_price.amount)],
-      [#text(weight: "bold")[#format_money(item.total.amount)]],
+      [#money(item.unit_price.amount)],
+      [#text(weight: "bold")[#money(item.total.amount)]],
     )
 
     // Sub-items as continuous text spanning all columns, aligned with description
@@ -160,11 +172,7 @@
 #v(5pt)
 
 // Totals section (right-aligned)
-#invoice-totals(
-  subtotal: data.totals.subtotal,
-  vat_breakdown: data.totals.vat_breakdown,
-  total: data.totals.total,
-)
+#invoice-sums(data, labels, money, choice.currency)
 
 #v(5pt)
 
@@ -183,15 +191,23 @@
     #v(8pt)
   ]
 
-  Zahlbar ohne Abzug bis zum #format_german_date(data.payment.due_date).
+  #labels.payable_by #date(data.payment.due_date).
 
+  #if "bank_account" in data.payment [
+    #v(8pt)
+    *#labels.iban:* #data.payment.bank_account.iban
+    #if "bic" in data.payment.bank_account [#linebreak()*#labels.bic:* #data.payment.bank_account.bic]
+  ]
+  #for field in data.at("profile_fields", default: ()) [
+    #block(above: 4pt, below: 4pt)[*#field.label:* #field.value]
+  ]
   #v(8pt)
 
-  Gelieferte Waren bleiben bis zur vollständigen Bezahlung unser Eigentum.
+  #labels.retention_of_title
 
   #v(12pt)
 
-  Mit freundlichen Grüßen
+  #labels.regards
 
   #v(20pt)
 

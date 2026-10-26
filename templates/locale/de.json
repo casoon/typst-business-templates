@@ -36,7 +36,29 @@
     "bic": "BIC",
     "reference": "Verwendungszweck",
     "thank_you": "Vielen Dank für Ihr Vertrauen!",
-    "regards": "Mit freundlichen Grüßen"
+    "regards": "Mit freundlichen Grüßen",
+    "contact": "Rückfragen an:",
+    "delivery_date": "Leistungsdatum",
+    "payable_by": "Zahlbar ohne Abzug bis zum",
+    "retention_of_title": "Gelieferte Waren bleiben bis zur vollständigen Bezahlung unser Eigentum.",
+    "business_owner": "Geschäftsinhaber",
+    "vat_id": "USt-IdNr.",
+    "tax_id": "Steuernummer",
+    "account_holder": "Kontoinhaber",
+    "units": {
+      "C62": "Stk.",
+      "HUR": "Std.",
+      "DAY": "Tage",
+      "KGM": "kg",
+      "MTR": "m",
+      "KMT": "km",
+      "LTR": "l",
+      "LS": "LS",
+      "MON": "MON",
+      "ANN": "ANN",
+      "CT": "CT",
+      "PX": "PX"
+    }
   },
   "offer": {
     "title": "Angebot",
@@ -82,10 +104,32 @@
     "security_hint_2": "Geben Sie Zugangsdaten nicht an Dritte weiter",
     "security_hint_3": "Ändern Sie Passwörter regelmäßig",
     "security_hint_4": "Verwenden Sie 2-Faktor-Authentifizierung wo möglich",
-    "security_hint_5": "Melden Sie verdächtige Aktivitäten sofort"
+    "security_hint_5": "Melden Sie verdächtige Aktivitäten sofort",
+    "masked_notice": "Passwortfelder sind maskiert. Notizen und andere Freitexte sind unverändert."
   },
   "documentation": {
     "title": "DOKUMENTATION",
     "document_number": "Dokumentnummer"
+  },
+  "publication": {
+    "duration": "Dauer",
+    "result": "Ergebnis",
+    "participation": "Mitwirkung",
+    "required": "Pflicht",
+    "recommended": "Empfohlen",
+    "optional": "Optional"
+  },
+  "task_list": {
+    "phase": "Phase",
+    "responsible": "Zuständig",
+    "roles": "Rollen",
+    "due": "Fällig",
+    "depends_on": "Abhängig von",
+    "condition": "Bedingung",
+    "additional_tasks": "Weitere Aufgaben",
+    "high": "Hoch",
+    "medium": "Mittel",
+    "low": "Niedrig",
+    "title": "Aufgabenliste"
   }
 }

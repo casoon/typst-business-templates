@@ -32,12 +32,13 @@
   company: none,
   recipient: none,
   company-first: false,
+  address-width: 100%,
 ) = {
   // DIN 5008 positioning: 45mm from top = 77.5pt
   v(77.5pt)
 
   // Sender line (return address)
-  block(height: 20pt)[
+  block(height: 20pt, width: address-width)[
     #set text(size: 8pt, font: "Helvetica")
     #if company != none [
       #if "business_owner" in company and company.business_owner != none [
@@ -49,7 +50,7 @@
   ]
 
   // Recipient address block
-  block(height: 120pt)[
+  block(height: 120pt, width: address-width)[
     #set text(size: 12pt, font: "Helvetica")
     
     #if recipient != none [

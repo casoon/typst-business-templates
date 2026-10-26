@@ -249,6 +249,34 @@
           "description": "Group documents in per-year folders."
         }
       }
+    },
+    "registration_number": {
+      "type": "string",
+      "description": "Explicit legal registration identifier, e.g. French SIREN. Used by case profiles; never inferred."
+    },
+    "electronic_address": {
+      "type": "object",
+      "required": [
+        "value",
+        "scheme_id"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "scheme_id": {
+          "type": "string"
+        }
+      },
+      "description": "Electronic endpoint and identifier scheme for future structured adapters; not implemented by the legacy CII path."
+    },
+    "legal_form": {
+      "type": "string",
+      "description": "Legal form, supplied explicitly for the French preview profile."
+    },
+    "share_capital": {
+      "type": "string",
+      "description": "Share capital with currency, supplied explicitly for the French preview profile."
     }
   }
 }

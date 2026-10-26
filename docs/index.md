@@ -4,7 +4,7 @@ description: What the business-templates Typst package contains, which tools it 
 order: 0
 ---
 
-typst-business-templates is the [Typst](https://typst.app/) package `business-templates`: 19
+typst-business-templates is the [Typst](https://typst.app/) package `business-templates`: 21
 templates for business documents — invoices, offers, credit notes, reminders, letters,
 credentials, concepts, contracts, documentation and more. Two tools from the same author go with
 it:
@@ -57,3 +57,8 @@ it. The example projects are in
 Earlier versions shipped `docgen`, a CLI with project scaffolding, numbering and client
 management, and a Rust library crate. Both are discontinued: the templates are now a plain Typst
 package, and compiling and e-invoices are done by typstgen.
+
+Compact guides, intake forms and landscape pages: [Publications](guides/publications/).
+Existing projects: [Migration](guides/migration/) and [Versions](reference/releases/).
+
+Invoice selection, case prerequisites and tooling integration: [Invoice profiles](guides/invoice-profiles/).

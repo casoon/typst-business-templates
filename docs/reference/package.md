@@ -21,7 +21,7 @@ The package is installed locally, see [Installation](../../getting-started/insta
 ## Accounting functions
 
 ```typst
-invoice(data: none, company: none)
+invoice(data: none, company: none, profile: none, locale: none)
 offer(data: none, company: none)
 credit-note(data: none, company: none)
 reminder(data: none, company: none)
@@ -30,7 +30,7 @@ order-confirmation(data: none, company: none)
 quotation-request(data: none, company: none)
 time-sheet(data: none, company: none)
 letter(data: none, company: none, [body])
-credentials(data: none, company: (:), locale: none)
+credentials(data: none, company: (:), locale: none, mask: false)
 ```
 
 | Parameter | Type | Content |
@@ -69,7 +69,7 @@ Template-specific parameters, with defaults:
 | `specification` | `title`, `document_number`, `subject`, `client_name`, `project_name`, `version: "1.0"`, `status: "Entwurf"`, `tags: ()`, `authors: ()`, `created_at`, `last_updated`, `show_toc: true` |
 | `proposal` | `title`, `document_number`, `client_name`, `project_name`, `budget`, `timeline`, `version: "1.0"`, `status: "Angebot"`, `tags: ()`, `created_at`, `valid_until`, `authors: ()`, `show_toc: true` |
 | `sla` | `title`, `document_number`, `service_provider`, `customer`, `effective_date`, `termination_date`, `review_period`, `version: "1.0"`, `status: "Aktiv"`, `created_at`, `show_toc: true` |
-| `task-list` | `title: "Aufgabenliste"`, `subtitle`, `project`, `client`, `document-number`, `created` (today), `tasks: ()`, `categories: ()`, `notes` |
+| `task-list` | `title: "Aufgabenliste"`, `subtitle`, `project`, `client`, `document-number`, `created` (today), `tasks: ()`, `categories: ()`, `roles: ()`, `notes` |
 | `handout` | `title`, `handout-type: "Aufgabenblatt"`, `category`, `subject`, `target-group: "Oberstufe"`, `ai-context`, `competencies: ()`, `duration`, `materials: ()`, `version: "1.0"` |
 
 Parameters without a default shown default to `none`. Dates are strings and printed as given.
@@ -77,7 +77,7 @@ Parameters without a default shown default to `none`. Dates are strings and prin
 `task-list` is usually called directly with an empty body (`#task-list(…)[]`). A task is a
 dictionary with `title` and optionally `status` (`todo`, `in-progress`, `done`, `blocked`),
 `priority` (`high`, `medium`, `low`), `due`, `assignee`, `tags`, `description`, `depends-on`,
-`condition` and `subtasks`; a category has `name`, optional `description` and `tasks`.
+`condition`, `phase` and `subtasks`; a category has `name`, optional `description` and `tasks`.
 
 ## Handout helpers
 
@@ -132,5 +132,27 @@ Paths are relative to the working directory, so run typstgen from the project fo
 ## Locales
 
 `templates/locale/` contains `de`, `en`, `es`, `fr`, `it`, `nl` and `pt`, all with the same keys.
-A custom `locale:` dictionary follows the same shape; missing keys fall back to built-in
-defaults.
+A custom `locale:` dictionary recursively overlays the catalog selected by the document/company
+language. Missing/null labels inherit; empty strings suppress labels. Known type conflicts and
+unsupported languages fail. `load-locale(locale, company, language: none)` is exported for
+caller-composed components. See [Migration](../../guides/migration/#partial-translations).
+
+## Publication functions and components
+
+`publication` and `brochure` accept a content body with the compact frame and identity
+parameters. The package exports printable fields, choices, notices, phases, tables, priorities,
+cards and numbered steps. See [Publications](../../guides/publications/) for signatures,
+page dimensions, PDF structure and overflow limits.
+
+## Metadata and credentials
+
+Running-text title/author/number/date mapping and the `credentials(mask: true)` password-field
+contract are described in [Migration](../../guides/migration/). Masking does not redact free text.
+Task responsibility reuses `assignee`; optional `phase` and a `roles: ((name: ..., description:
+...),)` legend are visible text. Empty phase/assignee values add no column or label.
+
+## Invoice profiles
+
+The optional rendering selection separates document language, format locale, EUR currency and
+DIN/international layout. Fiscal profile resolution and canonical data belong to typstgen.
+See [Invoice profiles](../../guides/invoice-profiles/) for the versioned contracts and release states.

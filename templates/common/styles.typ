@@ -134,9 +134,35 @@
 // company.logo is a path from the project root ("data/logo.png") or the image bytes
 // (`read("/data/logo.png", encoding: none)`). A path only resolves when the templates sit
 // in the project; imported as a package, the logo must be given as bytes.
-// The bundled translations for company.language, unless a locale dictionary is given.
-#let load-locale(locale, company) = if locale != none { locale } else {
-  json("../locale/" + get-language(company) + ".json")
+// Merge partial catalogs without discarding bundled sibling labels. Null inherits;
+// empty strings intentionally suppress a label. Known branches must keep their shape.
+#let merge-locale(base, overrides, path: "locale") = {
+  assert(type(overrides) == dictionary, message: path + ": expected dictionary")
+  let result = base
+  for (key, value) in overrides {
+    if value == none { continue }
+    let field = path + "." + key
+    if key in base {
+      if type(base.at(key)) == dictionary {
+        assert(type(value) == dictionary, message: field + ": expected dictionary")
+        result.insert(key, merge-locale(base.at(key), value, path: field))
+      } else {
+        assert(type(value) == str, message: field + ": expected string or none")
+        result.insert(key, value)
+      }
+    } else {
+      result.insert(key, value)
+    }
+  }
+  result
+}
+
+#let load-locale(locale, company, language: none) = {
+  let lang = if language == none { get-language(company) } else { language }
+  assert(lang in ("de", "en", "es", "fr", "it", "nl", "pt"),
+    message: "locale: unsupported language " + repr(lang))
+  let base = json("../locale/" + lang + ".json")
+  if locale == none { base } else { merge-locale(base, locale) }
 }
 
 #let logo-source(logo) = if type(logo) == str { "/" + logo } else { logo }

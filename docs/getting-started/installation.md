@@ -7,7 +7,7 @@ order: 1
 ## typstgen
 
 ```sh
-cargo install typstgen
+cargo install typstgen --version 0.5.0 --locked
 ```
 
 typstgen embeds the Typst compiler, so no separate `typst` binary is needed. Other install options
@@ -77,3 +77,7 @@ The accounting documents use Helvetica. Without it, Typst falls back to an insta
 font and prints a warning.
 
 Continue with the [Quickstart](../quickstart/).
+
+The current package is unreleased. Pin a repository commit for reproducibility; historical
+`v0.7.x` releases contain docgen. See [Versions](../../reference/releases/) and
+[Migration](../../guides/migration/).

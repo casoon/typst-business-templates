@@ -36,7 +36,29 @@
     "bic": "BIC",
     "reference": "Référence",
     "thank_you": "Merci pour votre confiance !",
-    "regards": "Cordialement"
+    "regards": "Cordialement",
+    "contact": "Contact :",
+    "delivery_date": "Date de prestation",
+    "payable_by": "Paiement intégral avant le",
+    "retention_of_title": "Les biens livrés restent notre propriété jusqu’au paiement intégral.",
+    "business_owner": "Dirigeant",
+    "vat_id": "N° TVA",
+    "tax_id": "Numéro fiscal",
+    "account_holder": "Titulaire du compte",
+    "units": {
+      "C62": "pièces",
+      "HUR": "h",
+      "DAY": "jours",
+      "KGM": "kg",
+      "MTR": "m",
+      "KMT": "km",
+      "LTR": "l",
+      "LS": "LS",
+      "MON": "MON",
+      "ANN": "ANN",
+      "CT": "CT",
+      "PX": "PX"
+    }
   },
   "offer": {
     "title": "Devis",
@@ -82,10 +104,32 @@
     "security_hint_2": "Ne transmettez pas les identifiants à des tiers",
     "security_hint_3": "Changez régulièrement les mots de passe",
     "security_hint_4": "Utilisez l'authentification à deux facteurs si possible",
-    "security_hint_5": "Signalez immédiatement toute activité suspecte"
+    "security_hint_5": "Signalez immédiatement toute activité suspecte",
+    "masked_notice": "Les champs de mot de passe sont masqués. Les notes et autres textes restent inchangés."
   },
   "documentation": {
     "title": "Documentation",
     "document_number": "N° de document"
+  },
+  "publication": {
+    "duration": "Durée",
+    "result": "Résultat",
+    "participation": "Participation",
+    "required": "Obligatoire",
+    "recommended": "Recommandé",
+    "optional": "Facultatif"
+  },
+  "task_list": {
+    "phase": "Phase",
+    "responsible": "Responsable",
+    "roles": "Rôles",
+    "due": "Échéance",
+    "depends_on": "Dépend de",
+    "condition": "Condition",
+    "additional_tasks": "Autres tâches",
+    "high": "Haute",
+    "medium": "Moyenne",
+    "low": "Basse",
+    "title": "Liste de tâches"
   }
 }
