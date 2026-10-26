@@ -12,7 +12,6 @@ export default defineConfig({
       description:
         'Generate standardized business PDFs from JSON data and reusable Typst templates, with fixed build inputs for reproducible output.',
       tagline: 'Deterministic documents with Typst',
-      website: 'https://typst-business-templates.casoon.de',
       repo: 'casoon/typst-business-templates',
       version: '0.2.0',
       license: 'MIT',
