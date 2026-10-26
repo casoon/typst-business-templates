@@ -7,6 +7,10 @@ is archived separately.
 
 ## [Unreleased]
 
+### Changed
+- **Pages:** GitHub Pages is the single project homepage; the redundant custom-domain link
+  is removed from the header and metadata.
+
 ## [0.2.0] - 2026-10-26
 
 ### Breaking
