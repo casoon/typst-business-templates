@@ -2,7 +2,7 @@
 // Based on casoon-documents simple.typ template
 
 #import "../common/styles.typ": get-language, load-locale, logo-source
-#import "../common/invoice-profile.typ": invoice-presentation, invoice-money, invoice-date, invoice-party, invoice-reference, invoice-sums, invoice-unit
+#import "../common/invoice-profile.typ": invoice-presentation, invoice-money, invoice-price, invoice-date, invoice-party, invoice-reference, invoice-sums, invoice-unit
 #import "../common/footers.typ": accounting-footer
 #import "../common/formatting.typ": format_german_date, format_money, document-metadata
 #import "../common/din5008-address.typ": din5008-address-block
@@ -18,6 +18,7 @@
 #let texts = load-locale(locale, company, language: choice.language)
 #let labels = texts.invoice
 #let money = invoice-money.with(format-locale: choice.format_locale)
+#let price = invoice-price.with(format-locale: choice.format_locale)
 #let date = invoice-date.with(format-locale: choice.format_locale)
 #set document(..document-metadata(company, data.metadata.at("invoice_number", default: none), data.metadata.at("invoice_date", default: none)))
 #let show-footer = if "metadata" in data and "show_footer" in data.metadata { data.metadata.show_footer } else { true }
@@ -136,7 +137,7 @@
       [#item.quantity],
       invoice-unit(item, labels),
       [#item.vat_rate.percentage%],
-      [#money(item.unit_price.amount)],
+      [#price(item.unit_price.amount)],
       [#text(weight: "bold")[#money(item.total.amount)]],
     )
 

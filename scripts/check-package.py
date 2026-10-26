@@ -4,7 +4,9 @@
 Uses the same typstgen binary as check.sh; pypdf inspects the generated PDFs.
 Only synthetic values are generated here. Artifacts live in a temporary directory.
 """
+import argparse
 import json
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
@@ -12,6 +14,11 @@ import tempfile
 from pypdf import PdfReader
 
 REPO = Path(__file__).resolve().parents[1]
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--artifacts-dir", type=Path)
+artifacts_dir = parser.parse_args().artifacts_dir
+if artifacts_dir:
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
 
 
 def check(condition, message):
@@ -41,6 +48,8 @@ with tempfile.TemporaryDirectory(prefix="business-templates-check-") as director
                   f"{name}: expected {error!r}, got {result.stderr}")
             return
         check(result.returncode == 0, f"{name}: {result.stderr}")
+        if artifacts_dir:
+            shutil.copyfile(output, artifacts_dir / output.name)
         return PdfReader(output)
 
     def text(reader):
@@ -112,6 +121,8 @@ Synthetic document content.
         result = subprocess.run(["typstgen", "compile", source.name, "-o", str(root / source.with_suffix('.pdf').name),
                                  "--pdf-standard", "ua-1"], cwd=source.parent, capture_output=True, text=True)
         check(result.returncode == 0, source.name + ": " + result.stderr)
+        if artifacts_dir:
+            shutil.copyfile(root / source.with_suffix('.pdf').name, artifacts_dir / source.with_suffix('.pdf').name)
         reader = PdfReader(root / source.with_suffix('.pdf').name)
         check(len(reader.pages) >= 2, source.name + ": expected continuation pages")
         check("/StructTreeRoot" in reader.trailer["/Root"], source.name + ": missing PDF tags")

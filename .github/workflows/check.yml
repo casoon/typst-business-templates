@@ -36,7 +36,11 @@ jobs:
           command -v typstgen || cargo install typstgen --version "${{ steps.pins.outputs.typstgen }}" --locked
           command -v chartlet || cargo install chartlet --version "${{ steps.pins.outputs.chartlet }}" --locked
       - name: Install schema and PDF inspection tools
-        run: python3 -m pip install --upgrade jsonschema referencing pypdf
+        run: >-
+          python3 -m pip install
+          "jsonschema==$(jq -r .python_packages.jsonschema tool-versions.json)"
+          "referencing==$(jq -r .python_packages.referencing tool-versions.json)"
+          "pypdf==$(jq -r .python_packages.pypdf tool-versions.json)"
       - name: Compile examples and diagrams, ZUGFeRD invoices, schemas, locales
         run: scripts/check.sh
 
@@ -59,6 +63,6 @@ jobs:
               --rev "${{ steps.profiles.outputs.revision }}" --root "$HOME/.local/typstgen-profiles"
           fi
       - name: Install PDF inspection tools
-        run: python3 -m pip install pypdf
+        run: python3 -m pip install "pypdf==$(jq -r .python_packages.pypdf tool-versions.json)"
       - name: Check profiles and canonical PDF/XML values
         run: python3 scripts/check-profiles.py --typstgen "$HOME/.local/typstgen-profiles/bin/typstgen"

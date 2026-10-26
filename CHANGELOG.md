@@ -17,6 +17,8 @@ All notable changes to this project will be documented in this file.
 - `locale/` moved into the package (`templates/locale/`).
 
 ### Added
+- **Testing:** `scripts/test.sh` builds the coordinated tools in an isolated cache and retains
+  synthetic package/invoice PDFs, canonical inputs and external validation reports for manual review.
 - **Invoices:** Shared DE/international rendering with independent language and number formatting,
   versioned DE standard/§ 19 preview profiles, a French B2B draft and coordinated typstgen contracts.
 - **Validation:** Canonical PDF/CII integration checks with optional pinned Mustang and veraPDF
@@ -67,6 +69,10 @@ All notable changes to this project will be documented in this file.
   document identity, PDF/UA compilation and tagged publication tables with synthetic data.
 
 ### Fixed
+- **Invoices:** Unit prices retain their canonical decimal precision in the PDF, matching the CII
+  unit price instead of silently rounding it to EUR cents.
+- **Invoices:** Optional null logos and omitted house numbers work in the profile examples and
+  both address layouts, matching the existing data schema.
 - **Templates checked against casoon-data**, the production user of the old template copy: the
   title pages of concept, documentation and protocol look as before the refactoring of January
   2026 again (own page without header and footer, bold labels with colon, outlined tags, 24 pt

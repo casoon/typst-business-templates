@@ -39,6 +39,15 @@
   if format-locale == "en-GB" { value.replace(",", ".") } else { value }
 }
 
+// Unit prices can have more precision than rounded monetary totals. Preserve
+// their decimal value so PDF and XML do not show different prices per unit.
+#let invoice-price(amount, format-locale: "de-DE") = {
+  let parts = str(decimal(str(amount))).split(".")
+  let fraction = parts.at(1, default: "")
+  if fraction.len() < 2 { fraction += "0" * (2 - fraction.len()) }
+  parts.first() + if format-locale == "en-GB" { "." } else { "," } + fraction
+}
+
 #let invoice-date(value, format-locale: "de-DE") = {
   if format-locale == "de-DE" { format_german_date(value) }
   else if type(value) == dictionary { value.date } else { value }

@@ -45,7 +45,8 @@ functions; there is no second country rule engine in the Typst templates.
 The returned canonical model has ISO calendar dates, ISO country/currency codes, decimal strings,
 explicit line tax categories and separate category/rate tax groups. Quantities, prices and rates
 use the existing typstgen decimal arithmetic (four fractional digits internally); monetary totals
-round half away from zero to EUR cents. Discounts, allowances, charges, partial payments,
+round half away from zero directly to EUR cents, without an intermediate rounding step. Unit prices retain their canonical decimal precision
+in both PDF and CII. Discounts, allowances, charges, partial payments,
 advance invoices and other currency precisions are outside these released profile cases.
 
 The returned `data`/`company` rendering view and CII serialization originate from that same
@@ -128,7 +129,7 @@ The schemas check the catalog shape; typstgen does not pretend a skipped JSON Sc
 
 Profile tools require the coordinated **unreleased typstgen profiles build**, not the published
 0.5.0 binary. The base package examples remain checked with published typstgen 0.5.0. Use the
-revision `8a311cf9dd08a7acca3d35695ae958bed44a71fd` recorded in `tool-versions.json` for the profile workflow; no crate publication or
+revision `aad498243e13011906e66ec4bbf3874d33734035` recorded in `tool-versions.json` for the profile workflow; no crate publication or
 external release is implied.
 
 1. Call `list_document_profiles` with the package catalog. By default it lists only released
@@ -144,7 +145,7 @@ external release is implied.
 
 Build the coordinated CLI from the typstgen checkout at that revision with `cargo build --locked`.
 Once the branch is available remotely, `cargo install --git https://github.com/casoon/typstgen
---rev 8a311cf9dd08a7acca3d35695ae958bed44a71fd --locked` selects exactly that source revision.
+--rev aad498243e13011906e66ec4bbf3874d33734035 --locked` selects exactly that source revision.
 The CLI still identifies its package version as 0.5.0; the Git revision distinguishes this
 unreleased feature build from the published crate. Do not install the published 0.5.0 crate
 and expect profile commands to exist.
@@ -168,6 +169,41 @@ Reports expose `resolved`/`blocked` for selection and `ready_for_preview`/`block
 and `transmission`. Only executed checks pass. A blocked document has no rendering view;
 missing prerequisites are actionable diagnostics. A successful preview is not a send/issue action.
 
+## Local acceptance test
+
+From the repository root, run:
+
+```sh
+scripts/test.sh
+```
+
+Prerequisites are Cargo, Python 3, Java and the veraPDF CLI. On macOS, `brew install openjdk
+verapdf` supplies the external runtimes. `JAVA_BIN` and `VERAPDF_BIN` can select explicit
+executables. The script prefers a working Java on PATH and recognises Homebrew's JDK location.
+An optional positional argument selects a different parent output directory. Each invocation
+creates a fresh `run-…/` directory, so a failed run cannot expose an older success report.
+
+The script builds the exact coordinated typstgen revision and pinned chartlet version, creates
+an isolated Python environment and verifies the pinned Mustang checksum before executing it.
+All downloaded/built tools stay under `.cache/test-tools/`; build directories are separated by
+Git revision to prevent reuse of older binaries with the same crate version. Global installations
+are untouched.
+
+On success, the printed `output/test/run-…/` directory contains:
+
+- `package/`: A4/landscape publications, phased tasks, metadata fixtures, credentials with and
+  without masking, long titles, a logo and a dark-page example. Credentials are synthetic.
+- `invoices/`: DE de/en × DIN/international, § 19, multiple rates, legacy zero-tax categories,
+  FR fr/en draft and long multipage examples; each with its request/resolved data.
+- Beside the hybrid PDFs: the embedded Factur-X XML, Mustang XML report and veraPDF result.
+- `report.json`: executed checks, external validator versions, checksum, retained notices and
+  explicit `not_run` stages. A successful run does not claim transmission or release the FR draft.
+
+Inspect the PDFs after the automated checks. For manual editing, change a synthetic source in
+`examples/invoice-profiles/`, not its generated report. Run the profile validation command again
+before compiling `invoice.typ`; do not reuse an old resolved view after changing request data.
+Existing user projects remain outside this public acceptance suite.
+
 ## Reproducible checks and structured output
 
 ```sh
@@ -179,7 +215,7 @@ python scripts/check-profiles.py --typstgen /absolute/path/to/coordinated/typstg
 
 This checks DE de/en in both layouts, § 19, multiple rates, FR fr/en, missing prerequisites,
 regime validity and negative cases. It compares canonical totals and line categories against
-embedded CII and extracted PDF totals, validates Factur-X with Mustang 2.26.0 and PDF/A-3b with
+embedded CII and extracted PDF totals, and checks identifiers, parties, addresses, dates, currency and payment accounts, validates Factur-X with Mustang 2.26.0 and PDF/A-3b with
 veraPDF 1.30.0 when explicitly supplied. The generated report records versions, validator hash
 and notices; omitted validators remain `not_run`. Validator pins and adapter states live in
 `profiles/validators.json`. Mustang can report additional XRechnung notices while the selected

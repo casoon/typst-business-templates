@@ -11,6 +11,13 @@ repo="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 failed=0
+if [ "${1:-}" = "--artifacts-dir" ] && [ "$#" -eq 2 ]; then
+  mkdir -p "$2"
+  set -- --artifacts-dir "$(cd "$2" && pwd)"
+elif [ "$#" -ne 0 ]; then
+  echo "Usage: scripts/check.sh [--artifacts-dir DIRECTORY]" >&2
+  exit 2
+fi
 
 fail() {
   echo "FAIL $1" >&2
@@ -111,7 +118,7 @@ if problems:
 PY
 [ -s "$tmp/err" ] || echo "ok   templates/locale (same keys as de.json)"
 
-python3 "$repo/scripts/check-package.py" 2>"$tmp/err" || fail "package contracts"
+python3 "$repo/scripts/check-package.py" "$@" 2>"$tmp/err" || fail "package contracts"
 
 if [ "$failed" -gt 0 ]; then
   echo "$failed check(s) failed" >&2

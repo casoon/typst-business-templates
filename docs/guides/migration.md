@@ -101,3 +101,7 @@ consumer integration and its before/after review require access and a separate c
 Invoice profiles require the separate coordinated typstgen revision, while base documents remain
 compatible with 0.5.0. Follow [Invoice profiles](../invoice-profiles/) before adopting them; preserve
 legacy taxation until the explicit case and canonical PDF/XML comparison pass.
+
+A complete repeatable local acceptance run is `scripts/test.sh`; generated review PDFs,
+canonical inputs and external reports remain in `output/test/`. See the
+[acceptance test](../invoice-profiles/#local-acceptance-test) for prerequisites and scope.

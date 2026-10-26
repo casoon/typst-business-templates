@@ -42,9 +42,9 @@
     #set text(size: 8pt, font: "Helvetica")
     #if company != none [
       #if "business_owner" in company and company.business_owner != none [
-        #company.business_owner · #company.address.street #company.address.house_number · #company.address.postal_code #company.address.city
+        #company.business_owner · #company.address.street #company.address.at("house_number", default: "") · #company.address.postal_code #company.address.city
       ] else [
-        #company.name · #company.address.street #company.address.house_number · #company.address.postal_code #company.address.city
+        #company.name · #company.address.street #company.address.at("house_number", default: "") · #company.address.postal_code #company.address.city
       ]
     ]
   ]
@@ -64,7 +64,7 @@
       #if not company-first and firm != none [
         #firm\
       ]
-      #recipient.address.street #recipient.address.house_number\
+      #recipient.address.street #recipient.address.at("house_number", default: "")\
       #recipient.address.postal_code #recipient.address.city
     ]
   ]

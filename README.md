@@ -160,6 +160,21 @@ embeds an architecture diagram.
 
 ## Development
 
+For a complete local test with retained PDFs and external validator reports:
+
+```bash
+scripts/test.sh
+```
+
+This builds the pinned typstgen/chartlet revisions in `.cache/test-tools/`, installs the pinned
+Python test dependencies in a local virtual environment and verifies the Mustang download
+checksum. It requires Cargo, Python 3, a Java runtime and the veraPDF CLI (on macOS: `brew install
+openjdk verapdf`). It runs package and invoice checks and keeps each run in a fresh `output/test/run-…/` directory.
+The first run downloads/builds the tools; later runs reuse them. No global tool installation is
+replaced. See [the testing workflow](docs/guides/invoice-profiles.md#local-acceptance-test).
+
+The compatibility check with an already installed typstgen is:
+
 ```bash
 scripts/check.sh
 ```

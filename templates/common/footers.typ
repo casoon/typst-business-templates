@@ -160,7 +160,7 @@
               #company.business_owner\
             ]
             #if company != none and "address" in company [
-              #company.address.street #company.address.house_number\
+              #company.address.street #company.address.at("house_number", default: "")\
               #company.address.postal_code #company.address.city
             ]
           ],

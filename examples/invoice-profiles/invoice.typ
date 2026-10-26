@@ -3,5 +3,5 @@
 #let resolved = json("resolved.json")
 #assert(resolved.status == "ready_for_preview", message: "Invoice profile validation is blocked")
 #let company = resolved.company
-#if "logo" in company { company.insert("logo", read(company.logo, encoding: none)) }
+#if company.at("logo", default: none) != none { company.insert("logo", read(company.logo, encoding: none)) }
 #invoice(data: resolved.data, company: company, profile: resolved.selection)

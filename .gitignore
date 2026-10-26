@@ -25,3 +25,7 @@ plan/
 
 # Generated profile validation reports
 examples/invoice-profiles/resolved.json
+
+# Reproducible local test tools and generated review artifacts
+.cache/test-tools/
+output/test/
