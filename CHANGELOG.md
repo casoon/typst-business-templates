@@ -58,6 +58,8 @@ All notable changes to this project will be documented in this file.
   builds the e-invoices, validates the JSON and compares the locale keys
 
 ### Changed
+- **Pages:** The homepage, README and documentation explain typstgen as the separate
+  compiler project, with links to its repository and compatible installation instructions.
 - **Pages:** The hero explains deterministic JSON/Typst document generation with a responsive
   Chartlet workflow; multilingual invoices remain a concrete application below.
 - **Pages:** English audience-focused copy, direct PDF/setup links and a shorter example workflow

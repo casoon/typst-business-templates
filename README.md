@@ -13,6 +13,12 @@ be versioned and reviewed alongside your project.
 credentials, compact publications, printable forms and landscape brochures.
 [chartlet](https://github.com/casoon/chartlet) supplies diagrams when needed.
 
+**Templates here, compiler separately:** this repository contains the Typst package, JSON
+schemas and examples. [typstgen](https://casoon.github.io/typstgen/) is a separate project
+providing the CLI, Rust library and MCP server, with the Typst compiler embedded.
+Install it using the [setup guide](docs/getting-started/installation.md); configured invoices
+require the coordinated source revision documented there.
+
 **[Documentation](https://casoon.github.io/typst-business-templates/)** ·
 **[Capabilities and limits](docs/reference/project-status.md)** ·
 **[Demo gallery](examples/invoice-languages/README.md)**
