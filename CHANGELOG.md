@@ -8,6 +8,8 @@ is archived separately.
 ## [Unreleased]
 
 ### Changed
+- **Documentation:** Useful questions from the retired landing page are consolidated into an
+  updated FAQ, with the historical practice article linked from the migration guide.
 - **Pages:** GitHub Pages is the single project homepage; the redundant custom-domain link
   is removed from the header and metadata.
 
