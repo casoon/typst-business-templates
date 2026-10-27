@@ -92,6 +92,9 @@ Synthetic document content.
         check("DOC-2026-001" in text(reader), template + ": visible identity lost")
     reader = compile_source("no-date", locale_import + '#show: pkg.concept.with(title: "Undated", show_toc: false)\nBody')
     check(reader.metadata.creation_date is None, "Missing document date must stay absent")
+    reader = compile_source("year-only", locale_import + '#show: pkg.concept.with(title: "Year only", created_at: "2025", show_toc: false)\nBody')
+    check(reader.metadata.creation_date is None, "Year-only label must not invent a PDF date")
+    check("2025" in text(reader), "Year-only label must remain visible")
 
     sentinel = "SYNTHETIC-PASSWORD-ONLY-12345"
     data = {

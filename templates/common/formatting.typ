@@ -108,9 +108,13 @@
 /// Running-text identity: preserve the human title, keep the assigned number in keywords.
 /// Missing dates stay absent rather than using the compilation date.
 #let prose-metadata(company, title, number, date, authors: ()) = {
-  let args = document-metadata(company, none, date)
+  // A year-only label is useful on the page but does not identify a calendar
+  // date for PDF metadata. Keep it visible while omitting the metadata date.
+  let year-only = date != none and str(date).matches(regex("^\\d{4}$")).len() == 1
+  let metadata-date = if year-only { none } else { date }
+  let args = document-metadata(company, none, metadata-date)
   args.title = title
-  args.date = if date == none { none } else { to-datetime(date) }
+  args.date = if metadata-date == none { none } else { to-datetime(metadata-date) }
   assert(args.date != auto, message: "document date: expected ISO or German calendar date")
   args.keywords = if number == none { () } else { (str(number),) }
   if authors.len() > 0 { args.author = authors }

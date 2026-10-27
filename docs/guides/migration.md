@@ -72,6 +72,8 @@ A `task-list` with its title page disabled displays its number from page two as 
 Dates accept an ISO `YYYY-MM-DD` string, a `{date: ...}` dictionary or a German calendar date.
 Absent dates are omitted; invalid dates fail. The legacy `task-list.created` default is still
 today for compatibility; pass a fixed date or `none` for reproducible documents.
+Prose templates also keep a year-only `created_at` label on the page and omit it from PDF date
+metadata; a year does not identify a calendar day.
 Accounting metadata keeps its existing title/author/date mapping.
 
 PDF keywords provide an additional searchable identifier, not a custom XMP namespace or the
