@@ -17,7 +17,7 @@ Two calling conventions:
 - **show rule** — `#show: concept.with(title: …, company: …)` followed by the text. See
   [Documents in Typst](../../guides/typst-documents/).
 
-Schemas are published at `https://casoon.github.io/typst-business-templates/schema/`.
+Schemas are published at `https://casoon.github.io/typst-business-templates/schema/<name>.schema.json`.
 
 ## Accounting layout
 
