@@ -13,6 +13,7 @@ is archived separately.
   updated FAQ, with the historical practice article linked from the migration guide.
 - **Pages:** GitHub Pages is the single project homepage; the redundant custom-domain link
   is removed from the header and metadata.
+- **Pages:** theme 0.11.1; the start page now carries a release teaser and an FAQ.
 
 ## [0.2.0] - 2026-10-26
 

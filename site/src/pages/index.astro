@@ -1,4 +1,5 @@
 ---
+import { readFile } from 'node:fs/promises';
 import {
   Badge,
   Badges,
@@ -6,14 +7,24 @@ import {
   Button,
   CodeBlock,
   Facts,
+  Faq,
   Features,
   Hero,
   Quickstart,
+  ReleaseHighlights,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
 import config from 'virtual:casoon-pages/config';
-import { url } from '@casoon/pages-theme/lib/url.ts';
+import { parseChangelog } from '@casoon/pages-theme/lib/changelog';
+import { url } from '@casoon/pages-theme/lib/url';
 import { example } from '../showcase';
+
+// Skip "Unreleased": it has no version to show as "New in v…" yet.
+const latestRelease = config.changelog
+  ? parseChangelog(await readFile(config.changelog, 'utf8')).find(
+      (r) => r.version.toLowerCase() !== 'unreleased'
+    )
+  : undefined;
 
 // brochure shares publication/default.typ rather than having its own folder.
 const templateCount = Object.keys(import.meta.glob('../../../templates/*/default.typ', { query: '?raw' })).length + 1;
@@ -194,6 +205,33 @@ python3 examples/invoice-languages/build.py`;
   >
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
   </Quickstart>
+
+  {latestRelease && <ReleaseHighlights release={latestRelease} />}
+
+  <Faq
+    items={[
+      {
+        q: 'Is business-templates published on Typst Universe?',
+        a: 'No. It is distributed as a source release tag (currently templates-v0.2.0) and installed locally as @local/business-templates; clone the tagged repository rather than fetching a package.',
+      },
+      {
+        q: 'Do I need typstgen to use these templates?',
+        a: 'Yes. This repository holds only the Typst package, JSON schemas and examples; typstgen is the separate project that provides the CLI, Rust library and MCP server with the Typst compiler embedded.',
+      },
+      {
+        q: 'Are the example tax rates and company details usable as-is?',
+        a: 'No. The businesses, accounts and tax rates in the language demos are fictional, and a language demo is not a reviewed national tax preset. Optional reviewed profiles exist separately for cases that need them.',
+      },
+      {
+        q: 'What happened to the old docgen CLI and Rust crate?',
+        a: 'They are discontinued. This repository is now the standalone Typst package, and client/project management, numbering and the former --encrypt option were not carried over. Historical tags keep their original meaning.',
+      },
+      {
+        q: 'Can an AI assistant check and compile the documents for me?',
+        a: 'Yes, through MCP. Connect an MCP-compatible assistant to typstgen’s local server so it can check the Typst source, inspect a page preview and compile the PDF while you edit the JSON or Typst inputs.',
+      },
+    ]}
+  />
 </Base>
 
 <style>

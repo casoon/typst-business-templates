@@ -1,6 +1,6 @@
 import { statSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { url } from '@casoon/pages-theme/lib/url.ts';
+import { url } from '@casoon/pages-theme/lib/url';
 import type { ShowcaseExample } from '@casoon/pages-theme/showcase';
 
 // Input: the example files in examples/, exactly as committed. Output: the PDF that typstgen
