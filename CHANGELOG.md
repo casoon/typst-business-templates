@@ -8,6 +8,7 @@ is archived separately.
 ## [Unreleased]
 
 ### Changed
+- **Metadata:** Year-only prose `created_at` labels remain visible and no longer imply a fabricated PDF calendar date. Details: [migration](https://casoon.github.io/typst-business-templates/docs/guides/migration/#document-identity).
 - **Documentation:** Useful questions from the retired landing page are consolidated into an
   updated FAQ, with the historical practice article linked from the migration guide.
 - **Pages:** GitHub Pages is the single project homepage; the redundant custom-domain link
