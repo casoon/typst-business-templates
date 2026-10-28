@@ -7,7 +7,13 @@ is archived separately.
 
 ## [Unreleased]
 
+### Added
+- **Invoices:** XRechnung 3.0 and Peppol BIS Billing 3.0 files (UBL 2.1) from the same invoice data via
+  `typstgen e-invoice`, checked against the canonical values and validated with Mustang 2.26.0.
+  Details: [E-invoice files](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#e-invoice-files-xrechnung-and-peppol).
+
 ### Changed
+- **Tooling:** The coordinated typstgen revision now includes the XRechnung/Peppol writer.
 - **Metadata:** Year-only prose `created_at` labels remain visible and no longer imply a fabricated PDF calendar date. Details: [migration](https://casoon.github.io/typst-business-templates/docs/guides/migration/#document-identity).
 - **Documentation:** Useful questions from the retired landing page are consolidated into an
   updated FAQ, with the historical practice article linked from the migration guide.

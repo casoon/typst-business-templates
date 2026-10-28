@@ -2,7 +2,7 @@
   "$comment": "Versions used by compatibility checks, acceptance tools and example/site generators, so the numbers exist once.",
   "typstgen": "0.5.0",
   "chartlet": "0.21.0",
-  "typstgen_profiles_revision": "98715ba5041a9b86a30cae6cdeee8d5881f9ca19",
+  "typstgen_profiles_revision": "0aa2b9c506a6aadb44cb3e70144904482d525d83",
   "python_packages": {
     "jsonschema": "4.26.0",
     "referencing": "0.37.0",
