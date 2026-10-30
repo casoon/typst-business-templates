@@ -49,20 +49,16 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Read the coordinated typstgen revision
-        id: profiles
-        run: echo "revision=$(jq -r .typstgen_profiles_revision tool-versions.json)" >> "$GITHUB_OUTPUT"
+      - name: Read the pinned typstgen version
+        id: pins
+        run: echo "typstgen=$(jq -r .typstgen tool-versions.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
         with:
-          path: ~/.local/typstgen-profiles/bin/typstgen
-          key: typstgen-profiles-${{ steps.profiles.outputs.revision }}
-      - name: Build the coordinated profile tooling
-        run: |
-          if [ ! -x "$HOME/.local/typstgen-profiles/bin/typstgen" ]; then
-            cargo install typstgen --debug --locked --git https://github.com/casoon/typstgen \
-              --rev "${{ steps.profiles.outputs.revision }}" --root "$HOME/.local/typstgen-profiles"
-          fi
+          path: ~/.cargo/bin/typstgen
+          key: typstgen-${{ steps.pins.outputs.typstgen }}
+      - name: Install typstgen
+        run: command -v typstgen || cargo install typstgen --version "${{ steps.pins.outputs.typstgen }}" --locked
       - name: Install PDF inspection tools
         run: python3 -m pip install "pypdf==$(jq -r .python_packages.pypdf tool-versions.json)"
       - name: Check profiles and canonical PDF/XML values
-        run: python3 scripts/check-profiles.py --typstgen "$HOME/.local/typstgen-profiles/bin/typstgen"
+        run: python3 scripts/check-profiles.py --typstgen "$HOME/.cargo/bin/typstgen"

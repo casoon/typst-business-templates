@@ -13,8 +13,8 @@ The remaining work is concentrated in distribution, real consumer integration an
 reviewed invoice/export cases.
 
 Package `business-templates` 0.2.0 is distributed as the `templates-v0.2.0` source release. Configured invoice preparation and profile
-tools use the coordinated typstgen Git revision in `tool-versions.json`; these commands are
-not present in published typstgen 0.5.0. See [Installation](../../getting-started/installation/)
+tools use typstgen 0.6.0 (`tool-versions.json`); these commands are
+not present in typstgen 0.5.0. See [Installation](../../getting-started/installation/)
 and [Versions](../releases/).
 
 ## Implementation map
@@ -62,8 +62,7 @@ transaction data still need their own applicable checks; unexecuted validators s
 | [#16](https://github.com/casoon/typst-business-templates/issues/16) | FR domestic B2B draft only; no completed national electronic issuance/transmission path |
 | [#25](https://github.com/casoon/typst-business-templates/issues/25) | Package compatibility examples and migration guidance present; a real consumer-repository migration still needs a separately scoped integration |
 
-Before treating this as a released integration, review the coordinated changes in both
-repositories, exercise representative documents from the intended consumer, then select
+Before treating this as a released integration, exercise representative documents from the intended consumer, then select
 and publish the package/compiler combination. Package tags, registry publication and Typst
 Universe are not implied by a documentation or Pages update. Issue closure should follow
 the actual acceptance scope rather than equating an umbrella issue with its first milestone.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild the committed invoice demos using the coordinated typstgen build."""
+"""Rebuild the committed invoice demos using the pinned typstgen version."""
 import argparse
 import json
 from pathlib import Path
@@ -9,7 +9,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parents[1]
-pin = json.loads((REPO / 'tool-versions.json').read_text())['typstgen_profiles_revision']
+pin = json.loads((REPO / 'tool-versions.json').read_text())['typstgen']
 managed = REPO / '.cache/test-tools' / ('typstgen-' + pin) / 'bin/typstgen'
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--typstgen', default=str(managed) if managed.exists() else 'typstgen')
@@ -17,7 +17,7 @@ parser.add_argument('--output-dir', type=Path, help='Write LANGUAGE/invoice.pdf 
 args = parser.parse_args()
 binary = str(Path(args.typstgen).resolve()) if '/' in args.typstgen else shutil.which(args.typstgen)
 if not binary:
-    parser.error('typstgen not found; pass --typstgen /path/to/the/coordinated/binary')
+    parser.error('typstgen not found; pass --typstgen /path/to/typstgen')
 output_root = args.output_dir.resolve() if args.output_dir else ROOT
 
 with tempfile.TemporaryDirectory(prefix='.build-', dir=ROOT) as temporary:

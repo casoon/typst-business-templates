@@ -16,8 +16,8 @@ credentials, compact publications, printable forms and landscape brochures.
 **Templates here, compiler separately:** this repository contains the Typst package, JSON
 schemas and examples. [typstgen](https://casoon.github.io/typstgen/) is a separate project
 providing the CLI, Rust library and MCP server, with the Typst compiler embedded.
-Install it using the [setup guide](docs/getting-started/installation.md); configured invoices
-require the coordinated source revision documented there.
+Install it with one `cargo install` command; the [setup guide](docs/getting-started/installation.md)
+has the three steps.
 
 **Working with an AI assistant?** Connect typstgen through MCP to check Typst sources,
 inspect page previews and compile PDFs while you edit the template inputs.
@@ -57,22 +57,19 @@ infer applicable tax rules or transmission requirements.
 
 ## Installation and version
 
-The Typst package is **0.2.0**, distributed as the source release `templates-v0.2.0` and installed
-locally as `@local/business-templates:0.2.0`. It is not published on Typst Universe.
-
-Configured invoices and profile tools require the **coordinated typstgen source revision** in
-[`tool-versions.json`](tool-versions.json). Installing the published typstgen 0.5.0 does not
-provide these commands. The [installation guide](docs/getting-started/installation.md)
-distinguishes both toolchains and shows the pinned installation.
-
-Existing plain-template examples remain compatible with published typstgen 0.5.0:
-
 ```sh
-cargo install typstgen --version 0.5.0 --locked
+cargo install typstgen --version 0.6.0 --locked
 git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates
-cd typst-business-templates/examples/it-consultant
-typstgen compile documents/invoices/2025/invoice.typ
+cd typst-business-templates && ./scripts/install-package.sh
+cd examples/it-consultant && typstgen compile documents/invoices/2025/invoice.typ
 ```
+
+The Typst package is **0.2.0**, distributed as the source release `templates-v0.2.0`; it is not
+published on Typst Universe. `install-package.sh` copies it to Typst's local package directory,
+so documents import `@local/business-templates:0.2.0`. Tool versions are pinned in
+[`tool-versions.json`](tool-versions.json): typstgen 0.6.0 for invoice configuration, profiles,
+ZUGFeRD and XRechnung/Peppol files. The [installation guide](docs/getting-started/installation.md)
+covers custom package folders and fonts.
 
 ## Beyond invoices
 
