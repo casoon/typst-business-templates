@@ -69,10 +69,10 @@ document's content separately. External invoice validation remains a separate st
 
 ## Configured invoices
 
-The coordinated source build also exposes `prepare_invoice`, `list_document_profiles`,
-`resolve_document_profile` and `validate_document`. Use [invoice configuration](../invoice-configuration/)
+typstgen 0.6.0 also exposes `prepare_invoice`, `list_document_profiles`,
+`resolve_document_profile`, `validate_document` and `e_invoice`. Use [invoice configuration](../invoice-configuration/)
 for user-owned tax and presentation settings, or [invoice profiles](../invoice-profiles/)
-for explicitly bounded profile checks. Published typstgen 0.5.0 does not include those tools.
+for explicitly bounded profile checks. Older typstgen versions do not include those tools.
 
 For the full tool parameters and a video with actual tool results, see
 [typstgen's MCP guide](https://casoon.github.io/typstgen/docs/guides/ai-agents/).

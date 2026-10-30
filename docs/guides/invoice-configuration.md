@@ -9,8 +9,7 @@ business. The same invoice builder uses the file for any seller or buyer country
 catalog entry or country-specific Typst template is needed. Company and customer addresses
 remain in the invoice input; language and tax treatment are explicit choices.
 
-This workflow requires the coordinated typstgen source revision in `tool-versions.json`.
-The published typstgen 0.5.0 does not contain `prepare-invoice`.
+This workflow requires typstgen 0.6.0 or later; 0.5.0 does not contain `prepare-invoice`.
 
 ## A configuration you own
 
@@ -121,7 +120,7 @@ are PDF additions; they do not automatically create new structured XML elements.
 
 ## Build an invoice
 
-From `examples/invoice-config/`, using the coordinated typstgen binary:
+From `examples/invoice-config/`, with typstgen 0.6.0:
 
 ```sh
 typstgen prepare-invoice --config ../../invoice-config.json invoice.json > resolved.json

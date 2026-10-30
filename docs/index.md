@@ -29,8 +29,7 @@ Rust library and MCP server, with the Typst compiler embedded. Follow the
 [setup guide](getting-started/installation/) to select the compatible version.
 
 The Typst package renders the document and checks supplied totals.
-[typstgen](https://casoon.github.io/typstgen/) compiles Typst and, in the coordinated
-source build, prepares configured invoices using exact decimal arithmetic. VAT PDFs and CII
+[typstgen](https://casoon.github.io/typstgen/) compiles Typst and, since 0.6.0, prepares configured invoices using exact decimal arithmetic. VAT PDFs and CII
 XML use the same canonical invoice values. Sales-tax configurations return PDF rendering data
 with independent component amounts and are excluded from the CII adapter.
 [chartlet](https://casoon.github.io/chartlet/) supplies diagrams as SVG.
@@ -41,10 +40,9 @@ Running-text documents and credentials have their documented branding and locale
 
 ## Package version and boundaries
 
-Package 0.2.0 is distributed as the `templates-v0.2.0` source release for local installation. Configured invoices and profile tools
-require the source revision in `tool-versions.json`; published typstgen 0.5.0 covers the older
-plain-template and VAT-export path. See [Installation](getting-started/installation/) for
-both paths, and [Capabilities and limits](reference/project-status/) for the implementation map.
+Package 0.2.0 is distributed as the `templates-v0.2.0` source release for local installation. Checked with typstgen 0.6.0
+(`tool-versions.json`), which provides configured invoices, profile tools and e-invoice files.
+See [Installation](getting-started/installation/) for setup, and [Capabilities and limits](reference/project-status/) for the implementation map.
 
 The configurable builder does not determine applicable law, rates, taxability, nexus or
 national delivery requirements. Transmission (including Peppol network delivery) and additional reviewed

@@ -25,14 +25,14 @@ US routing/account fields rather than IBAN/BIC fields.
 
 ## Rebuild
 
-From the repository root, using the coordinated typstgen source build:
+From the repository root, with typstgen 0.6.0 on PATH:
 
 ```sh
-python3 examples/invoice-languages/build.py --typstgen /path/to/typstgen
+python3 examples/invoice-languages/build.py
 ```
 
-After `scripts/test.sh` has installed the pinned tool, `--typstgen` may be omitted; the
-builder prefers that project-local binary. Otherwise it uses `typstgen` on PATH.
+`--typstgen /path/to/typstgen` selects another binary. After `scripts/test.sh` has installed
+the pinned tool, the builder prefers that project-local binary; otherwise it uses `typstgen` on PATH.
 Use `--output-dir output/invoice-demos` to keep the committed PDFs unchanged.
 
 To prepare a single variant manually, from this directory:

@@ -35,7 +35,7 @@ mkdir -p "$cache" "$output_base"
 output="$(mktemp -d "$output_base/run-XXXXXXXX")"
 output="$(cd "$output" && pwd)"
 printf 'Test output: %s\n' "$output"
-revision="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["typstgen_profiles_revision"])' "$repo/tool-versions.json")"
+typstgen_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["typstgen"])' "$repo/tool-versions.json")"
 chartlet_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["chartlet"])' "$repo/tool-versions.json")"
 
 if [ ! -x "$cache/python/bin/python" ]; then
@@ -47,16 +47,15 @@ for name, version in json.load(open(sys.argv[1]))['python_packages'].items():
     print(f'{name}=={version}')
 PY
 "$cache/python/bin/python" -m pip install --quiet -r "$cache/requirements.txt"
-if [ ! -x "$cache/typstgen-$revision/bin/typstgen" ]; then
-  # Do not share target artifacts between Git revisions with the same crate version.
-  CARGO_TARGET_DIR="$cache/build/typstgen-$revision" cargo install typstgen --debug --locked --force --git https://github.com/casoon/typstgen \
-    --rev "$revision" --root "$cache/typstgen-$revision"
+if [ ! -x "$cache/typstgen-$typstgen_version/bin/typstgen" ]; then
+  CARGO_TARGET_DIR="$cache/build/typstgen-$typstgen_version" cargo install typstgen --debug --locked --force \
+    --version "$typstgen_version" --root "$cache/typstgen-$typstgen_version"
 fi
 if [ ! -x "$cache/chartlet-$chartlet_version/bin/chartlet" ]; then
   CARGO_TARGET_DIR="$cache/build/chartlet-$chartlet_version" cargo install chartlet --debug --locked --force --version "$chartlet_version" \
     --root "$cache/chartlet-$chartlet_version"
 fi
-export PATH="$cache/python/bin:$cache/typstgen-$revision/bin:$cache/chartlet-$chartlet_version/bin:$PATH"
+export PATH="$cache/python/bin:$cache/typstgen-$typstgen_version/bin:$cache/chartlet-$chartlet_version/bin:$PATH"
 
 # The validator is executable third-party code: verify the pinned release checksum
 # before it is used. A cached jar is checked on every run, too.
@@ -77,7 +76,7 @@ PY
 
 cd "$repo"
 scripts/check.sh --artifacts-dir "$output/package"
-python scripts/check-profiles.py --typstgen "$cache/typstgen-$revision/bin/typstgen" \
+python scripts/check-profiles.py --typstgen "$cache/typstgen-$typstgen_version/bin/typstgen" \
   --mustang "$cache/mustang.jar" --java "$java_bin" --verapdf "$verapdf_bin" \
   --artifacts-dir "$output/invoices" --report "$output/report.json"
 # Retain ordinary publication examples alongside the synthetic PDF contract cases.

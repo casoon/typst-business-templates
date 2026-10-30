@@ -4,42 +4,29 @@ description: Install typstgen (and chartlet for diagrams), make the business-tem
 order: 1
 ---
 
-## typstgen
-
-There are two supported build workflows. Use the coordinated source build for invoice
-configuration and profile commands; use the published compiler for the existing plain-template
-examples and VAT export. The template package is distributed as a versioned source release.
-
-### Configured invoices and profile tools
-
-From the cloned `typst-business-templates` repository, install the exact revision declared by
-the package into a project-local tool directory:
+## In three steps
 
 ```sh
-revision="$(python3 -c 'import json; print(json.load(open("tool-versions.json"))["typstgen_profiles_revision"])')"
-cargo install typstgen --git https://github.com/casoon/typstgen \
-  --rev "$revision" --locked --debug \
-  --root ".cache/test-tools/typstgen-$revision"
-export PATH="$PWD/.cache/test-tools/typstgen-$revision/bin:$PATH"
-python3 examples/invoice-languages/build.py
+# 1. The compiler (typstgen embeds Typst; no separate typst binary needed)
+cargo install typstgen --version 0.6.0 --locked
+
+# 2. The package, from the tagged source release
+git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates.git
+cd typst-business-templates && ./scripts/install-package.sh
+
+# 3. A check: rebuild the invoice demos
+python3 examples/invoice-languages/build.py --output-dir /tmp/invoice-demos
 ```
 
-This does not replace a globally installed compiler. The binary still reports package version
-0.5.0; the Git revision identifies the development features. `scripts/test.sh` also installs
-this pinned build and runs the complete acceptance workflow, including external validators.
+After step 2, any project can `#import "@local/business-templates:0.2.0": invoice`; step 3 is
+optional. You need [Rust and Cargo](https://rustup.rs/) for step 1; other install options are in
+the [typstgen documentation](https://casoon.github.io/typstgen/). The version pair that this
+package is checked with is recorded in `tool-versions.json`: **typstgen 0.6.0**, which provides
+invoice configuration (`prepare-invoice`), profile checks, ZUGFeRD/Factur-X and the XRechnung/Peppol
+writer (`e-invoice`). Plain-template documents also compile with typstgen 0.5.0.
 
 See [Invoice configuration](../../guides/invoice-configuration/) and the
 [eight PDF demos](../../../showcase/) for the practical path.
-
-### Existing plain-template examples
-
-```sh
-cargo install typstgen --version 0.5.0 --locked
-```
-
-typstgen embeds the Typst compiler, so no separate `typst` binary is needed. Other install options
-are in the [typstgen documentation](https://casoon.github.io/typstgen/).
-The published 0.5.0 crate does not contain `prepare-invoice` or the profile commands.
 
 ## chartlet (optional)
 
@@ -52,14 +39,12 @@ cargo install chartlet
 ## The package
 
 The package is the `templates/` folder of the repository (`templates/typst.toml`, entry point
-`templates/lib.typ`). It is not on Typst Universe; install it as a local package under the name
-`business-templates`, version `0.2.0`:
+`templates/lib.typ`). It is not on Typst Universe. `scripts/install-package.sh` (step 2 above)
+copies it into the Typst package directory of your system as `local/business-templates/0.2.0`;
+pass a directory to install somewhere else, for example `./scripts/install-package.sh ~/packages`
+together with `package_path = "/home/you/packages"` in `typstgen.toml`.
 
-```sh
-git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates.git
-```
-
-Then either copy or symlink `templates/` into your Typst package directory:
+To do it by hand instead, copy or symlink `templates/` into your Typst package directory:
 
 ```sh
 # macOS

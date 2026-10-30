@@ -23,7 +23,7 @@ applicable electronic invoicing obligation. The existing Factur-X pipeline remai
 separately and is checked with canonical data and external validators below. Versioned XRechnung
 3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 adapter specifications are in the catalog and
 remain `specified_not_implemented` there: they cannot be selected as a profile output. The
-coordinated typstgen build can nevertheless write both formats as pure UBL XML from the same
+typstgen 0.6.0 can nevertheless write both formats as pure UBL XML from the same
 invoice data with `typstgen e-invoice --format xrechnung-3.0|peppol-bis-3.0`; see
 [E-invoice files](#e-invoice-files-xrechnung-and-peppol). Peppol transport and French
 approved-platform transmission are not supplied.
@@ -136,10 +136,8 @@ national catalog entry. The catalogs below remain an optional layer for reviewed
 
 ## Complete synthetic agent flow
 
-Profile tools require the coordinated **unreleased typstgen profiles build**, not the published
-0.5.0 binary. The base package examples remain checked with published typstgen 0.5.0. Use the
-revision `0aa2b9c506a6aadb44cb3e70144904482d525d83` recorded in `tool-versions.json` for the profile workflow; no crate publication or
-external release is implied.
+Profile tools require typstgen 0.6.0 or later (the version in `tool-versions.json`); the
+published 0.5.0 binary does not have them.
 
 1. Call `list_document_profiles` with the package catalog. By default it lists only released
    DE combinations; opt into drafts only for a deliberate preview.
@@ -152,14 +150,9 @@ external release is implied.
 5. Run the existing `check`/`preview` tools, inspect the PDF, then `compile`. For a hybrid invoice,
    use the same canonical data with the existing ZUGFeRD compile path and external validators.
 
-Build the coordinated CLI from the typstgen checkout at that revision with `cargo build --locked`.
-Once the branch is available remotely, `cargo install --git https://github.com/casoon/typstgen
---rev 0aa2b9c506a6aadb44cb3e70144904482d525d83 --locked` selects exactly that source revision.
-The CLI still identifies its package version as 0.5.0; the Git revision distinguishes this
-unreleased feature build from the published crate. Do not install the published 0.5.0 crate
-and expect profile commands to exist.
+Install it with `cargo install typstgen --version 0.6.0 --locked`.
 
-CLI equivalent, from `examples/invoice-profiles/`, with the coordinated binary on PATH:
+CLI equivalent, from `examples/invoice-profiles/`, with typstgen on PATH:
 
 ```sh
 typstgen list-document-profiles --catalog ../../profiles/catalog.json
@@ -192,10 +185,10 @@ executables. The script prefers a working Java on PATH and recognises Homebrew's
 An optional positional argument selects a different parent output directory. Each invocation
 creates a fresh `run-…/` directory, so a failed run cannot expose an older success report.
 
-The script builds the exact coordinated typstgen revision and pinned chartlet version, creates
+The script builds the pinned typstgen and chartlet versions, creates
 an isolated Python environment and verifies the pinned Mustang checksum before executing it.
 All downloaded/built tools stay under `.cache/test-tools/`; build directories are separated by
-Git revision to prevent reuse of older binaries with the same crate version. Global installations
+version. Global installations
 are untouched.
 
 On success, the printed `output/test/run-…/` directory contains:
@@ -216,7 +209,7 @@ Existing user projects remain outside this public acceptance suite.
 ## Reproducible checks and structured output
 
 ```sh
-python scripts/check-profiles.py --typstgen /absolute/path/to/coordinated/typstgen \
+python scripts/check-profiles.py --typstgen /absolute/path/to/typstgen \
   --mustang /absolute/path/to/Mustang-CLI-2.26.0.jar \
   --java /absolute/path/to/java --verapdf /absolute/path/to/verapdf \
   --report /tmp/profile-validation.json

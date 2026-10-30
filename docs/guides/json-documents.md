@@ -30,8 +30,8 @@ Every accounting template has the same two parameters:
 `invoice` and `credentials` also take partial `locale:` overrides, see [Languages](../branding/#languages).
 Invoices additionally accept a rendering `profile:`. For named VAT rates or sales-tax components,
 calculated totals, language, currency, paper and layout, use
-[invoice configuration](../invoice-configuration/) with the coordinated typstgen build.
-The direct wrapper below continues to accept supplied totals with published typstgen 0.5.0.
+[invoice configuration](../invoice-configuration/) with typstgen 0.6.0.
+The direct wrapper below continues to accept supplied totals, also with typstgen 0.5.0.
 
 Since `data` and `company` are ordinary Typst dictionaries, the wrapper can change them before
 passing them on — for example to add the logo as bytes:
