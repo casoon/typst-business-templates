@@ -47,7 +47,7 @@ plain-template and VAT-export path. See [Installation](getting-started/installat
 both paths, and [Capabilities and limits](reference/project-status/) for the implementation map.
 
 The configurable builder does not determine applicable law, rates, taxability, nexus or
-national delivery requirements. XRechnung/Peppol adapters, transmission and additional reviewed
+national delivery requirements. Transmission (including Peppol network delivery) and additional reviewed
 cross-border cases are not implemented. Numbering, accounting, payment tracking and client
 management are outside the package. External invoice checks and compilation/accessibility
 checks remain separate results.

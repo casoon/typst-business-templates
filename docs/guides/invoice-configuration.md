@@ -166,7 +166,8 @@ editable inputs and configuration files. It uses one shared invoice wrapper.
 This is a configuration format for invoice construction. It does not infer which tax treatment
 or national requirements apply: the result records `checks.jurisdiction = "not_assessed"`.
 The existing [versioned catalogs](../invoice-profiles/) provide an optional reviewed-rule path.
-Configuration does not implement new XRechnung/Peppol adapters or invoice transmission.
+Configuration does not add output adapters or invoice transmission; XRechnung/Peppol files come from
+`typstgen e-invoice` ([E-invoice files](../invoice-profiles/#e-invoice-files-xrechnung-and-peppol)).
 
 
 ## US sales-tax components

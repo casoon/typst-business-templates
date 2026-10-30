@@ -203,4 +203,5 @@ check the result with an external one before sending. Field mapping, unit codes 
 categories are in the
 [typstgen e-invoice guide](https://casoon.github.io/typstgen/docs/guides/e-invoices/).
 
-Only invoices are supported — not credit notes and not XRechnung.
+Only invoices are supported — not credit notes. XRechnung and Peppol files are written separately
+with `typstgen e-invoice` ([E-invoice files](../invoice-profiles/#e-invoice-files-xrechnung-and-peppol)).

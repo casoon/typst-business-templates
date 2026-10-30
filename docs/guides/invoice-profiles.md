@@ -21,9 +21,12 @@ format locales, currencies, layouts, outputs, sources, review date and effective
 `pdf-preview` is a rendering output. It is not a statement that issuing a plain PDF satisfies an
 applicable electronic invoicing obligation. The existing Factur-X pipeline remains available
 separately and is checked with canonical data and external validators below. Versioned XRechnung
-3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 adapter specifications are in the catalog;
-they are explicitly **not implemented** and cannot be selected as released outputs. Peppol
-transport and French approved-platform transmission are not supplied.
+3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 adapter specifications are in the catalog and
+remain `specified_not_implemented` there: they cannot be selected as a profile output. The
+coordinated typstgen build can nevertheless write both formats as pure UBL XML from the same
+invoice data with `typstgen e-invoice --format xrechnung-3.0|peppol-bis-3.0`; see
+[E-invoice files](#e-invoice-files-xrechnung-and-peppol). Peppol transport and French
+approved-platform transmission are not supplied.
 
 The DE profiles cover supply dates in the reviewed interval 2025-01-01 through 2026-12-31;
 the FR draft starts 2026-09-01. These are bounded package review windows, not statutory expiry
@@ -135,7 +138,7 @@ national catalog entry. The catalogs below remain an optional layer for reviewed
 
 Profile tools require the coordinated **unreleased typstgen profiles build**, not the published
 0.5.0 binary. The base package examples remain checked with published typstgen 0.5.0. Use the
-revision `98715ba5041a9b86a30cae6cdeee8d5881f9ca19` recorded in `tool-versions.json` for the profile workflow; no crate publication or
+revision `0aa2b9c506a6aadb44cb3e70144904482d525d83` recorded in `tool-versions.json` for the profile workflow; no crate publication or
 external release is implied.
 
 1. Call `list_document_profiles` with the package catalog. By default it lists only released
@@ -151,7 +154,7 @@ external release is implied.
 
 Build the coordinated CLI from the typstgen checkout at that revision with `cargo build --locked`.
 Once the branch is available remotely, `cargo install --git https://github.com/casoon/typstgen
---rev 98715ba5041a9b86a30cae6cdeee8d5881f9ca19 --locked` selects exactly that source revision.
+--rev 0aa2b9c506a6aadb44cb3e70144904482d525d83 --locked` selects exactly that source revision.
 The CLI still identifies its package version as 0.5.0; the Git revision distinguishes this
 unreleased feature build from the published crate. Do not install the published 0.5.0 crate
 and expect profile commands to exist.
@@ -226,9 +229,30 @@ veraPDF 1.30.0 when explicitly supplied. The generated report records versions, 
 and notices; omitted validators remain `not_run`. Validator pins and adapter states live in
 `profiles/validators.json`. Mustang can report additional XRechnung notices while the selected
 Factur-X profile passes; these notices are retained, not treated as XRechnung certification.
+The pure XRechnung/Peppol files from `typstgen e-invoice` are validated separately, see below.
 
 Archive source inputs, selection, catalog/rule versions, confirmed facts and evidence references,
 text overrides, package/tooling commits, fonts/assets, creation timestamp, typstgen build manifest
 and external reports. No number reservation, booking, payment tracking or document delivery is
-performed. XRechnung/Peppol adapters require their specific address/reference/payment/unit
-fields and validator artifacts before they can move from specification to released capability.
+performed.
+
+## E-invoice files: XRechnung and Peppol
+
+`typstgen e-invoice --company company.json --format xrechnung-3.0 invoice.json` (or
+`peppol-bis-3.0`) writes UBL 2.1 XML from the same canonical invoice data as the PDF and the CII
+path, never from the rendered PDF. It does not send anything; Peppol network transport and national
+submission duties remain outside this package.
+
+Both formats need additional fields, which are reported with their JSON path when missing:
+`company.electronic_address` and `recipient.electronic_address` (`scheme_id`, `value`),
+`metadata.buyer_reference` (XRechnung; Peppol accepts `metadata.order_reference` instead) and, for
+XRechnung, `company.contact.name` and `company.contact.phone`. An unknown format is an error, not a
+PDF fallback. The command reports arithmetic and required fields; XML schema, EN 16931, profile and
+transmission checks are `not_run` and need an external validator.
+
+`scripts/check-profiles.py` writes both formats for the VAT fixtures, compares payable amount,
+currency, invoice number and tax group count with the canonical values and, when `--mustang` is
+given, validates the files with Mustang 2.26.0. Mustang applies the EN 16931 and XRechnung 3.0
+rules to the XRechnung file. For Peppol it reports only the EN 16931 UBL rules; the Peppol-specific
+Schematron is not part of that check, so the result is not a Peppol certification. Credit notes,
+sales-tax invoices and the national KoSIT validator are not covered.

@@ -173,6 +173,25 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
                 printed = f'{Decimal(amount):.2f}'
                 if resolved['selection']['format_locale'] != 'en-GB': printed = printed.replace('.',',')
                 check(printed in text, name+': PDF canonical total missing '+printed)
+            ubl_data=copy.deepcopy(resolved['data']); ubl_company=copy.deepcopy(resolved['company'])
+            ubl_company['electronic_address']={'scheme_id':'0204','value':'991-12345-67'}
+            ubl_company.setdefault('contact',{}).update(name='Synthetic Contact',phone='+49 30 0000000')
+            ubl_data['recipient']['electronic_address']={'scheme_id':'0204','value':'991-98765-43'}
+            ubl_data.setdefault('metadata',{})['buyer_reference']='991-01234-56'
+            (root/'ubl-data.json').write_text(json.dumps(ubl_data)); (root/'ubl-company.json').write_text(json.dumps(ubl_company))
+            ubl_ns={'cbc':'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2','cac':'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'}
+            ubl_files=[]
+            for target in ['xrechnung-3.0','peppol-bis-3.0']:
+                ubl_path=root/(name+'.'+target+'.xml')
+                run([binary,'e-invoice','--company','ubl-company.json','--format',target,'-o',str(ubl_path),'ubl-data.json'],root)
+                ubl=ET.fromstring(ubl_path.read_bytes())
+                payable=ubl.find('cac:LegalMonetaryTotal/cbc:PayableAmount',ubl_ns)
+                check(Decimal(payable.text)==Decimal(model['grand_total']),name+': '+target+' payable amount differs from canonical total')
+                check(payable.attrib['currencyID']==model['currency'],name+': '+target+' currency differs')
+                check(ubl.find('cbc:ID',ubl_ns).text==request['data']['metadata']['invoice_number'],name+': '+target+' invoice number differs')
+                ubl_groups=sorted((g.find('cac:TaxCategory/cbc:ID',ubl_ns).text,Decimal(g.find('cbc:TaxableAmount',ubl_ns).text),Decimal(g.find('cbc:TaxAmount',ubl_ns).text)) for g in ubl.findall('cac:TaxTotal/cac:TaxSubtotal',ubl_ns))
+                check(len(ubl_groups)==len(model['breakdown']),name+': '+target+' tax group count differs')
+                ubl_files.append((target,ubl_path))
             external = {'fixture':name,'mustang':'not_run','pdfa':'not_run'}
             if args.mustang:
                 output = run([args.java,'-jar',str(args.mustang.resolve()),'--action','validate','--source',str(pdf),'--disable-file-logging'],root)
@@ -187,6 +206,17 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
                 external.update(mustang='passed',mustang_version=validation.find('xml/info/validator').attrib['version'],
                                 mustang_sha256=hashlib.sha256(args.mustang.read_bytes()).hexdigest(),
                                 notices=[n.text for n in validation.findall('xml/messages/notice')])
+            if args.mustang:
+                for target,ubl_path in ubl_files:
+                    output = run([args.java,'-jar',str(args.mustang.resolve()),'--action','validate','--source',str(ubl_path),'--disable-file-logging'],root)
+                    start = output.find('<?xml')
+                    check(start >= 0, 'Mustang returned no XML report for '+target)
+                    validation = ET.fromstring(output[start:])
+                    check(validation.find('summary').attrib['status'] == 'valid', name+': Mustang rejected '+target)
+                    if args.artifacts_dir:
+                        shutil.copyfile(ubl_path,args.artifacts_dir/ubl_path.name)
+                        (args.artifacts_dir/(name+'.'+target+'.mustang.xml')).write_text(output[start:])
+                    external.setdefault('ubl',{})[target]={'mustang':'passed','profile':validation.find('xml/info/profile').text}
             if args.verapdf:
                 output = run([args.verapdf,'--format','text',str(pdf)],root)
                 check(output.startswith('PASS '),name+': veraPDF did not report PASS')
@@ -305,10 +335,10 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
 
     report['checks']=['eight committed and rebuilt language/US demos','user-owned invoice configuration','profile resolution','missing facts','eligibility dates and waiver','unsupported outputs',
                       'de/en DIN/international invariant','French fr/en draft invariant','multiple rates',
-                      'canonical PDF/XML totals, tax groups, parties, dates, currency and payment','optional logos and house numbers','long content']
+                      'canonical PDF/XML totals, tax groups, parties, dates, currency and payment','XRechnung 3.0 and Peppol BIS 3.0 UBL values and optional Mustang validation','optional logos and house numbers','long content']
 
 if args.report:
     args.report.write_text(json.dumps(report,indent=2)+'\n')
 print('ok   invoice profiles, canonical values and PDF/XML integration')
 for result in report['external_validation']:
-    print(f"     {result['fixture']}: Mustang={result['mustang']}, PDF/A={result['pdfa']}")
+    print(f"     {result['fixture']}: Mustang={result['mustang']}, PDF/A={result['pdfa']}, UBL={sorted(result.get('ubl',{})) or 'not_run'}")
