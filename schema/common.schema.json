@@ -37,7 +37,7 @@
       ]
     },
     "vat_rate": {
-      "description": "VAT rate of an item. `code` selects the EN 16931 category for ZUGFeRD: Standard/Reduced (S), Zero (Z), Exempt or SmallBusiness (E, needs exemption_reason or exemption_reason_code), ReverseCharge (AE, needs recipient.vat_id).",
+      "description": "VAT rate of an item. `code` selects the EN 16931 category for ZUGFeRD: Standard/Reduced (S), Zero (Z), Exempt or SmallBusiness (E, needs exemption_reason or exemption_reason_code), ReverseCharge (AE, needs recipient.vat_id), IntraCommunity (K, needs recipient.vat_id, a delivery date or period and metadata.delivery_country_code), Export (G).",
       "oneOf": [
         { "$ref": "#/$defs/decimal" },
         {
@@ -46,7 +46,7 @@
           "properties": {
             "code": {
               "type": "string",
-              "examples": ["Standard", "Reduced", "Zero", "Exempt", "SmallBusiness", "ReverseCharge"]
+              "examples": ["Standard", "Reduced", "Zero", "Exempt", "SmallBusiness", "ReverseCharge", "IntraCommunity", "Export"]
             },
             "percentage": { "$ref": "#/$defs/decimal" },
             "exemption_reason": { "type": "string" },

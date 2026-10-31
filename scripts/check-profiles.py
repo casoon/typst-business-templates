@@ -61,6 +61,8 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     small = json.loads((REPO/'examples/invoice-profiles/de-small-business.json').read_text())
     france = json.loads((REPO/'examples/invoice-profiles/fr-standard-draft.json').read_text())
     eu_services = json.loads((REPO/'examples/invoice-profiles/de-eu-services-draft.json').read_text())
+    eu_goods = json.loads((REPO/'examples/invoice-profiles/de-eu-goods-draft.json').read_text())
+    export_case = json.loads((REPO/'examples/invoice-profiles/de-export-draft.json').read_text())
     negative_cases = []
     changed = copy.deepcopy(base); changed['facts'].pop('rate_applicability_confirmed'); negative_cases.append((changed, 'facts.rate_applicability_confirmed'))
     changed = copy.deepcopy(base); changed['data']['recipient']['address']['country_code'] = 'FR'; negative_cases.append((changed, 'DE-BUYER'))
@@ -104,6 +106,24 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     changed = copy.deepcopy(eu_services)
     for item in changed['data']['items']: item['vat_rate']['exemption_reason'] = 'Reverse charge'
     negative_cases.append((changed, 'EU-RC-NOTE'))
+    for case, name in ((eu_goods, 'EU'), (export_case, 'EXPORT')):
+        changed = copy.deepcopy(case); changed['selection'].pop('allow_draft'); negative_cases.append((changed, 'PROFILE-STATUS'))
+        changed = copy.deepcopy(case); changed['facts']['supply_kind'] = 'services'; negative_cases.append((changed, 'DE-SUPPLY'))
+        changed = copy.deepcopy(case); changed['facts']['no_excluded_transaction_type'] = False; negative_cases.append((changed, name + '-NO-EXCLUDED-TYPE'))
+        changed = copy.deepcopy(case)
+        for item in changed['data']['items']: item['vat_rate'] = {'code': 'Standard', 'percentage': '19'}
+        negative_cases.append((changed, 'EU-IC-CATEGORY' if name == 'EU' else 'EXPORT-CATEGORY'))
+        changed = copy.deepcopy(case)
+        for item in changed['data']['items']: item['vat_rate'].pop('exemption_reason')
+        negative_cases.append((changed, 'data.items[0].vat_rate.exemption_reason'))
+    changed = copy.deepcopy(eu_goods); changed['data']['recipient']['address']['country_code'] = 'DE'; negative_cases.append((changed, 'DE-BUYER'))
+    changed = copy.deepcopy(eu_goods); changed['data']['metadata'].pop('delivery_country_code'); negative_cases.append((changed, 'data.metadata.delivery_country_code'))
+    changed = copy.deepcopy(eu_goods); changed['data']['metadata']['delivery_country_code'] = 'US'; negative_cases.append((changed, 'EU-DELIVERY-COUNTRY'))
+    changed = copy.deepcopy(eu_goods); changed['data']['recipient'].pop('vat_id'); negative_cases.append((changed, 'data.recipient.vat_id'))
+    changed = copy.deepcopy(eu_goods); changed['facts']['goods_dispatched_to_member_state'] = False; negative_cases.append((changed, 'EU-DISPATCHED'))
+    changed = copy.deepcopy(eu_goods); changed['facts']['acquisition_taxed_in_destination'] = False; negative_cases.append((changed, 'EU-ACQUISITION-TAXED'))
+    changed = copy.deepcopy(export_case); changed['facts']['goods_exported_to_third_country'] = False; negative_cases.append((changed, 'EXPORT-DESTINATION'))
+    changed = copy.deepcopy(export_case); changed['facts']['export_transport_by'] = 'carrier'; negative_cases.append((changed, 'EXPORT-TRANSPORT'))
     for request, expected in negative_cases:
         result = validate(request, 'blocked')
         check(expected in json.dumps(result['diagnostics']), 'Missing diagnostic: ' + expected)
@@ -149,6 +169,12 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
         if resolved['selection']['profile_id'] == 'de-small-business':
             check('19 UStG' in text, 'Section 19 note missing')
             check(resolved['normalized']['tax_total'] == '0', 'Small business has nonzero VAT')
+        if resolved['selection']['profile_id'] == 'de-eu-goods-b2b':
+            squashed = ' '.join(text.split())
+            check('innergemeinschaftliche Lieferung' in squashed, name+': exemption note missing from PDF')
+            check(request['data']['recipient']['vat_id'] in squashed, name+': recipient VAT ID is not printed')
+        if resolved['selection']['profile_id'] == 'de-third-country-export':
+            check('Ausfuhrlieferung' in ' '.join(text.split()), name+': exemption note missing from PDF')
         if resolved['selection']['profile_id'] == 'de-eu-services-b2b':
             squashed = ' '.join(text.split())
             check('Steuerschuldnerschaft des Leistungsempfängers' in squashed, name+': reverse-charge note missing from PDF')
@@ -289,6 +315,9 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     eu_model = export(eu_services,'eu-services-draft',hybrid=True)
     check(Decimal(eu_model['tax_total'])==0,'Reverse charge invoice shows VAT')
     check(eu_model['grand_total']==eu_model['line_total'],'Reverse charge total differs from net total')
+    for case, name in ((eu_goods, 'eu-goods-draft'), (export_case, 'export-draft')):
+        model = export(case, name, hybrid=True)
+        check(Decimal(model['tax_total']) == 0 and model['grand_total'] == model['line_total'], name + ': zero-tax invoice shows VAT')
     french = export(france,'fr-draft')
     france['selection'].update(language='en',format_locale='en-GB')
     check(export(france,'fr-draft-en') == french,'French translation changed fiscal data')

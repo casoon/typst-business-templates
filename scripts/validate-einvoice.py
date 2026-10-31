@@ -3,7 +3,7 @@
 
 Run on demand, not in CI: it downloads the pinned validators from profiles/validators.json
 into .cache/test-tools/einvoice-validators/ (SHA-256 checked), writes both formats for a
-synthetic demo invoices (standard rate and EU reverse charge) with `typstgen e-invoice` and validates them with the KoSIT validator.
+synthetic demo invoices (standard rate, EU reverse charge, intra-Community supply and export) with `typstgen e-invoice` and validates them with the KoSIT validator.
 XRechnung uses KoSIT's official configuration; Peppol uses a scenario assembled here from the
 UBL schema, the CEN rules and the Peppol 3.0.21 Schematron. A control file with its buyer
 reference removed must be rejected, so a pass cannot come from a validator that checks nothing.
@@ -129,9 +129,11 @@ shutil.rmtree(output, ignore_errors=True)
 output.mkdir(parents=True)
 demo = REPO / 'examples/invoice-languages/de'
 resolved = json.loads(run([typstgen, 'prepare-invoice', '--config', str(demo / 'invoice-config.json'), str(demo / 'invoice.json')]).stdout)
-reverse_charge = json.loads(run([typstgen, 'validate-document', '--catalog', str(REPO / 'profiles/catalog.json'),
-                                 str(REPO / 'examples/invoice-profiles/de-eu-services-draft.json')]).stdout)
-inputs = [('standard-rate', resolved['data'], resolved['company']), ('reverse-charge', reverse_charge['data'], reverse_charge['company'])]
+inputs = [('standard-rate', resolved['data'], resolved['company'])]
+for case, example in [('reverse-charge', 'de-eu-services-draft'), ('intra-community', 'de-eu-goods-draft'), ('export', 'de-export-draft')]:
+    view = json.loads(run([typstgen, 'validate-document', '--catalog', str(REPO / 'profiles/catalog.json'),
+                           str(REPO / 'examples/invoice-profiles' / (example + '.json'))]).stdout)
+    inputs.append((case, view['data'], view['company']))
 
 targets = [('xrechnung-3.0', xrechnung_config, 'scenarios.xml'), ('peppol-bis-3.0', peppol_config, 'scenarios-peppol.xml')]
 report = {'kosit_validator': pins['kosit_validator'], 'xrechnung_configuration': pins['xrechnung_configuration'],
