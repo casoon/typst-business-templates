@@ -26,7 +26,7 @@ and [Versions](../releases/).
 | VAT categories | Taxable/reduced, zero, exempt and reverse charge with distinct groups | Category support alone does not establish a national or cross-border case |
 | Sales tax | Explicit additive components with separate bases/rounded amounts, untaxed lines, US dates/USD/account fields | No location-based rates, nexus determination or compounding; PDF/component output |
 | Structured invoices | Existing CII/Factur-X VAT path with PDF/XML value checks | XRechnung 3.0 and Peppol BIS 3.0 as UBL files via `typstgen e-invoice` (checked with Mustang and, on demand, the KoSIT validator with the XRechnung and Peppol 3.0.21 rules); transmission is unimplemented; sales-tax output is rejected by CII and UBL |
-| Reviewed catalog | Bounded DE standard and § 19 preview cases; FR domestic B2B draft | FR remains opt-in draft; additional cross-border cases remain unsupported |
+| Reviewed catalog | Bounded DE standard and § 19 preview cases; FR domestic B2B and DE→EU B2B service (reverse charge) drafts | Drafts are opt-in previews; EU goods, export, B2C/OSS and further exemptions remain unsupported |
 | Publications | Compact A4 frame, printable forms, cards, phases and landscape brochures | Printable elements are not interactive AcroForms |
 | Existing templates | Password masking, partial locale overrides, task phases/roles and prose identity metadata | Masking covers password fields, not arbitrary free text |
 

@@ -16,7 +16,23 @@ format locales, currencies, layouts, outputs, sources, review date and effective
 | `de-standard@1` | released | Domestic DE B2B, confirmed ordinary/reduced rate applicability, 19%/7%, no special sectors or territories | PDF preview |
 | `de-small-business@1` | released | Domestic DE B2B, explicitly confirmed § 19 eligibility interval and no waiver, 0 VAT/category E | PDF preview |
 | `fr-domestic-standard@1-draft` | draft, explicit opt-in | Mainland FR domestic B2B ordinary services at 20%, bounded prerequisites below | PDF preview |
-| Other listed cases | unsupported | True zero, other exemptions, reverse charge, EU goods/services, exports, B2C/OSS, cross-border small business | none |
+| `de-eu-services-b2b@1-draft` | draft, explicit opt-in | German supplier, other service to a business customer in another EU member state (general place-of-supply rule, § 3a Abs. 2 UStG), tax owed by the recipient: category AE at 0%, bounded prerequisites below | PDF preview |
+| Other listed cases | unsupported | True zero, other exemptions, domestic reverse charge (§ 13b), EU goods supplies, exports, B2C/OSS, cross-border small business | none |
+
+### EU service to a business customer (draft)
+
+Selecting `de-eu-services-b2b` (with `allow_draft`) requires caller-confirmed facts: the recipient is
+an entrepreneur and the service is for its business (`service_for_recipient_business`), its VAT ID has
+been confirmed (`recipient_vat_id_confirmed`), no special place-of-supply rule applies
+(`no_special_place_of_supply_rule`, i.e. none of § 3a Abs. 3-8, § 3b, § 3e UStG) and the place of
+supply is the recipient's member state (`facts.place_of_supply`). The recipient must be in an EU
+member state other than Germany and have a VAT ID, the seller needs a VAT ID, every line uses
+`ReverseCharge` at 0%, and each line's `exemption_reason` carries the statutory wording
+"Steuerschuldnerschaft des Leistungsempfängers" (§ 14a Abs. 1 UStG; an English line can add a
+translation). The invoice template prints the recipient's VAT ID for reverse-charge invoices because
+§ 14a requires both IDs. Not checked: the invoice deadline (15th of the following month), whether the
+VAT ID confirmation is current, goods, B2C and the recipient's national rules. Sources: § 3a and
+§ 14a UStG, checked 2026-10-31. This is a bounded preview for a documented case, not tax advice.
 
 `pdf-preview` is a rendering output. It is not a statement that issuing a plain PDF satisfies an
 applicable electronic invoicing obligation. The existing Factur-X pipeline remains available
