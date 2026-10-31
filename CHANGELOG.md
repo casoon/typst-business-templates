@@ -23,6 +23,7 @@ is archived separately.
   Details: [EU service profile](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#eu-service-to-a-business-customer-draft).
 
 ### Changed
+- **Documentation:** README, start page, FAQ and the invoice guides state that the invoice and tax-case profiles are templates not reviewed by a tax adviser, describe the use cases, and list every invoice case with its state (released or draft); the start page table is generated from the profile catalog and a check keeps README, guide and start page in step.
 - **Invoices:** Reverse-charge and intra-Community invoices print the recipient's VAT ID, as § 14a UStG requires. Other invoices are unchanged.
 - **Tooling:** typstgen 0.6.2 is the single pinned compiler version. It is the published crate, so
   the separate source build for invoice configuration and profile tools is gone: install it with

@@ -15,6 +15,15 @@ build manifests and MCP tools belong to typstgen; they are separate from templat
 See the [package reference](../../reference/package/) and
 [typstgen documentation](https://casoon.github.io/typstgen/).
 
+## Are the invoice and tax cases reviewed by a tax adviser?
+
+No. The profiles are templates built from the statutes and standards named in their sources.
+Nobody has certified them for your situation. Only two cases are released (domestic standard and
+reduced rates, and the small business exemption of § 19 UStG), and even those are bounded previews;
+the other cases are drafts that you select explicitly, and you confirm their prerequisites. Have a
+tax adviser or accountant check the profile, wording and amounts before you issue real invoices.
+See [invoice profiles](../../guides/invoice-profiles/).
+
 ## Where are my data stored?
 
 Company details, document data, templates and output PDFs are files in your project directory.

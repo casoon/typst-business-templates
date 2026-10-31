@@ -1,12 +1,24 @@
 // @ts-check
 import casoonPages from '@casoon/pages-theme';
 import { defineConfig } from 'astro/config';
+import { fileURLToPath } from 'node:url';
+
+// Project-owned styles for notices in the docs; the vendored theme stays untouched.
+const noticeStyles = {
+  name: 'notice-styles',
+  hooks: {
+    'astro:config:setup': ({ injectScript }) => {
+      injectScript('page-ssr', `import ${JSON.stringify(fileURLToPath(new URL('./src/notice.css', import.meta.url)))};`);
+    },
+  },
+};
 
 // Project page: https://casoon.github.io/typst-business-templates/ — `base` is the GitHub Pages path.
 export default defineConfig({
   site: 'https://casoon.github.io/typst-business-templates',
   base: '/typst-business-templates/',
   integrations: [
+    noticeStyles,
     casoonPages({
       name: 'typst-business-templates',
       description:

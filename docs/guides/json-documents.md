@@ -4,6 +4,10 @@ description: Invoices, offers, credit notes and the other accounting documents â
 order: 1
 ---
 
+> **Templates, not tax advice.** The invoice and tax-case profiles are templates. No tax adviser or
+> accountant has reviewed them, and they may need adjusting to your situation and country. Have them
+> checked before you issue real invoices. Examples use fictional companies, accounts and rates.
+
 Ten templates take their content as data: `invoice`, `offer`, `credit-note`, `reminder`,
 `delivery-note`, `order-confirmation`, `quotation-request`, `time-sheet`, `letter` and
 `credentials`. The data lives in a JSON file; a four-line `.typ` file loads it and calls the
