@@ -1,5 +1,5 @@
 {
-  "checked_on": "2026-10-26",
+  "checked_on": "2026-10-30",
   "mustang": {
     "version": "2.26.0",
     "url": "https://github.com/ZUGFeRD/mustangproject/releases/download/core-2.26.0/Mustang-CLI-2.26.0.jar",
@@ -18,5 +18,33 @@
     "version": "3.0.2",
     "url": "https://xeinkauf.de/xrechnung/",
     "status": "specified_not_implemented"
+  },
+  "kosit_validator": {
+    "version": "1.6.3",
+    "purpose": "Official KoSIT validator engine (XRechnung, and Peppol with the locally assembled scenario)",
+    "url": "https://github.com/itplr-kosit/validator/releases/download/v1.6.3/validator-1.6.3-standalone.jar",
+    "sha256": "799e64befca97d4080e03608c80b85dd5a5ecc5f4ae4f35d1116ec2855b9a7c9"
+  },
+  "xrechnung_configuration": {
+    "version": "3.0.2 (2026-08-31)",
+    "purpose": "Official KoSIT XRechnung scenarios, UBL schemas and CEN/XRechnung Schematron",
+    "url": "https://github.com/itplr-kosit/validator-configuration-xrechnung/releases/download/v2026-08-31/xrechnung-3.0.2-validator-configuration-2026-08-31.zip",
+    "sha256": "2530cd107c414511c5d0462ec10f886910395abfca820db82e83d70bf01221a8"
+  },
+  "peppol_schematron": {
+    "version": "3.0.21",
+    "purpose": "Peppol BIS Billing 3.0 rules, compiled locally with the Schematron pipeline from the Mustang jar and Saxon from the KoSIT jar",
+    "files": [
+      {
+        "name": "CEN-EN16931-UBL.sch",
+        "url": "https://raw.githubusercontent.com/OpenPEPPOL/peppol-bis-invoice-3/3.0.21/rules/sch/CEN-EN16931-UBL.sch",
+        "sha256": "268d4f7a2688676695e6c69cba6fba69a6802604fee12cb544a6b30ff09555a3"
+      },
+      {
+        "name": "PEPPOL-EN16931-UBL.sch",
+        "url": "https://raw.githubusercontent.com/OpenPEPPOL/peppol-bis-invoice-3/3.0.21/rules/sch/PEPPOL-EN16931-UBL.sch",
+        "sha256": "9616cfffb418f349b532c1e25d3c831b8af6a47f4f5607ca0df4b1336f48e5f3"
+      }
+    ]
   }
 }

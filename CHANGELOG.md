@@ -11,6 +11,8 @@ is archived separately.
 - **Invoices:** XRechnung 3.0 and Peppol BIS Billing 3.0 files (UBL 2.1) from the same invoice data via
   `typstgen e-invoice`, checked against the canonical values and validated with Mustang 2.26.0.
   Details: [E-invoice files](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#e-invoice-files-xrechnung-and-peppol).
+- **Testing:** `scripts/validate-einvoice.py` validates XRechnung and Peppol files on demand with the pinned KoSIT validator, the official XRechnung configuration and the Peppol BIS Billing 3.0.21 Schematron, including a control that must be rejected.
+  Details: [Official rule sets](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#official-rule-sets-on-demand).
 
 ### Changed
 - **Tooling:** typstgen 0.6.0 is the single pinned compiler version. It is the published crate, so

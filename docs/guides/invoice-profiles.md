@@ -246,6 +246,24 @@ transmission checks are `not_run` and need an external validator.
 `scripts/check-profiles.py` writes both formats for the VAT fixtures, compares payable amount,
 currency, invoice number and tax group count with the canonical values and, when `--mustang` is
 given, validates the files with Mustang 2.26.0. Mustang applies the EN 16931 and XRechnung 3.0
-rules to the XRechnung file. For Peppol it reports only the EN 16931 UBL rules; the Peppol-specific
-Schematron is not part of that check, so the result is not a Peppol certification. Credit notes,
-sales-tax invoices and the national KoSIT validator are not covered.
+rules to the XRechnung file but, for Peppol, only the EN 16931 UBL rules.
+
+### Official rule sets, on demand
+
+```sh
+python3 scripts/validate-einvoice.py --typstgen "$(command -v typstgen)"
+```
+
+The script is not part of CI or `test.sh`. It downloads the pinned tools listed in
+`profiles/validators.json` into `.cache/test-tools/einvoice-validators/` (SHA-256 checked),
+writes both formats for the synthetic German demo invoice and validates them with the KoSIT
+validator 1.6.3: XRechnung with KoSIT's official configuration 3.0.2 (2026-08-31), Peppol with a
+scenario assembled by the script from the UBL schema, the CEN rules and the Peppol BIS Billing
+3.0.21 Schematron (compiled locally with the ISO Schematron pipeline). A control copy without the
+buyer reference must be rejected, so a pass cannot come from a validator that checks nothing.
+Report and files land in `output/einvoice/`. Run it again after changing typstgen or a pin.
+
+Result on 2026-10-30 with typstgen 0.6.0: both files accepted, both controls rejected. This
+covers the German demo invoice (one standard-rated VAT group), not every tax case; the Peppol
+scenario is assembled here and is not an official Peppol validator distribution. Credit notes,
+sales-tax invoices and transmission are not covered.

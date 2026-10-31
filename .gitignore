@@ -32,3 +32,4 @@ examples/invoice-languages/*/resolved.json
 # Reproducible local test tools and generated review artifacts
 .cache/test-tools/
 output/test/
+output/einvoice/
