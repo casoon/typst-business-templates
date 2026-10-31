@@ -78,6 +78,13 @@
 
   #v(3pt)
 
+  // Reverse charge invoices name the recipient's VAT ID (§ 14a UStG, Art. 226 Directive 2006/112/EC).
+  #let reverse-charge = data.totals.at("vat_breakdown", default: ()).any(group => type(group.rate) == dictionary and (group.rate.at("code", default: "") == "ReverseCharge" or group.rate.at("category", default: "") == "AE"))
+  #if reverse-charge and data.recipient.at("vat_id", default: none) != none [
+    #labels.vat_id: #data.recipient.vat_id
+    #v(3pt)
+  ]
+
   #if "project_reference" in data.metadata and data.metadata.project_reference != none [
     #texts.common.project: #data.metadata.project_reference
     #v(3pt)

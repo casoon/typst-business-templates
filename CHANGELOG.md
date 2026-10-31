@@ -15,8 +15,11 @@ is archived separately.
   Details: [Official rule sets](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#official-rule-sets-on-demand).
 - **Invoices:** `xrechnung-3.0` and `peppol-bis-3.0` are selectable outputs of the released DE profiles; `validate-document` reports the fields each format needs before the file is written (typstgen 0.6.1).
   Details: [E-invoice files](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#e-invoice-files-xrechnung-and-peppol).
+- **Invoices:** Draft profile `de-eu-services-b2b` for German services to business customers in other EU member states (reverse charge, category AE), with prerequisites, statutory note check, CII/UBL validation and an example.
+  Details: [EU service profile](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#eu-service-to-a-business-customer-draft).
 
 ### Changed
+- **Invoices:** Reverse-charge invoices print the recipient's VAT ID, as § 14a UStG requires. Other invoices are unchanged.
 - **Tooling:** typstgen 0.6.1 is the single pinned compiler version. It is the published crate, so
   the separate source build for invoice configuration and profile tools is gone: install it with
   `cargo install typstgen --version 0.6.1 --locked`. CI, `scripts/test.sh` and the demo builder use it.

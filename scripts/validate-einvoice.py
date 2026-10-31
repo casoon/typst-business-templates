@@ -3,7 +3,7 @@
 
 Run on demand, not in CI: it downloads the pinned validators from profiles/validators.json
 into .cache/test-tools/einvoice-validators/ (SHA-256 checked), writes both formats for a
-synthetic demo invoice with `typstgen e-invoice` and validates them with the KoSIT validator.
+synthetic demo invoices (standard rate and EU reverse charge) with `typstgen e-invoice` and validates them with the KoSIT validator.
 XRechnung uses KoSIT's official configuration; Peppol uses a scenario assembled here from the
 UBL schema, the CEN rules and the Peppol 3.0.21 Schematron. A control file with its buyer
 reference removed must be rejected, so a pass cannot come from a validator that checks nothing.
@@ -122,19 +122,16 @@ if not (peppol_config / 'scenarios-peppol.xml').exists():
 </scenarios>
 ''')
 
-# Synthetic input: the German demo invoice plus the fields both formats require.
+# Synthetic inputs: the German demo invoice (standard rate) and the EU reverse-charge example,
+# each plus the fields both formats require.
 output = args.output.resolve()
 shutil.rmtree(output, ignore_errors=True)
 output.mkdir(parents=True)
 demo = REPO / 'examples/invoice-languages/de'
 resolved = json.loads(run([typstgen, 'prepare-invoice', '--config', str(demo / 'invoice-config.json'), str(demo / 'invoice.json')]).stdout)
-data, company = resolved['data'], resolved['company']
-company['electronic_address'] = {'scheme_id': '0204', 'value': '991-12345-67'}
-company.setdefault('contact', {}).update(name='Synthetic Contact', phone='+49 30 0000000')
-data['recipient']['electronic_address'] = {'scheme_id': '0204', 'value': '991-98765-43'}
-data.setdefault('metadata', {})['buyer_reference'] = '991-01234-56'
-(output / 'data.json').write_text(json.dumps(data, indent=2))
-(output / 'company.json').write_text(json.dumps(company, indent=2))
+reverse_charge = json.loads(run([typstgen, 'validate-document', '--catalog', str(REPO / 'profiles/catalog.json'),
+                                 str(REPO / 'examples/invoice-profiles/de-eu-services-draft.json')]).stdout)
+inputs = [('standard-rate', resolved['data'], resolved['company']), ('reverse-charge', reverse_charge['data'], reverse_charge['company'])]
 
 targets = [('xrechnung-3.0', xrechnung_config, 'scenarios.xml'), ('peppol-bis-3.0', peppol_config, 'scenarios-peppol.xml')]
 report = {'kosit_validator': pins['kosit_validator'], 'xrechnung_configuration': pins['xrechnung_configuration'],
@@ -148,20 +145,28 @@ def validate(config, scenarios, xml):
     return accepted, result.stdout
 
 
-for name, config, scenarios in targets:
-    xml = output / (name + '.xml')
-    run([typstgen, 'e-invoice', '--company', str(output / 'company.json'), '--format', name, '-o', str(xml), str(output / 'data.json')])
-    accepted, _ = validate(config, config / scenarios, xml)
-    # Control: without the buyer reference both rule sets must reject the file.
-    broken = output / (name + '.control.xml')
-    text = xml.read_text()
-    stripped = re.sub(r'\s*<cbc:BuyerReference>.*?</cbc:BuyerReference>', '', text)
-    if stripped == text:
-        sys.exit(f'{name}: control could not remove the buyer reference')
-    broken.write_text(stripped)
-    control_rejected = not validate(config, config / scenarios, broken)[0]
-    report['results'].append({'format': name, 'accepted': accepted, 'control_rejected': control_rejected})
-    print(f"{name}: {'accepted' if accepted else 'REJECTED'}; control without buyer reference {'rejected' if control_rejected else 'WRONGLY ACCEPTED'}")
+for case, data, company in inputs:
+    company['electronic_address'] = {'scheme_id': '0204', 'value': '991-12345-67'}
+    company.setdefault('contact', {}).update(name='Synthetic Contact', phone='+49 30 0000000')
+    data['recipient']['electronic_address'] = {'scheme_id': '0204', 'value': '991-98765-43'}
+    data.setdefault('metadata', {})['buyer_reference'] = '991-01234-56'
+    (output / (case + '.data.json')).write_text(json.dumps(data, indent=2))
+    (output / (case + '.company.json')).write_text(json.dumps(company, indent=2))
+    for name, config, scenarios in targets:
+        xml = output / (case + '.' + name + '.xml')
+        run([typstgen, 'e-invoice', '--company', str(output / (case + '.company.json')), '--format', name, '-o', str(xml),
+             str(output / (case + '.data.json'))])
+        accepted, _ = validate(config, config / scenarios, xml)
+        # Control: without the buyer reference both rule sets must reject the file.
+        broken = output / (case + '.' + name + '.control.xml')
+        text = xml.read_text()
+        stripped = re.sub(r'\s*<cbc:BuyerReference>.*?</cbc:BuyerReference>', '', text)
+        if stripped == text:
+            sys.exit(f'{case} {name}: control could not remove the buyer reference')
+        broken.write_text(stripped)
+        control_rejected = not validate(config, config / scenarios, broken)[0]
+        report['results'].append({'case': case, 'format': name, 'accepted': accepted, 'control_rejected': control_rejected})
+        print(f"{case} {name}: {'accepted' if accepted else 'REJECTED'}; control without buyer reference {'rejected' if control_rejected else 'WRONGLY ACCEPTED'}")
 
 (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
 print(f'Report and files: {output}')

@@ -571,21 +571,163 @@
       "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
     },
     {
-      "id": "eu-services",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "cross-border-services",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-eu-services-b2b",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "replace_rules": [
+        "DE-BUYER",
+        "DE-PLACE",
+        "DE-SUPPLY"
+      ],
+      "status": "draft",
+      "tax_case": "eu-services-b2b",
+      "scope": "German supplier, other service (not goods) to a business customer in another EU member state under the general place-of-supply rule (§ 3a Abs. 2 UStG), tax owed by the recipient (reverse charge, category AE, 0%). No special place-of-supply rules (§ 3a Abs. 3-8, § 3b, § 3e), no B2C, no goods; preview only. The invoice deadline (15th of the following month) is not checked.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.recipient_vat_id_confirmed",
+        "facts.service_for_recipient_business",
+        "facts.no_special_place_of_supply_rule",
+        "company.vat_id",
+        "data.recipient.vat_id",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "EU-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-eu-services-b2b"
+        },
+        {
+          "id": "DE-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "DE-PLACE",
+          "path": "facts.place_of_supply",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "DE-SUPPLY",
+          "path": "facts.supply_kind",
+          "op": "equals",
+          "value": "services"
+        },
+        {
+          "id": "EU-VATID-CONFIRMED",
+          "path": "facts.recipient_vat_id_confirmed",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-BUSINESS-USE",
+          "path": "facts.service_for_recipient_business",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-NO-EXCEPTION",
+          "path": "facts.no_special_place_of_supply_rule",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-RC-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "ReverseCharge"
+          ]
+        },
+        {
+          "id": "EU-RC-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "EU-RC-NOTE",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "Steuerschuldnerschaft des Leistungsempfängers"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__3a.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14a.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://eur-lex.europa.eu/eli/dir/2006/112/oj",
+          "checked_on": "2026-10-31"
+        }
+      ]
     },
     {
       "id": "third-country-export",
