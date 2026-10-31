@@ -4,6 +4,10 @@ description: Implementation scope, verification evidence and work remaining befo
 order: 4
 ---
 
+> **Templates, not tax advice.** The invoice and tax-case profiles are templates. No tax adviser or
+> accountant has reviewed them, and they may need adjusting to your situation and country. Have them
+> checked before you issue real invoices. Examples use fictional companies, accounts and rates.
+
 ## Current assessment
 
 The source tree provides a usable business-document package and a configurable invoice

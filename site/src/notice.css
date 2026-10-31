@@ -1,0 +1,13 @@
+/* A notice in the docs is a blockquote that opens with bold text, e.g.
+   "> **Templates, not tax advice.** …". Quotes that open with plain text (prompts) stay as they are. */
+.cp-prose blockquote:has(> p:first-child > strong:first-child) {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand);
+  border-radius: 4px 12px 12px 4px;
+  background: var(--brand-soft);
+  color: var(--text);
+  font-size: 14.5px;
+}
+.cp-prose blockquote:has(> p:first-child > strong:first-child) > p { margin: 0; }
+.cp-prose blockquote:has(> p:first-child > strong:first-child) strong { color: var(--heading); }

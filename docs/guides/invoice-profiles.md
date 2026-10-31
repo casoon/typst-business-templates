@@ -4,6 +4,10 @@ description: Separate country rules, tax cases, language, layout and output, wit
 order: 7
 ---
 
+> **Templates, not tax advice.** The invoice and tax-case profiles are templates. No tax adviser or
+> accountant has reviewed them, and they may need adjusting to your situation and country. Have them
+> checked before you issue real invoices. Examples use fictional companies, accounts and rates.
+
 ## Supported combinations
 
 The versioned source is `profiles/catalog.json`, validated by

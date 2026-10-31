@@ -153,4 +153,18 @@ Synthetic document content.
     compile_source("publication-logo", locale_import + '#show: pkg.publication.with(title: "With logo", logo: image("logo.svg", height: 9mm, alt: "Example Studio"))\nBody', standard="ua-1")
     compile_source("dark-brochure", locale_import + '#show: pkg.brochure.with(title: "Dark page", foreground: white, background: rgb("#182C39"), accent: rgb("#C4E6FC"))\nBody', standard="ua-1")
 
-print("ok   package contracts (locales, masking, metadata, publications, PDF structure)")
+# README, guide and start page must list every selectable invoice case and carry the review notice.
+catalog = json.loads((REPO / "profiles/catalog.json").read_text())
+selectable = [p["id"] for p in catalog["profiles"] if p["status"] in ("released", "draft")]
+start_page = (REPO / "site/src/pages/index.astro").read_text()
+guide = (REPO / "docs/guides/invoice-profiles.md").read_text()
+for profile_id in selectable:
+    check(f"'{profile_id}'" in start_page, f"Start page does not label the invoice case {profile_id}")
+    check(f"`{profile_id}@" in guide, f"Invoice profile guide does not describe {profile_id}")
+readme = (REPO / "README.md").read_text()
+listed = sum(1 for line in readme.splitlines() if line.endswith(("| Released |", "| Draft |")))
+check(listed == len(selectable), f"README lists {listed} invoice cases, the catalog has {len(selectable)}")
+for name, text in [("README", readme), ("start page", start_page), ("invoice profile guide", guide)]:
+    check("Templates, not tax advice" in text, f"{name} lacks the notice that the cases are not reviewed by a tax adviser")
+
+print("ok   package contracts (locales, masking, metadata, publications, PDF structure, case documentation)")

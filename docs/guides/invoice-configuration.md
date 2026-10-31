@@ -4,6 +4,10 @@ description: Configure tax rates, required fields, notes and presentation using 
 order: 8
 ---
 
+> **Templates, not tax advice.** The invoice and tax-case profiles are templates. No tax adviser or
+> accountant has reviewed them, and they may need adjusting to your situation and country. Have them
+> checked before you issue real invoices. Examples use fictional companies, accounts and rates.
+
 Copy `invoice-config.json` from the repository root into your project and adjust it for your
 business. The same invoice builder uses the file for any seller or buyer country. No national
 catalog entry or country-specific Typst template is needed. Company and customer addresses

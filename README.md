@@ -19,6 +19,10 @@ providing the CLI, Rust library and MCP server, with the Typst compiler embedded
 Install it with one `cargo install` command; the [setup guide](docs/getting-started/installation.md)
 has the three steps.
 
+> **Templates, not tax advice.** The invoice and tax-case profiles are templates. No tax adviser or
+> accountant has reviewed them, and they may need adjusting to your situation and country. Have them
+> checked before you issue real invoices. All examples use fictional companies, accounts and rates.
+
 **Working with an AI assistant?** Connect typstgen through MCP to check Typst sources,
 inspect page previews and compile PDFs while you edit the template inputs.
 The [MCP guide](docs/guides/ai-agents.md) walks through an existing letter example.
@@ -40,6 +44,41 @@ all use one shared template and a fictional SVG logo.
 
 The businesses, accounts and tax rates in these examples are fictional. A language demo is
 not a reviewed national tax preset.
+
+## What you can use it for
+
+- **Invoices:** VAT or sales-tax invoices with calculated totals in seven languages, A4 or US Letter;
+  the same data can produce Factur-X, XRechnung and Peppol files.
+- **Offers and accounting documents:** offers, credit notes, reminders, delivery notes, order
+  confirmations, quotation requests, time sheets and letters from JSON data.
+- **Contracts and project documents:** concepts, contracts, documentation, proposals, protocols, SLAs,
+  specifications and task lists, written in Typst.
+- **Guides, forms and brochures:** compact A4 guides, printable intake forms and landscape brochures.
+- **Access credentials** with optional masking of passwords, and **diagrams** from chartlet.
+
+### Which invoice cases are covered
+
+Each case is a profile with its own prerequisites, notes and checks. You confirm the facts; the
+package does not decide which case applies to you. *Released* means a bounded case, not a tax
+opinion; a *draft* is a preview you opt into and have checked.
+
+| Case | Basis | State |
+| --- | --- | --- |
+| Domestic sale, standard or reduced rate | § 12 UStG | Released |
+| Small business (Kleinunternehmer) | § 19 UStG | Released |
+| 0 % rate for photovoltaic systems | § 12 Abs. 3 UStG | Draft |
+| Tax-exempt supply | § 4 UStG | Draft |
+| Domestic reverse charge | § 13b UStG | Draft |
+| Goods to a business in another EU state | § 4 Nr. 1b, § 6a UStG | Draft |
+| Service to a business in another EU state (reverse charge) | § 3a, § 14a UStG | Draft |
+| Export to a non-EU country | § 4 Nr. 1a, § 6 UStG | Draft |
+| Consumer in another EU state (OSS) | § 18j UStG | Draft |
+| Small business selling in another EU state | § 19a UStG | Draft |
+| France: domestic sale between businesses | French VAT rules | Draft |
+
+Chain and triangular transactions, new vehicles and other schemes are not supported. The
+[prerequisites for each case](docs/guides/invoice-profiles.md) and the
+[capabilities and limits](docs/reference/project-status.md) list what is checked and what is not.
 
 ## Configure an invoice
 
