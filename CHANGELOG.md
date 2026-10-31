@@ -13,11 +13,13 @@ is archived separately.
   Details: [E-invoice files](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#e-invoice-files-xrechnung-and-peppol).
 - **Testing:** `scripts/validate-einvoice.py` validates XRechnung and Peppol files on demand with the pinned KoSIT validator, the official XRechnung configuration and the Peppol BIS Billing 3.0.21 Schematron, including a control that must be rejected.
   Details: [Official rule sets](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#official-rule-sets-on-demand).
+- **Invoices:** `xrechnung-3.0` and `peppol-bis-3.0` are selectable outputs of the released DE profiles; `validate-document` reports the fields each format needs before the file is written (typstgen 0.6.1).
+  Details: [E-invoice files](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#e-invoice-files-xrechnung-and-peppol).
 
 ### Changed
-- **Tooling:** typstgen 0.6.0 is the single pinned compiler version. It is the published crate, so
+- **Tooling:** typstgen 0.6.1 is the single pinned compiler version. It is the published crate, so
   the separate source build for invoice configuration and profile tools is gone: install it with
-  `cargo install typstgen --version 0.6.0 --locked`. CI, `scripts/test.sh` and the demo builder use it.
+  `cargo install typstgen --version 0.6.1 --locked`. CI, `scripts/test.sh` and the demo builder use it.
 - **Installation:** `scripts/install-package.sh` copies the package into Typst's local package
   directory; README and installation guide describe setup in three steps.
 - **Metadata:** Year-only prose `created_at` labels remain visible and no longer imply a fabricated PDF calendar date. Details: [migration](https://casoon.github.io/typst-business-templates/docs/guides/migration/#document-identity).

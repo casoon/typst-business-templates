@@ -8,7 +8,7 @@ order: 1
 
 ```sh
 # 1. The compiler (typstgen embeds Typst; no separate typst binary needed)
-cargo install typstgen --version 0.6.0 --locked
+cargo install typstgen --version 0.6.1 --locked
 
 # 2. The package, from the tagged source release
 git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates.git
@@ -21,7 +21,7 @@ python3 examples/invoice-languages/build.py --output-dir /tmp/invoice-demos
 After step 2, any project can `#import "@local/business-templates:0.2.0": invoice`; step 3 is
 optional. You need [Rust and Cargo](https://rustup.rs/) for step 1; other install options are in
 the [typstgen documentation](https://casoon.github.io/typstgen/). The version pair that this
-package is checked with is recorded in `tool-versions.json`: **typstgen 0.6.0**, which provides
+package is checked with is recorded in `tool-versions.json`: **typstgen 0.6.1**, which provides
 invoice configuration (`prepare-invoice`), profile checks, ZUGFeRD/Factur-X and the XRechnung/Peppol
 writer (`e-invoice`). Plain-template documents also compile with typstgen 0.5.0.
 

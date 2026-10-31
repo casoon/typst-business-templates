@@ -1,6 +1,6 @@
 {
   "$comment": "Versions used by compatibility checks, acceptance tools and example/site generators, so the numbers exist once.",
-  "typstgen": "0.6.0",
+  "typstgen": "0.6.1",
   "chartlet": "0.21.0",
   "python_packages": {
     "jsonschema": "4.26.0",

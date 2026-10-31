@@ -56,14 +56,14 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
 
     listed = json.loads(run([binary, 'list-document-profiles', '--catalog', catalog], root))
     check({p['id'] for p in listed['profiles']} == {'de-standard', 'de-small-business'}, 'Draft/unsupported profile leaked into released catalog')
-    check(all(p['country']=='DE' and p['languages']==['de','en'] and p['outputs']==['pdf-preview'] for p in listed['profiles']), 'Listed capabilities lost inherited fields')
+    check(all(p['country']=='DE' and p['languages']==['de','en'] and p['outputs']==['pdf-preview','xrechnung-3.0','peppol-bis-3.0'] for p in listed['profiles']), 'Listed capabilities lost inherited fields')
     base = json.loads((REPO/'examples/invoice-profiles/de-standard.json').read_text())
     small = json.loads((REPO/'examples/invoice-profiles/de-small-business.json').read_text())
     france = json.loads((REPO/'examples/invoice-profiles/fr-standard-draft.json').read_text())
     negative_cases = []
     changed = copy.deepcopy(base); changed['facts'].pop('rate_applicability_confirmed'); negative_cases.append((changed, 'facts.rate_applicability_confirmed'))
     changed = copy.deepcopy(base); changed['data']['recipient']['address']['country_code'] = 'FR'; negative_cases.append((changed, 'DE-BUYER'))
-    changed = copy.deepcopy(base); changed['selection']['output_profile'] = 'xrechnung'; negative_cases.append((changed, 'selection.output_profile'))
+    changed = copy.deepcopy(base); changed['selection']['output_profile'] = 'xrechnung-2.3'; negative_cases.append((changed, 'selection.output_profile'))
     changed = copy.deepcopy(base); changed['selection']['profile_id'] = 'unknown'; negative_cases.append((changed, 'PROFILE-IDENTITY'))
     changed = copy.deepcopy(small); changed['facts']['waived_exemption'] = True; negative_cases.append((changed, 'DE-19-WAIVER'))
     changed = copy.deepcopy(small); changed['facts']['regime_valid_until'] = '2026-10-24'; negative_cases.append((changed, 'DE-19-PERIOD'))
@@ -76,9 +76,26 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     changed = copy.deepcopy(base); changed['data']['metadata']['due_date'] = '2026-12-31'; negative_cases.append((changed, 'data.metadata.due_date'))
     changed = copy.deepcopy(base); changed['data']['totals']['discount_total'] = {'amount':'10.00','currency':'EUR'}; negative_cases.append((changed, 'data.totals.discount_total'))
     changed = copy.deepcopy(base); changed['company'].pop('name'); negative_cases.append((changed, 'company.name'))
+    # E-invoice outputs: selectable for released DE profiles, fields reported with their paths.
+    for output, extra in [('xrechnung-3.0', 'data.metadata.buyer_reference'), ('peppol-bis-3.0', 'one is required by Peppol')]:
+        changed = copy.deepcopy(base); changed['selection']['output_profile'] = output
+        for field in ['electronic_address']:
+            changed['data']['recipient'].pop(field, None); changed['company'].pop(field, None)
+        changed['data']['metadata'].pop('buyer_reference', None); changed['data']['metadata'].pop('order_reference', None)
+        negative_cases.append((changed, 'data.recipient.electronic_address'))
+        negative_cases.append((changed, 'company.electronic_address'))
+        negative_cases.append((changed, extra))
+    changed = copy.deepcopy(france); changed['selection']['output_profile'] = 'xrechnung-3.0'; negative_cases.append((changed, 'selection.output_profile'))
     for request, expected in negative_cases:
         result = validate(request, 'blocked')
         check(expected in json.dumps(result['diagnostics']), 'Missing diagnostic: ' + expected)
+    for output in ['xrechnung-3.0', 'peppol-bis-3.0']:
+        complete = copy.deepcopy(base); complete['selection']['output_profile'] = output
+        complete['company']['electronic_address'] = {'scheme_id': '0204', 'value': '991-12345-67'}
+        complete['company'].setdefault('contact', {}).update(name='Synthetic Contact', phone='+49 30 0000000')
+        complete['data']['recipient']['electronic_address'] = {'scheme_id': '0204', 'value': '991-98765-43'}
+        complete['data']['metadata']['buyer_reference'] = '991-01234-56'
+        validate(complete, 'ready_for_preview')
 
     def export(request, name, hybrid=False, legacy=False, configuration=None):
         if configuration is None:

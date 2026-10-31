@@ -13,7 +13,7 @@ The remaining work is concentrated in distribution, real consumer integration an
 reviewed invoice/export cases.
 
 Package `business-templates` 0.2.0 is distributed as the `templates-v0.2.0` source release. Configured invoice preparation and profile
-tools use typstgen 0.6.0 (`tool-versions.json`); these commands are
+tools use typstgen 0.6.1 (`tool-versions.json`); these commands are
 not present in typstgen 0.5.0. See [Installation](../../getting-started/installation/)
 and [Versions](../releases/).
 
@@ -58,9 +58,10 @@ transaction data still need their own applicable checks; unexecuted validators s
 | [#12](https://github.com/casoon/typst-business-templates/issues/12), [#15](https://github.com/casoon/typst-business-templates/issues/15) | Shared rendering/data contract and library/CLI/MCP profile flow implemented for the stated combinations |
 | [#17–#23](https://github.com/casoon/typst-business-templates/issues/17) | Publication/component, masking, metadata, task, locale and brochure implementations are present and checked |
 | [#24](https://github.com/casoon/typst-business-templates/issues/24) | Version namespaces and release strategy documented; publication remains a separate decision |
-| [#11](https://github.com/casoon/typst-business-templates/issues/11), [#13](https://github.com/casoon/typst-business-templates/issues/13), [#14](https://github.com/casoon/typst-business-templates/issues/14) | Initial VAT/configuration/Factur-X milestone present; broader reviewed cases and structured adapters remain open |
+| [#14](https://github.com/casoon/typst-business-templates/issues/14) | XRechnung 3.0 and Peppol BIS 3.0 UBL files with catalog output selection, Mustang checks and on-demand KoSIT/Peppol rule checks; transmission and credit notes are not implemented |
+| [#11](https://github.com/casoon/typst-business-templates/issues/11), [#13](https://github.com/casoon/typst-business-templates/issues/13) | Initial VAT/configuration/Factur-X/UBL milestone present; broader reviewed tax cases (zero rate, reverse charge, EU and export) remain open |
 | [#16](https://github.com/casoon/typst-business-templates/issues/16) | FR domestic B2B draft only; no completed national electronic issuance/transmission path |
-| [#25](https://github.com/casoon/typst-business-templates/issues/25) | Package compatibility examples and migration guidance present; a real consumer-repository migration still needs a separately scoped integration |
+| [#25](https://github.com/casoon/typst-business-templates/issues/25) | Package compatibility examples and migration guidance present; migrating a consumer repository is outside this repository's scope (closed) |
 
 Before treating this as a released integration, exercise representative documents from the intended consumer, then select
 and publish the package/compiler combination. Package tags, registry publication and Typst

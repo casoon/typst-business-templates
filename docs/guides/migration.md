@@ -7,7 +7,7 @@ order: 6
 ## Version pair
 
 This checkout contains the Typst package `business-templates` **0.2.0**, requiring
-Typst **0.15.0** or later and checked with **typstgen 0.6.0** (embedded Typst 0.15). Tool versions
+Typst **0.15.0** or later and checked with **typstgen 0.6.1** (embedded Typst 0.15). Tool versions
 are pinned in `tool-versions.json`. Existing `v0.7.x` tags belong to docgen/the discontinued Rust
 crate; they are not Typst package versions. See [Releases](../../reference/releases/).
 Use the `templates-v0.2.0` tag or pin its commit alongside the package version:
@@ -83,7 +83,7 @@ export standard explicitly and validate it externally. For reproducibility use a
 
 ## Family-by-family integration
 
-1. Pin package revision and typstgen 0.6.0; compile the old documents and record their text,
+1. Pin package revision and typstgen 0.6.1; compile the old documents and record their text,
    identifiers, financial values and metadata before editing wrappers.
 2. Move one guide/intake document to `publication`, then replace only equivalent local field,
    option, notice, phase and table helpers. Keep branding, content and business workflows local.
@@ -104,7 +104,7 @@ publication family. These are repository examples, not evidence of a migration i
 consumer repository. No consumer helpers have been deleted by this package update. Actual
 consumer integration and its before/after review require access and a separate commission.
 
-Invoice profiles require typstgen 0.6.0; base documents also compile with 0.5.0. Follow [Invoice profiles](../invoice-profiles/) before adopting them; preserve
+Invoice profiles require typstgen 0.6.0 or later (0.6.1 for XRechnung/Peppol as profile output); base documents also compile with 0.5.0. Follow [Invoice profiles](../invoice-profiles/) before adopting them; preserve
 legacy taxation until the explicit case and canonical PDF/XML comparison pass.
 
 A complete repeatable local acceptance run is `scripts/test.sh`; generated review PDFs,

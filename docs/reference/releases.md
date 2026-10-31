@@ -12,7 +12,7 @@ order: 3
 | Typst package release tags | `templates-vX.Y.Z` | Tag version equals the manifest version; the first release is `templates-v0.2.0` |
 | Historical repository releases | `v0.7.x` and older | docgen CLI/Rust crate; historical tags retain their original contents and meaning |
 | Minimum compiler | Typst 0.15.0 | `compiler` in the package manifest |
-| Verified tooling | typstgen 0.6.0, chartlet 0.21.0 | `tool-versions.json`; chartlet is optional outside diagram checks |
+| Verified tooling | typstgen 0.6.1, chartlet 0.21.0 | `tool-versions.json`; chartlet is optional outside diagram checks |
 | Configured invoices/profile tooling | typstgen 0.6.0 or later | Earlier versions lack `prepare-invoice`, the profile commands and `e-invoice` |
 
 The Typst package follows Semantic Versioning independently of the discontinued crate. During
