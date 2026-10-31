@@ -9,7 +9,7 @@ This assumes typstgen and the package are [installed](../installation/).
 ## Configured invoice path
 
 For editable taxes, automatic totals, seven invoice languages or US Letter/USD, start with
-typstgen 0.6.0 from the installation guide. The repository's language demos are
+typstgen 0.6.1 from the installation guide. The repository's language demos are
 ready to open in the [showcase](../../../showcase/). From `examples/invoice-languages/`:
 
 ```sh

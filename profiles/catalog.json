@@ -27,7 +27,9 @@
         "international"
       ],
       "outputs": [
-        "pdf-preview"
+        "pdf-preview",
+        "xrechnung-3.0",
+        "peppol-bis-3.0"
       ],
       "transmission": {
         "status": "not_implemented",
@@ -129,7 +131,7 @@
       },
       "status": "released",
       "tax_case": "domestic-standard",
-      "scope": "Domestic B2B standard/reduced rates, no allowances, advance payments, special sectors or territories; PDF preview only. Rate applicability is a caller-confirmed fact.",
+      "scope": "Domestic B2B standard/reduced rates, no allowances, advance payments, special sectors or territories; PDF preview; XRechnung 3.0 and Peppol BIS 3.0 files via typstgen e-invoice. Rate applicability is a caller-confirmed fact.",
       "required": [
         "facts.rate_applicability_confirmed"
       ],
@@ -187,7 +189,7 @@
       },
       "status": "released",
       "tax_case": "domestic-small-business",
-      "scope": "Domestic B2B section 19, confirmed eligibility interval and no waiver; no inference from invoice turnover; PDF preview only.",
+      "scope": "Domestic B2B section 19, confirmed eligibility interval and no waiver; no inference from invoice turnover; PDF preview; XRechnung 3.0 and Peppol BIS 3.0 files via typstgen e-invoice.",
       "required": [
         "facts.small_business_eligible",
         "facts.waived_exemption",
@@ -495,7 +497,10 @@
           }
         }
       ],
-      "business_case": "domestic-b2b"
+      "business_case": "domestic-b2b",
+      "outputs": [
+        "pdf-preview"
+      ]
     },
     {
       "id": "de-zero",
@@ -655,50 +660,34 @@
       ]
     },
     {
-      "id": "xrechnung",
+      "id": "xrechnung-3.0",
       "version": "3.0.2",
-      "status": "specified_not_implemented",
+      "status": "implemented",
       "syntax": "UBL 2.1",
       "customization_id": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
       "requires": [
         "buyer_reference",
-        "seller.electronic_address",
-        "buyer.electronic_address",
-        "KoSIT validation"
+        "seller and buyer electronic addresses",
+        "seller contact name, phone and e-mail",
+        "payment means",
+        "KoSIT validation (external, scripts/validate-einvoice.py)"
       ],
-      "required_field_paths": [
-        "data.metadata.buyer_reference",
-        "company.electronic_address.value",
-        "company.electronic_address.scheme_id",
-        "data.recipient.electronic_address.value",
-        "data.recipient.electronic_address.scheme_id",
-        "data.payment.method_code",
-        "data.items.*.unit_code"
-      ]
+      "writer": "typstgen e-invoice"
     },
     {
-      "id": "peppol-bis-billing",
+      "id": "peppol-bis-3.0",
       "version": "3.0.21",
-      "status": "specified_not_implemented",
+      "status": "implemented",
       "syntax": "UBL 2.1",
       "customization_id": "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
       "profile_id": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
       "requires": [
-        "electronic address scheme IDs",
+        "seller and buyer electronic addresses",
         "buyer or order reference",
-        "payment and unit codes",
-        "Peppol business rule validation",
+        "Peppol business rule validation (external, scripts/validate-einvoice.py)",
         "separate network transmission"
       ],
-      "required_field_paths": [
-        "company.electronic_address.value",
-        "company.electronic_address.scheme_id",
-        "data.recipient.electronic_address.value",
-        "data.recipient.electronic_address.scheme_id",
-        "data.payment.method_code",
-        "data.items.*.unit_code"
-      ],
-      "reference_requirement": "data.metadata.buyer_reference or data.metadata.order_reference"
+      "writer": "typstgen e-invoice"
     }
   ]
 }

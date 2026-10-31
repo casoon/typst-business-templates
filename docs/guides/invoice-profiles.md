@@ -21,12 +21,12 @@ format locales, currencies, layouts, outputs, sources, review date and effective
 `pdf-preview` is a rendering output. It is not a statement that issuing a plain PDF satisfies an
 applicable electronic invoicing obligation. The existing Factur-X pipeline remains available
 separately and is checked with canonical data and external validators below. Versioned XRechnung
-3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 adapter specifications are in the catalog and
-remain `specified_not_implemented` there: they cannot be selected as a profile output. The
-typstgen 0.6.0 can nevertheless write both formats as pure UBL XML from the same
-invoice data with `typstgen e-invoice --format xrechnung-3.0|peppol-bis-3.0`; see
-[E-invoice files](#e-invoice-files-xrechnung-and-peppol). Peppol transport and French
-approved-platform transmission are not supplied.
+3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 are catalog outputs (`xrechnung-3.0`,
+`peppol-bis-3.0`) of the released DE profiles, selectable with typstgen 0.6.1 or later. Selecting
+one makes `validate-document` report the extra fields the format needs; the XML itself is written
+by `typstgen e-invoice --format xrechnung-3.0|peppol-bis-3.0` from the same invoice data, see
+[E-invoice files](#e-invoice-files-xrechnung-and-peppol). The FR draft offers only the preview.
+Peppol transport and French approved-platform transmission are not supplied.
 
 The DE profiles cover supply dates in the reviewed interval 2025-01-01 through 2026-12-31;
 the FR draft starts 2026-09-01. These are bounded package review windows, not statutory expiry
@@ -150,7 +150,7 @@ published 0.5.0 binary does not have them.
 5. Run the existing `check`/`preview` tools, inspect the PDF, then `compile`. For a hybrid invoice,
    use the same canonical data with the existing ZUGFeRD compile path and external validators.
 
-Install it with `cargo install typstgen --version 0.6.0 --locked`.
+Install it with `cargo install typstgen --version 0.6.1 --locked`.
 
 CLI equivalent, from `examples/invoice-profiles/`, with typstgen on PATH:
 
@@ -239,8 +239,10 @@ submission duties remain outside this package.
 Both formats need additional fields, which are reported with their JSON path when missing:
 `company.electronic_address` and `recipient.electronic_address` (`scheme_id`, `value`),
 `metadata.buyer_reference` (XRechnung; Peppol accepts `metadata.order_reference` instead) and, for
-XRechnung, `company.contact.name` and `company.contact.phone`. An unknown format is an error, not a
-PDF fallback. The command reports arithmetic and required fields; XML schema, EN 16931, profile and
+XRechnung, `company.contact.name`, `company.contact.phone`, `company.contact.email` and a payment
+method (`payment.method_code` or a bank account). With a catalog profile, `validate-document` and the
+MCP tool of the same name report these fields (`OUTPUT-REQUIRED`) before the file is written. An
+unknown format is an error, not a PDF fallback. The command reports arithmetic and required fields; XML schema, EN 16931, profile and
 transmission checks are `not_run` and need an external validator.
 
 `scripts/check-profiles.py` writes both formats for the VAT fixtures, compares payable amount,
@@ -263,7 +265,7 @@ scenario assembled by the script from the UBL schema, the CEN rules and the Pepp
 buyer reference must be rejected, so a pass cannot come from a validator that checks nothing.
 Report and files land in `output/einvoice/`. Run it again after changing typstgen or a pin.
 
-Result on 2026-10-30 with typstgen 0.6.0: both files accepted, both controls rejected. This
+Result on 2026-10-31 with typstgen 0.6.1: both files accepted, both controls rejected. This
 covers the German demo invoice (one standard-rated VAT group), not every tax case; the Peppol
 scenario is assembled here and is not an official Peppol validator distribution. Credit notes,
 sales-tax invoices and transmission are not covered.
