@@ -19,7 +19,12 @@ format locales, currencies, layouts, outputs, sources, review date and effective
 | `de-eu-services-b2b@1-draft` | draft, explicit opt-in | German supplier, other service to a business customer in another EU member state (general place-of-supply rule, § 3a Abs. 2 UStG), tax owed by the recipient: category AE at 0%, bounded prerequisites below | PDF preview |
 | `de-eu-goods-b2b@1-draft` | draft, explicit opt-in | German supplier, goods to a business customer registered for VAT in another EU member state (tax-exempt intra-Community supply, § 4 Nr. 1 Buchst. b, § 6a UStG): category K at 0% | PDF preview |
 | `de-third-country-export@1-draft` | draft, explicit opt-in | German supplier, goods exported to a third country by the supplier or a foreign buyer (§ 4 Nr. 1 Buchst. a, § 6 UStG): category G at 0% | PDF preview |
-| Other listed cases | unsupported | True zero, other exemptions, domestic reverse charge (§ 13b), B2C/OSS, cross-border small business, new vehicles, chain and triangular transactions | none |
+| `de-zero-rate-section-12-3@1-draft` | draft, explicit opt-in | Domestic supply or installation of photovoltaic systems at 0% (§ 12 Abs. 3 UStG): category Z | PDF preview |
+| `de-exempt-section-4@1-draft` | draft, explicit opt-in | Domestic supply exempt under a named § 4 UStG provision (not Nr. 1, not § 19): category E | PDF preview |
+| `de-domestic-reverse-charge@1-draft` | draft, explicit opt-in | Domestic supply where the recipient owes the tax (§ 13b Abs. 2 UStG): category AE | PDF preview |
+| `de-eu-b2c-oss@1-draft` | draft, explicit opt-in | Supply to a consumer in another EU member state taxed there under the Union scheme (§ 18j UStG): category S at the caller-confirmed destination rate | PDF preview |
+| `de-eu-small-business@1-draft` | draft, explicit opt-in | German small business using another member state's exemption (§ 19a UStG): category E | PDF preview |
+| Other listed cases | unsupported | Everything else, in particular new vehicles, chain and triangular transactions, non-Union OSS schemes, travellers' exports | none |
 
 ### EU service to a business customer (draft)
 
@@ -76,6 +81,40 @@ Both drafts need caller-confirmed facts and keep the evidence as references; the
 Not checked in either case: invoice deadlines, the validity of the confirmation and the destination
 rules of the other state. Sources: § 6, § 6a, § 14, § 14a UStG, checked 2026-10-31. These are bounded
 previews for documented cases, not tax advice.
+
+
+### Further drafts: 0% rate, exemptions, § 13b, OSS, EU small business
+
+Each needs caller-confirmed facts, cites its provision on every line (the line's `exemption_reason`
+is printed under the description) and previews only; the legal assessment stays with the caller.
+
+- **`de-zero-rate-section-12-3`:** photovoltaic supply or installation (`pv_supply_or_installation`),
+  qualifying location (`qualifying_location`) and capacity of at most 30 kWp
+  (`capacity_within_30_kwp`). Lines use `Zero` at 0% and cite "§ 12 Abs. 3 UStG". Private buyers are
+  allowed (`buyer_type` is `business` or `consumer`).
+- **`de-exempt-section-4`:** the exemption provision is confirmed (`exemption_provision_confirmed`) and
+  no option to tax is exercised (`no_option_to_tax`). Lines use `Exempt` at 0% and cite "§ 4 Nr. …"
+  with the actual number; the cited provision itself is not assessed.
+- **`de-domestic-reverse-charge`:** `facts.section_13b_basis` names the provision (`13b_2_2` to
+  `13b_2_12`, not the foreign-supplier cases) and `recipient_status_confirmed` covers the recipient's
+  status (for construction services, that the recipient itself provides such services). Lines use
+  `ReverseCharge` at 0% and carry "Steuerschuldnerschaft des Leistungsempfängers" (§ 14a Abs. 5 UStG);
+  both parties need a VAT ID.
+- **`de-eu-b2c-oss`:** consumer in another EU member state, Union scheme registration
+  (`oss_registered`), destination taxation because the EU-wide threshold of 10,000 euro is exceeded or
+  waived (`destination_taxation_applies`; § 3c, § 3a Abs. 5 UStG) and the destination rate
+  (`destination_rate_confirmed`). Lines use `Standard` or `Reduced` with the destination rate; rates
+  are not looked up.
+- **`de-eu-small-business`:** BZSt Kleinunternehmer identification number issued
+  (`small_business_id_issued`, number in `company.small_business_id`), EU-wide turnover within 100,000
+  euro (`eu_turnover_within_limit`) and the destination state's conditions met
+  (`destination_conditions_met`). Lines use `Exempt` at 0% with the destination state's wording. The
+  structured file is not supported for this case: typstgen has no mapping from the Kleinunternehmer ID
+  to the seller identifier that EN 16931 (BR-CO-26) demands without a VAT ID.
+
+Sources: § 4, § 9, § 12, § 13b, § 14a, § 18j, § 19a, § 3a, § 3c UStG, checked 2026-10-31. Not checked:
+deadlines, registrations and reports (OSS returns, quarterly small-business reports), destination-state
+invoice rules. These are bounded previews, not tax advice.
 
 ## Responsibilities and normalized contract
 

@@ -63,6 +63,16 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     eu_services = json.loads((REPO/'examples/invoice-profiles/de-eu-services-draft.json').read_text())
     eu_goods = json.loads((REPO/'examples/invoice-profiles/de-eu-goods-draft.json').read_text())
     export_case = json.loads((REPO/'examples/invoice-profiles/de-export-draft.json').read_text())
+    # Further draft tax cases: (example, name, facts that must hold -> rule id, category rule, note rule or None)
+    more_cases = [
+        ('de-zero-rate-draft', 'zero-rate', {'pv_supply_or_installation': 'ZERO-PV', 'qualifying_location': 'ZERO-LOCATION', 'capacity_within_30_kwp': 'ZERO-CAPACITY'}, 'ZERO-CATEGORY', 'ZERO-NOTE', {'code': 'Standard', 'percentage': '19'}),
+        ('de-exempt-draft', 'exempt', {'exemption_provision_confirmed': 'EXEMPT-CONFIRMED', 'no_option_to_tax': 'EXEMPT-NO-OPTION'}, 'EXEMPT-CATEGORY', 'EXEMPT-NOTE', {'code': 'Reduced', 'percentage': '7'}),
+        ('de-domestic-reverse-charge-draft', 'domestic-rc', {'recipient_status_confirmed': 'RC-RECIPIENT'}, 'RC-CATEGORY', 'RC-NOTE', {'code': 'Reduced', 'percentage': '7'}),
+        ('de-eu-b2c-oss-draft', 'oss', {'oss_registered': 'OSS-REGISTERED', 'destination_taxation_applies': 'OSS-DESTINATION', 'destination_rate_confirmed': 'OSS-RATE-CONFIRMED'}, 'OSS-CATEGORY', None, {'code': 'Zero', 'percentage': '0'}),
+        ('de-eu-small-business-draft', 'eu-small-business', {'small_business_id_issued': 'SB-ID', 'eu_turnover_within_limit': 'SB-LIMIT', 'destination_conditions_met': 'SB-CONDITIONS'}, 'SB-CATEGORY', None, {'code': 'Reduced', 'percentage': '7'}),
+    ]
+    more = {name: (json.loads((REPO/f'examples/invoice-profiles/{example}.json').read_text()), facts, category, note, bad_rate)
+            for example, name, facts, category, note, bad_rate in more_cases}
     negative_cases = []
     changed = copy.deepcopy(base); changed['facts'].pop('rate_applicability_confirmed'); negative_cases.append((changed, 'facts.rate_applicability_confirmed'))
     changed = copy.deepcopy(base); changed['data']['recipient']['address']['country_code'] = 'FR'; negative_cases.append((changed, 'DE-BUYER'))
@@ -124,6 +134,22 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     changed = copy.deepcopy(eu_goods); changed['facts']['acquisition_taxed_in_destination'] = False; negative_cases.append((changed, 'EU-ACQUISITION-TAXED'))
     changed = copy.deepcopy(export_case); changed['facts']['goods_exported_to_third_country'] = False; negative_cases.append((changed, 'EXPORT-DESTINATION'))
     changed = copy.deepcopy(export_case); changed['facts']['export_transport_by'] = 'carrier'; negative_cases.append((changed, 'EXPORT-TRANSPORT'))
+    for name, (case, facts, category, note, bad_rate) in more.items():
+        changed = copy.deepcopy(case); changed['selection'].pop('allow_draft'); negative_cases.append((changed, 'PROFILE-STATUS'))
+        for fact, rule in facts.items():
+            changed = copy.deepcopy(case); changed['facts'][fact] = False; negative_cases.append((changed, rule))
+        changed = copy.deepcopy(case)
+        for item in changed['data']['items']: item['vat_rate'] = dict(bad_rate)
+        negative_cases.append((changed, category))
+        if note:
+            changed = copy.deepcopy(case)
+            for item in changed['data']['items']: item['vat_rate']['exemption_reason'] = 'synthetic wrong note'
+            negative_cases.append((changed, note))
+    changed = copy.deepcopy(more['domestic-rc'][0]); changed['facts']['section_13b_basis'] = '13b_2_1'; negative_cases.append((changed, 'RC-BASIS'))
+    changed = copy.deepcopy(more['domestic-rc'][0]); changed['data']['recipient'].pop('vat_id'); negative_cases.append((changed, 'data.recipient.vat_id'))
+    changed = copy.deepcopy(more['oss'][0]); changed['data']['recipient']['address']['country_code'] = 'DE'; negative_cases.append((changed, 'DE-BUYER'))
+    changed = copy.deepcopy(more['oss'][0]); changed['facts']['buyer_type'] = 'business'; negative_cases.append((changed, 'DE-B2B'))
+    changed = copy.deepcopy(more['eu-small-business'][0]); changed['company'].pop('small_business_id'); negative_cases.append((changed, 'SB-NUMBER'))
     for request, expected in negative_cases:
         result = validate(request, 'blocked')
         check(expected in json.dumps(result['diagnostics']), 'Missing diagnostic: ' + expected)
@@ -318,6 +344,12 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     for case, name in ((eu_goods, 'eu-goods-draft'), (export_case, 'export-draft')):
         model = export(case, name, hybrid=True)
         check(Decimal(model['tax_total']) == 0 and model['grand_total'] == model['line_total'], name + ': zero-tax invoice shows VAT')
+    for name, (case, facts, category, note, bad_rate) in more.items():
+        # The small business has no VAT ID; typstgen has no mapping for its Kleinunternehmer ID to BT-29/BT-30,
+        # so EN 16931 (BR-CO-26) rejects the structured file. Only the PDF is checked for that case.
+        model = export(case, name + '-draft', hybrid=name != 'eu-small-business')
+        if name != 'oss':
+            check(Decimal(model['tax_total']) == 0, name + ': zero-tax invoice shows VAT')
     french = export(france,'fr-draft')
     france['selection'].update(language='en',format_locale='en-GB')
     check(export(france,'fr-draft-en') == french,'French translation changed fiscal data')

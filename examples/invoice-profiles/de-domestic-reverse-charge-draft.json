@@ -1,0 +1,131 @@
+{
+  "$schema": "../../schema/document-request.schema.json",
+  "selection": {
+    "profile_id": "de-domestic-reverse-charge",
+    "profile_version": "1-draft",
+    "language": "en",
+    "format_locale": "en-GB",
+    "currency": "EUR",
+    "layout": "international",
+    "output_profile": "pdf-preview",
+    "allow_draft": true
+  },
+  "data": {
+    "metadata": {
+      "invoice_number": "SYNTH-2026-001",
+      "invoice_date": "2026-10-26",
+      "delivery_date": "2026-10-25",
+      "applied_tax_case": "de-domestic-reverse-charge"
+    },
+    "recipient": {
+      "name": "Example Buyer GmbH",
+      "address": {
+        "street": "Example Avenue",
+        "house_number": "2",
+        "postal_code": "10115",
+        "city": "Berlin",
+        "country": "Deutschland",
+        "country_code": "DE"
+      },
+      "vat_id": "DE987654321"
+    },
+    "items": [
+      {
+        "position": 1,
+        "description": "Synthetic consulting service",
+        "quantity": "2",
+        "unit": "stunde",
+        "unit_code": "HUR",
+        "unit_price": {
+          "amount": "100.00",
+          "currency": "EUR"
+        },
+        "vat_rate": {
+          "code": "ReverseCharge",
+          "percentage": "0",
+          "exemption_reason": "Steuerschuldnerschaft des Leistungsempfängers (§ 13b UStG)"
+        },
+        "total": {
+          "amount": "200.00",
+          "currency": "EUR"
+        }
+      }
+    ],
+    "totals": {
+      "subtotal": {
+        "amount": "200.00",
+        "currency": "EUR"
+      },
+      "vat_breakdown": [
+        {
+          "rate": {
+            "code": "ReverseCharge",
+            "percentage": "0",
+            "exemption_reason": "Steuerschuldnerschaft des Leistungsempfängers (§ 13b UStG)"
+          },
+          "base": {
+            "amount": "200.00",
+            "currency": "EUR"
+          },
+          "amount": {
+            "amount": "0.00",
+            "currency": "EUR"
+          }
+        }
+      ],
+      "vat_total": {
+        "amount": "0.00",
+        "currency": "EUR"
+      },
+      "total": {
+        "amount": "200.00",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "due_date": "2026-11-25",
+      "payment_terms": "Net 30 days",
+      "bank_account": {
+        "iban": "DE89370400440532013000",
+        "bic": "COBADEFFXXX",
+        "bank_name": "Example Bank",
+        "account_holder": "Example Studio GmbH"
+      }
+    }
+  },
+  "company": {
+    "name": "Example Studio GmbH",
+    "address": {
+      "street": "Example Street",
+      "house_number": "1",
+      "postal_code": "10115",
+      "city": "Berlin",
+      "country": "Deutschland",
+      "country_code": "DE"
+    },
+    "tax_id": "TEST-TAX-ID",
+    "vat_id": "DE123456789",
+    "contact": {
+      "email": "hello@example.invalid"
+    },
+    "default_terms": {
+      "vat_exempt": false
+    },
+    "bank_account": {
+      "iban": "DE89370400440532013000",
+      "bic": "COBADEFFXXX",
+      "bank_name": "Example Bank",
+      "account_holder": "Example Studio GmbH"
+    }
+  },
+  "facts": {
+    "buyer_type": "business",
+    "place_of_supply": "DE",
+    "supply_kind": "services",
+    "evidence_refs": [
+      "synthetic-evidence"
+    ],
+    "section_13b_basis": "13b_2_4",
+    "recipient_status_confirmed": true
+  }
+}

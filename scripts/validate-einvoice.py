@@ -3,7 +3,7 @@
 
 Run on demand, not in CI: it downloads the pinned validators from profiles/validators.json
 into .cache/test-tools/einvoice-validators/ (SHA-256 checked), writes both formats for a
-synthetic demo invoices (standard rate, EU reverse charge, intra-Community supply and export) with `typstgen e-invoice` and validates them with the KoSIT validator.
+synthetic demo invoices (standard rate and the draft tax cases) with `typstgen e-invoice` and validates them with the KoSIT validator.
 XRechnung uses KoSIT's official configuration; Peppol uses a scenario assembled here from the
 UBL schema, the CEN rules and the Peppol 3.0.21 Schematron. A control file with its buyer
 reference removed must be rejected, so a pass cannot come from a validator that checks nothing.
@@ -130,7 +130,9 @@ output.mkdir(parents=True)
 demo = REPO / 'examples/invoice-languages/de'
 resolved = json.loads(run([typstgen, 'prepare-invoice', '--config', str(demo / 'invoice-config.json'), str(demo / 'invoice.json')]).stdout)
 inputs = [('standard-rate', resolved['data'], resolved['company'])]
-for case, example in [('reverse-charge', 'de-eu-services-draft'), ('intra-community', 'de-eu-goods-draft'), ('export', 'de-export-draft')]:
+for case, example in [('reverse-charge', 'de-eu-services-draft'), ('intra-community', 'de-eu-goods-draft'), ('export', 'de-export-draft'),
+                      ('zero-rate', 'de-zero-rate-draft'), ('exempt', 'de-exempt-draft'), ('domestic-reverse-charge', 'de-domestic-reverse-charge-draft'),
+                      ('oss', 'de-eu-b2c-oss-draft')]:
     view = json.loads(run([typstgen, 'validate-document', '--catalog', str(REPO / 'profiles/catalog.json'),
                            str(REPO / 'examples/invoice-profiles' / (example + '.json'))]).stdout)
     inputs.append((case, view['data'], view['company']))
