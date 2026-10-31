@@ -58,7 +58,7 @@ infer applicable tax rules or transmission requirements.
 ## Installation and version
 
 ```sh
-cargo install typstgen --version 0.6.1 --locked
+cargo install typstgen --version 0.6.2 --locked
 git clone --branch templates-v0.2.0 https://github.com/casoon/typst-business-templates
 cd typst-business-templates && ./scripts/install-package.sh
 cd examples/it-consultant && typstgen compile documents/invoices/2025/invoice.typ
@@ -67,7 +67,7 @@ cd examples/it-consultant && typstgen compile documents/invoices/2025/invoice.ty
 The Typst package is **0.2.0**, distributed as the source release `templates-v0.2.0`; it is not
 published on Typst Universe. `install-package.sh` copies it to Typst's local package directory,
 so documents import `@local/business-templates:0.2.0`. Tool versions are pinned in
-[`tool-versions.json`](tool-versions.json): typstgen 0.6.1 for invoice configuration, profiles,
+[`tool-versions.json`](tool-versions.json): typstgen 0.6.2 for invoice configuration, profiles,
 ZUGFeRD and XRechnung/Peppol files. The [installation guide](docs/getting-started/installation.md)
 covers custom package folders and fonts.
 

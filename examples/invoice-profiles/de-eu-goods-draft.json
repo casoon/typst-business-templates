@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schema/document-request.schema.json",
+  "selection": {
+    "profile_id": "de-eu-goods-b2b",
+    "profile_version": "1-draft",
+    "language": "en",
+    "format_locale": "en-GB",
+    "currency": "EUR",
+    "layout": "international",
+    "output_profile": "pdf-preview",
+    "allow_draft": true
+  },
+  "data": {
+    "metadata": {
+      "invoice_number": "SYNTH-2026-001",
+      "invoice_date": "2026-10-26",
+      "delivery_date": "2026-10-25",
+      "applied_tax_case": "de-eu-goods-b2b",
+      "delivery_country_code": "FR",
+      "delivery_city": "Paris",
+      "delivery_postal_code": "75002"
+    },
+    "recipient": {
+      "name": "Example Client SAS",
+      "address": {
+        "street": "Example Avenue",
+        "house_number": "2",
+        "postal_code": "75002",
+        "city": "Paris",
+        "country": "France",
+        "country_code": "FR"
+      },
+      "vat_id": "FR00987654321"
+    },
+    "items": [
+      {
+        "position": 1,
+        "description": "Synthetic goods",
+        "quantity": "2",
+        "unit": "stunde",
+        "unit_code": "HUR",
+        "unit_price": {
+          "amount": "100.00",
+          "currency": "EUR"
+        },
+        "vat_rate": {
+          "code": "IntraCommunity",
+          "percentage": "0",
+          "exemption_reason": "Steuerfreie innergemeinschaftliche Lieferung (§ 4 Nr. 1 Buchst. b i. V. m. § 6a UStG)"
+        },
+        "total": {
+          "amount": "200.00",
+          "currency": "EUR"
+        }
+      }
+    ],
+    "totals": {
+      "subtotal": {
+        "amount": "200.00",
+        "currency": "EUR"
+      },
+      "vat_breakdown": [
+        {
+          "rate": {
+            "code": "IntraCommunity",
+            "percentage": "0",
+            "exemption_reason": "Steuerfreie innergemeinschaftliche Lieferung (§ 4 Nr. 1 Buchst. b i. V. m. § 6a UStG)"
+          },
+          "base": {
+            "amount": "200.00",
+            "currency": "EUR"
+          },
+          "amount": {
+            "amount": "0.00",
+            "currency": "EUR"
+          }
+        }
+      ],
+      "vat_total": {
+        "amount": "0.00",
+        "currency": "EUR"
+      },
+      "total": {
+        "amount": "200.00",
+        "currency": "EUR"
+      }
+    },
+    "payment": {
+      "due_date": "2026-11-25",
+      "payment_terms": "Net 30 days",
+      "bank_account": {
+        "iban": "DE89370400440532013000",
+        "bic": "COBADEFFXXX",
+        "bank_name": "Example Bank",
+        "account_holder": "Example Studio GmbH"
+      }
+    }
+  },
+  "company": {
+    "name": "Example Studio GmbH",
+    "address": {
+      "street": "Example Street",
+      "house_number": "1",
+      "postal_code": "10115",
+      "city": "Berlin",
+      "country": "Deutschland",
+      "country_code": "DE"
+    },
+    "tax_id": "TEST-TAX-ID",
+    "vat_id": "DE123456789",
+    "contact": {
+      "email": "hello@example.invalid"
+    },
+    "default_terms": {
+      "vat_exempt": false
+    },
+    "bank_account": {
+      "iban": "DE89370400440532013000",
+      "bic": "COBADEFFXXX",
+      "bank_name": "Example Bank",
+      "account_holder": "Example Studio GmbH"
+    }
+  },
+  "facts": {
+    "buyer_type": "business",
+    "place_of_supply": "DE",
+    "supply_kind": "goods",
+    "goods_dispatched_to_member_state": true,
+    "recipient_vat_id_confirmed": true,
+    "acquisition_taxed_in_destination": true,
+    "no_excluded_transaction_type": true,
+    "evidence_refs": [
+      "synthetic-shipping-proof",
+      "synthetic-vat-id-confirmation"
+    ]
+  }
+}

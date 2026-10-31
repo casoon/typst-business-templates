@@ -61,11 +61,23 @@
         },
         "buyer_reference": {
           "type": "string",
-          "description": "Reference reserved for versioned output adapters; not emitted by the current legacy CII pipeline."
+          "description": "Buyer reference (BT-10), e.g. the Leitweg-ID. Written by `typstgen e-invoice`; XRechnung requires it."
         },
         "order_reference": {
           "type": "string",
-          "description": "Reference reserved for versioned output adapters; not emitted by the current legacy CII pipeline."
+          "description": "Purchase order reference (BT-13). Written by `typstgen e-invoice`; Peppol accepts it instead of the buyer reference."
+        },
+        "delivery_country_code": {
+          "type": "string",
+          "description": "Deliver-to country (BT-80, ISO 3166-1 alpha-2). Required for an intra-Community supply; written to CII and UBL."
+        },
+        "delivery_city": {
+          "type": "string",
+          "description": "Deliver-to city (BT-77). XRechnung requires it when delivery_country_code is given."
+        },
+        "delivery_postal_code": {
+          "type": "string",
+          "description": "Deliver-to post code (BT-78). XRechnung requires it when delivery_country_code is given."
         },
         "applied_tax_case": {
           "type": "string",

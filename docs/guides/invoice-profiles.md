@@ -17,7 +17,9 @@ format locales, currencies, layouts, outputs, sources, review date and effective
 | `de-small-business@1` | released | Domestic DE B2B, explicitly confirmed § 19 eligibility interval and no waiver, 0 VAT/category E | PDF preview |
 | `fr-domestic-standard@1-draft` | draft, explicit opt-in | Mainland FR domestic B2B ordinary services at 20%, bounded prerequisites below | PDF preview |
 | `de-eu-services-b2b@1-draft` | draft, explicit opt-in | German supplier, other service to a business customer in another EU member state (general place-of-supply rule, § 3a Abs. 2 UStG), tax owed by the recipient: category AE at 0%, bounded prerequisites below | PDF preview |
-| Other listed cases | unsupported | True zero, other exemptions, domestic reverse charge (§ 13b), EU goods supplies, exports, B2C/OSS, cross-border small business | none |
+| `de-eu-goods-b2b@1-draft` | draft, explicit opt-in | German supplier, goods to a business customer registered for VAT in another EU member state (tax-exempt intra-Community supply, § 4 Nr. 1 Buchst. b, § 6a UStG): category K at 0% | PDF preview |
+| `de-third-country-export@1-draft` | draft, explicit opt-in | German supplier, goods exported to a third country by the supplier or a foreign buyer (§ 4 Nr. 1 Buchst. a, § 6 UStG): category G at 0% | PDF preview |
+| Other listed cases | unsupported | True zero, other exemptions, domestic reverse charge (§ 13b), B2C/OSS, cross-border small business, new vehicles, chain and triangular transactions | none |
 
 ### EU service to a business customer (draft)
 
@@ -38,7 +40,7 @@ VAT ID confirmation is current, goods, B2C and the recipient's national rules. S
 applicable electronic invoicing obligation. The existing Factur-X pipeline remains available
 separately and is checked with canonical data and external validators below. Versioned XRechnung
 3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 are catalog outputs (`xrechnung-3.0`,
-`peppol-bis-3.0`) of the released DE profiles, selectable with typstgen 0.6.1 or later. Selecting
+`peppol-bis-3.0`) of the released DE profiles, selectable with typstgen 0.6.2 or later. Selecting
 one makes `validate-document` report the extra fields the format needs; the XML itself is written
 by `typstgen e-invoice --format xrechnung-3.0|peppol-bis-3.0` from the same invoice data, see
 [E-invoice files](#e-invoice-files-xrechnung-and-peppol). The FR draft offers only the preview.
@@ -47,6 +49,33 @@ Peppol transport and French approved-platform transmission are not supplied.
 The DE profiles cover supply dates in the reviewed interval 2025-01-01 through 2026-12-31;
 the FR draft starts 2026-09-01. These are bounded package review windows, not statutory expiry
 dates. Recheck sources and version the profile before extending a window or releasing a case.
+
+
+### EU goods and export (drafts)
+
+Both drafts need caller-confirmed facts and keep the evidence as references; the proof itself
+(accounting evidence, shipping or export confirmation) is not checked.
+
+- **`de-eu-goods-b2b`:** goods dispatched to another member state
+  (`goods_dispatched_to_member_state`), recipient VAT ID confirmed (`recipient_vat_id_confirmed`),
+  acquisition taxed in the destination state (`acquisition_taxed_in_destination`) and no excluded
+  transaction type (`no_excluded_transaction_type`: new vehicles, chain or triangular transactions,
+  consignment stock, distance sales). The recipient sits in an EU member state other than Germany and
+  has a VAT ID, the seller needs one, `metadata.delivery_country_code` names an EU member state
+  (with `delivery_city` and `delivery_postal_code` if the file is written as XRechnung), every line
+  uses `IntraCommunity` at 0% and its `exemption_reason` contains "innergemeinschaftliche Lieferung",
+  for example "Steuerfreie innergemeinschaftliche Lieferung (§ 4 Nr. 1 Buchst. b i. V. m. § 6a UStG)".
+  The template prints the recipient's VAT ID because § 14a Abs. 3 UStG requires both IDs.
+- **`de-third-country-export`:** goods exported to a third country
+  (`goods_exported_to_third_country`), transported by the supplier or a foreign buyer
+  (`export_transport_by`: `supplier` or `foreign_buyer`) and no excluded transaction type
+  (`no_excluded_transaction_type`: travellers' exports, deliveries to the areas of § 1 Abs. 3 UStG,
+  processing by agents). Every line uses `Export` at 0% and its `exemption_reason` contains
+  "Ausfuhrlieferung", for example "Steuerfreie Ausfuhrlieferung (§ 4 Nr. 1 Buchst. a i. V. m. § 6 UStG)".
+
+Not checked in either case: invoice deadlines, the validity of the confirmation and the destination
+rules of the other state. Sources: § 6, § 6a, § 14, § 14a UStG, checked 2026-10-31. These are bounded
+previews for documented cases, not tax advice.
 
 ## Responsibilities and normalized contract
 
@@ -166,7 +195,7 @@ published 0.5.0 binary does not have them.
 5. Run the existing `check`/`preview` tools, inspect the PDF, then `compile`. For a hybrid invoice,
    use the same canonical data with the existing ZUGFeRD compile path and external validators.
 
-Install it with `cargo install typstgen --version 0.6.1 --locked`.
+Install it with `cargo install typstgen --version 0.6.2 --locked`.
 
 CLI equivalent, from `examples/invoice-profiles/`, with typstgen on PATH:
 
@@ -281,7 +310,7 @@ scenario assembled by the script from the UBL schema, the CEN rules and the Pepp
 buyer reference must be rejected, so a pass cannot come from a validator that checks nothing.
 Report and files land in `output/einvoice/`. Run it again after changing typstgen or a pin.
 
-Result on 2026-10-31 with typstgen 0.6.1: both files accepted, both controls rejected. This
+Result on 2026-10-31 with typstgen 0.6.2: both files accepted, both controls rejected. This
 covers the German demo invoice (one standard-rated VAT group), not every tax case; the Peppol
 scenario is assembled here and is not an official Peppol validator distribution. Credit notes,
 sales-tax invoices and transmission are not covered.

@@ -15,14 +15,16 @@ is archived separately.
   Details: [Official rule sets](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#official-rule-sets-on-demand).
 - **Invoices:** `xrechnung-3.0` and `peppol-bis-3.0` are selectable outputs of the released DE profiles; `validate-document` reports the fields each format needs before the file is written (typstgen 0.6.1).
   Details: [E-invoice files](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#e-invoice-files-xrechnung-and-peppol).
+- **Invoices:** Draft profiles `de-eu-goods-b2b` (intra-Community supply, category K) and `de-third-country-export` (export, category G) with prerequisites, statutory notes, examples and CII/UBL validation; `IntraCommunity` and `Export` VAT codes, `delivery_country_code`, `delivery_city` and `delivery_postal_code` in the invoice schema (typstgen 0.6.2).
+  Details: [EU goods and export](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#eu-goods-and-export-drafts).
 - **Invoices:** Draft profile `de-eu-services-b2b` for German services to business customers in other EU member states (reverse charge, category AE), with prerequisites, statutory note check, CII/UBL validation and an example.
   Details: [EU service profile](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#eu-service-to-a-business-customer-draft).
 
 ### Changed
-- **Invoices:** Reverse-charge invoices print the recipient's VAT ID, as § 14a UStG requires. Other invoices are unchanged.
-- **Tooling:** typstgen 0.6.1 is the single pinned compiler version. It is the published crate, so
+- **Invoices:** Reverse-charge and intra-Community invoices print the recipient's VAT ID, as § 14a UStG requires. Other invoices are unchanged.
+- **Tooling:** typstgen 0.6.2 is the single pinned compiler version. It is the published crate, so
   the separate source build for invoice configuration and profile tools is gone: install it with
-  `cargo install typstgen --version 0.6.1 --locked`. CI, `scripts/test.sh` and the demo builder use it.
+  `cargo install typstgen --version 0.6.2 --locked`. CI, `scripts/test.sh` and the demo builder use it.
 - **Installation:** `scripts/install-package.sh` copies the package into Typst's local package
   directory; README and installation guide describe setup in three steps.
 - **Metadata:** Year-only prose `created_at` labels remain visible and no longer imply a fabricated PDF calendar date. Details: [migration](https://casoon.github.io/typst-business-templates/docs/guides/migration/#document-identity).

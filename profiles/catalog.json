@@ -554,21 +554,170 @@
       "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
     },
     {
-      "id": "eu-goods",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "intra-community-goods",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-eu-goods-b2b",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "replace_rules": [
+        "DE-BUYER",
+        "DE-SUPPLY"
+      ],
+      "status": "draft",
+      "tax_case": "eu-goods-b2b",
+      "scope": "German supplier, delivery of goods to a business customer registered for VAT in another EU member state, goods transported or shipped there by the supplier or the buyer (tax-exempt intra-Community supply, § 4 Nr. 1 Buchst. b i. V. m. § 6a UStG), category K at 0%. No new vehicles, chain or triangular transactions, consignment stock or distance sales; the proof (accounting and shipping evidence) is referenced, not checked; preview only. The invoice deadline (15th of the following month) is not checked.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.goods_dispatched_to_member_state",
+        "facts.recipient_vat_id_confirmed",
+        "facts.acquisition_taxed_in_destination",
+        "facts.no_excluded_transaction_type",
+        "company.vat_id",
+        "data.recipient.vat_id",
+        "data.metadata.delivery_country_code",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "EU-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-eu-goods-b2b"
+        },
+        {
+          "id": "DE-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "DE-SUPPLY",
+          "path": "facts.supply_kind",
+          "op": "equals",
+          "value": "goods"
+        },
+        {
+          "id": "EU-DELIVERY-COUNTRY",
+          "path": "data.metadata.delivery_country_code",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "EU-DISPATCHED",
+          "path": "facts.goods_dispatched_to_member_state",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-VATID-CONFIRMED",
+          "path": "facts.recipient_vat_id_confirmed",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-ACQUISITION-TAXED",
+          "path": "facts.acquisition_taxed_in_destination",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-NO-EXCLUDED-TYPE",
+          "path": "facts.no_excluded_transaction_type",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EU-IC-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "IntraCommunity"
+          ]
+        },
+        {
+          "id": "EU-IC-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "EU-IC-NOTE",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "innergemeinschaftliche Lieferung"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__6a.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14a.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "checked_on": "2026-10-31"
+        }
+      ]
     },
     {
       "id": "de-eu-services-b2b",
@@ -730,21 +879,99 @@
       ]
     },
     {
-      "id": "third-country-export",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "export",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-third-country-export",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "replace_rules": [
+        "DE-BUYER",
+        "DE-SUPPLY"
+      ],
+      "status": "draft",
+      "tax_case": "third-country-export",
+      "scope": "German supplier, delivery of goods to a business customer outside the EU, goods exported to the third-country territory by the supplier or by a foreign buyer (tax-exempt export delivery, § 4 Nr. 1 Buchst. a i. V. m. § 6 UStG), category G at 0%. No travellers' exports, no deliveries to the areas of § 1 Abs. 3 UStG, no processing by agents; the export proof is referenced, not checked; preview only.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.goods_exported_to_third_country",
+        "facts.export_transport_by",
+        "facts.no_excluded_transaction_type",
+        "company.vat_id",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "EU-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-third-country-export"
+        },
+        {
+          "id": "DE-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "required"
+        },
+        {
+          "id": "DE-SUPPLY",
+          "path": "facts.supply_kind",
+          "op": "equals",
+          "value": "goods"
+        },
+        {
+          "id": "EXPORT-DESTINATION",
+          "path": "facts.goods_exported_to_third_country",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EXPORT-TRANSPORT",
+          "path": "facts.export_transport_by",
+          "op": "one_of",
+          "values": [
+            "supplier",
+            "foreign_buyer"
+          ]
+        },
+        {
+          "id": "EXPORT-NO-EXCLUDED-TYPE",
+          "path": "facts.no_excluded_transaction_type",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EXPORT-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "Export"
+          ]
+        },
+        {
+          "id": "EXPORT-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "EXPORT-NOTE",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "Ausfuhrlieferung"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__6.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "checked_on": "2026-10-31"
+        }
+      ]
     },
     {
       "id": "eu-b2c-oss",

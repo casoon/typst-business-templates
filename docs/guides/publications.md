@@ -103,7 +103,7 @@ is a flowing document rather than a general presentation framework.
 
 ## Checks and limits
 
-Run `scripts/check.sh` with typstgen 0.6.1 and Python packages `jsonschema`, `referencing`, `pypdf`.
+Run `scripts/check.sh` with typstgen 0.6.2 and Python packages `jsonschema`, `referencing`, `pypdf`.
 The package checks compile the A4/landscape examples with `--pdf-standard ua-1`, inspect table
 header tags, document identity, reading order samples and continuation pages. Typst marks
 repeated headers, footers, lines and shapes as artifacts automatically. The publication heading
