@@ -503,55 +503,252 @@
       ]
     },
     {
-      "id": "de-zero",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "true-zero",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-zero-rate-section-12-3",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "draft",
+      "tax_case": "zero-rate-section-12-3",
+      "scope": "Domestic supply or installation of photovoltaic systems at the 0% rate (§ 12 Abs. 3 UStG): solar modules, essential components and storage supplied to the operator, or their installation, for installations on or near homes, apartments and public or common-good buildings; an installed capacity of at most 30 kWp (Marktstammdatenregister) counts as met. Category Z at 0%, no inference from the product or the buyer; preview only.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.pv_supply_or_installation",
+        "facts.qualifying_location",
+        "facts.capacity_within_30_kwp",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "ZERO-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-zero-rate-section-12-3"
+        },
+        {
+          "id": "DE-B2B",
+          "path": "facts.buyer_type",
+          "op": "one_of",
+          "values": [
+            "business",
+            "consumer"
+          ]
+        },
+        {
+          "id": "ZERO-PV",
+          "path": "facts.pv_supply_or_installation",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "ZERO-LOCATION",
+          "path": "facts.qualifying_location",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "ZERO-CAPACITY",
+          "path": "facts.capacity_within_30_kwp",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "ZERO-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "Zero"
+          ]
+        },
+        {
+          "id": "ZERO-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "ZERO-NOTE",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "§ 12 Abs. 3 UStG"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__12.html",
+          "checked_on": "2026-10-31"
+        }
+      ],
+      "replace_rules": [
+        "DE-B2B"
+      ]
     },
     {
-      "id": "de-exempt",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "exempt",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-exempt-section-4",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "draft",
+      "tax_case": "exempt-section-4",
+      "scope": "Domestic supply exempt under § 4 UStG other than export and intra-Community supply (Nr. 1, own profiles) and § 19: the caller names the exemption provision and it must be cited on every line (category E at 0%). No option to tax (§ 9 UStG); the provision itself is not assessed; preview only.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.exemption_provision_confirmed",
+        "facts.no_option_to_tax",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "EXEMPT-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-exempt-section-4"
+        },
+        {
+          "id": "DE-B2B",
+          "path": "facts.buyer_type",
+          "op": "one_of",
+          "values": [
+            "business",
+            "consumer"
+          ]
+        },
+        {
+          "id": "EXEMPT-CONFIRMED",
+          "path": "facts.exemption_provision_confirmed",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EXEMPT-NO-OPTION",
+          "path": "facts.no_option_to_tax",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "EXEMPT-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "Exempt"
+          ]
+        },
+        {
+          "id": "EXEMPT-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "EXEMPT-NOTE",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "§ 4 Nr."
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__4.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__9.html",
+          "checked_on": "2026-10-31"
+        }
+      ],
+      "replace_rules": [
+        "DE-B2B"
+      ]
     },
     {
-      "id": "de-reverse-charge",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "reverse-charge",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-domestic-reverse-charge",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "draft",
+      "tax_case": "domestic-reverse-charge-section-13b",
+      "scope": "Domestic supply by a German supplier to a German business customer who owes the tax under § 13b Abs. 2 UStG (not Nr. 1 and Nr. 5 Buchst. a, which concern foreign suppliers): category AE at 0% with the note 'Steuerschuldnerschaft des Leistungsempfängers' (§ 14a Abs. 5 UStG) and no separate tax. The caller names the provision and confirms the recipient's status (for construction services, Nr. 4: the recipient itself provides such services, § 13b Abs. 5); the provision itself is not assessed; preview only.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.section_13b_basis",
+        "facts.recipient_status_confirmed",
+        "company.vat_id",
+        "data.recipient.vat_id",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "RC-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-domestic-reverse-charge"
+        },
+        {
+          "id": "RC-BASIS",
+          "path": "facts.section_13b_basis",
+          "op": "one_of",
+          "values": [
+            "13b_2_2",
+            "13b_2_3",
+            "13b_2_4",
+            "13b_2_5b",
+            "13b_2_6",
+            "13b_2_7",
+            "13b_2_8",
+            "13b_2_9",
+            "13b_2_10",
+            "13b_2_11",
+            "13b_2_12"
+          ]
+        },
+        {
+          "id": "RC-RECIPIENT",
+          "path": "facts.recipient_status_confirmed",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "RC-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "ReverseCharge"
+          ]
+        },
+        {
+          "id": "RC-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        },
+        {
+          "id": "RC-NOTE",
+          "path": "data.items.*.vat_rate.exemption_reason",
+          "op": "contains",
+          "value": "Steuerschuldnerschaft des Leistungsempfängers"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__13b.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14a.html",
+          "checked_on": "2026-10-31"
+        }
+      ]
     },
     {
       "id": "de-eu-goods-b2b",
@@ -974,38 +1171,301 @@
       ]
     },
     {
-      "id": "eu-b2c-oss",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "b2c-oss",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-eu-b2c-oss",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "draft",
+      "tax_case": "eu-b2c-oss",
+      "scope": "German supplier, supply to a consumer in another EU member state taxed in the destination state under the Union scheme (§ 18j UStG): intra-Community distance sales of goods or services to non-business recipients (§ 3c, § 3a Abs. 5 UStG) once the EU-wide 10,000 euro threshold is exceeded or waived. The destination state's rate is confirmed by the caller (category S, rate above 0); rates are not looked up. Registration, returns and the destination state's invoicing rules are not assessed; preview only.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.oss_registered",
+        "facts.destination_taxation_applies",
+        "facts.destination_rate_confirmed"
+      ],
+      "rules": [
+        {
+          "id": "OSS-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-eu-b2c-oss"
+        },
+        {
+          "id": "DE-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "DE-B2B",
+          "path": "facts.buyer_type",
+          "op": "equals",
+          "value": "consumer"
+        },
+        {
+          "id": "DE-PLACE",
+          "path": "facts.place_of_supply",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "OSS-REGISTERED",
+          "path": "facts.oss_registered",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "OSS-DESTINATION",
+          "path": "facts.destination_taxation_applies",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "OSS-RATE-CONFIRMED",
+          "path": "facts.destination_rate_confirmed",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "OSS-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "Standard",
+            "Reduced"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__18j.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__3c.html",
+          "checked_on": "2026-10-31"
+        },
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__3a.html",
+          "checked_on": "2026-10-31"
+        }
+      ],
+      "replace_rules": [
+        "DE-BUYER",
+        "DE-B2B",
+        "DE-PLACE"
+      ]
     },
     {
-      "id": "eu-cross-border-small-business",
-      "version": "planned",
-      "status": "unsupported",
-      "document_type": "invoice",
-      "country": null,
-      "tax_case": "cross-border-small-business",
-      "languages": [],
-      "format_locales": [],
-      "currencies": [],
-      "layouts": [],
-      "outputs": [],
-      "required": [],
-      "rules": [],
-      "sources": [],
-      "scope": "Not implemented. Do not infer eligibility from buyer location or a zero amount."
+      "id": "de-eu-small-business",
+      "version": "1-draft",
+      "extends": {
+        "id": "de-invoice-base",
+        "version": "1"
+      },
+      "status": "draft",
+      "tax_case": "eu-small-business-section-19a",
+      "scope": "German small business using the exemption of another EU member state through the procedure of § 19a UStG: the Kleinunternehmer identification number issued by the BZSt is stated, EU-wide turnover stays within 100,000 euro, and the destination state's exemption conditions are met (confirmed by the caller). Category E at 0% with the exemption wording of the destination state in the line's exemption reason; that wording and the quarterly reports are not assessed; preview only.",
+      "outputs": [
+        "pdf-preview"
+      ],
+      "required": [
+        "facts.small_business_id_issued",
+        "facts.eu_turnover_within_limit",
+        "facts.destination_conditions_met",
+        "company.small_business_id",
+        "data.items.*.vat_rate.exemption_reason"
+      ],
+      "rules": [
+        {
+          "id": "SB-CASE",
+          "path": "data.metadata.applied_tax_case",
+          "op": "equals",
+          "value": "de-eu-small-business"
+        },
+        {
+          "id": "DE-BUYER",
+          "path": "data.recipient.address.country_code",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "DE-B2B",
+          "path": "facts.buyer_type",
+          "op": "one_of",
+          "values": [
+            "business",
+            "consumer"
+          ]
+        },
+        {
+          "id": "DE-PLACE",
+          "path": "facts.place_of_supply",
+          "op": "one_of",
+          "values": [
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE"
+          ]
+        },
+        {
+          "id": "SB-ID",
+          "path": "facts.small_business_id_issued",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "SB-LIMIT",
+          "path": "facts.eu_turnover_within_limit",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "SB-CONDITIONS",
+          "path": "facts.destination_conditions_met",
+          "op": "equals",
+          "value": true
+        },
+        {
+          "id": "SB-NUMBER",
+          "path": "company.small_business_id",
+          "op": "required"
+        },
+        {
+          "id": "SB-CATEGORY",
+          "path": "data.items.*.vat_rate.code",
+          "op": "one_of",
+          "values": [
+            "Exempt"
+          ]
+        },
+        {
+          "id": "SB-RATE",
+          "path": "data.items.*.vat_rate.percentage",
+          "op": "equals",
+          "value": "0"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__19a.html",
+          "checked_on": "2026-10-31"
+        }
+      ],
+      "replace_rules": [
+        "DE-BUYER",
+        "DE-B2B",
+        "DE-PLACE"
+      ]
     }
   ],
   "output_adapters": [

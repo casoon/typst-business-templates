@@ -26,7 +26,7 @@ and [Versions](../releases/).
 | VAT categories | Taxable/reduced, zero, exempt and reverse charge with distinct groups | Category support alone does not establish a national or cross-border case |
 | Sales tax | Explicit additive components with separate bases/rounded amounts, untaxed lines, US dates/USD/account fields | No location-based rates, nexus determination or compounding; PDF/component output |
 | Structured invoices | Existing CII/Factur-X VAT path with PDF/XML value checks | XRechnung 3.0 and Peppol BIS 3.0 as UBL files via `typstgen e-invoice` (checked with Mustang and, on demand, the KoSIT validator with the XRechnung and Peppol 3.0.21 rules); transmission is unimplemented; sales-tax output is rejected by CII and UBL |
-| Reviewed catalog | Bounded DE standard and § 19 preview cases; FR domestic B2B, DE→EU B2B service (reverse charge), intra-Community supply and export drafts | Drafts are opt-in previews; B2C/OSS, domestic reverse charge, chain transactions and further exemptions remain unsupported |
+| Reviewed catalog | Bounded DE standard and § 19 preview cases; FR domestic B2B, DE→EU B2B service (reverse charge), intra-Community supply, export, 0% (PV), § 4 exemption, § 13b, OSS and EU small-business drafts | Drafts are opt-in previews of documented cases; chain/triangular transactions, new vehicles and other schemes remain unsupported |
 | Publications | Compact A4 frame, printable forms, cards, phases and landscape brochures | Printable elements are not interactive AcroForms |
 | Existing templates | Password masking, partial locale overrides, task phases/roles and prose identity metadata | Masking covers password fields, not arbitrary free text |
 
@@ -59,7 +59,7 @@ transaction data still need their own applicable checks; unexecuted validators s
 | [#17–#23](https://github.com/casoon/typst-business-templates/issues/17) | Publication/component, masking, metadata, task, locale and brochure implementations are present and checked |
 | [#24](https://github.com/casoon/typst-business-templates/issues/24) | Version namespaces and release strategy documented; publication remains a separate decision |
 | [#14](https://github.com/casoon/typst-business-templates/issues/14) | XRechnung 3.0 and Peppol BIS 3.0 UBL files with catalog output selection, Mustang checks and on-demand KoSIT/Peppol rule checks; transmission and credit notes are not implemented |
-| [#11](https://github.com/casoon/typst-business-templates/issues/11), [#13](https://github.com/casoon/typst-business-templates/issues/13) | Initial VAT/configuration/Factur-X/UBL milestone present; remaining reviewed tax cases (true zero, other exemptions, § 13b, B2C/OSS, cross-border small business) remain open |
+| [#11](https://github.com/casoon/typst-business-templates/issues/11), [#13](https://github.com/casoon/typst-business-templates/issues/13) | Initial VAT/configuration/Factur-X/UBL milestone present; every case family now has a bounded draft; the drafts are not yet released profiles |
 | [#16](https://github.com/casoon/typst-business-templates/issues/16) | FR domestic B2B draft only; no completed national electronic issuance/transmission path |
 | [#25](https://github.com/casoon/typst-business-templates/issues/25) | Package compatibility examples and migration guidance present; migrating a consumer repository is outside this repository's scope (closed) |
 
