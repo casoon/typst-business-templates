@@ -13,7 +13,7 @@ The remaining work is concentrated in distribution, real consumer integration an
 reviewed invoice/export cases.
 
 Package `business-templates` 0.2.0 is distributed as the `templates-v0.2.0` source release. Configured invoice preparation and profile
-tools use typstgen 0.6.1 (`tool-versions.json`); these commands are
+tools use typstgen 0.6.2 (`tool-versions.json`); these commands are
 not present in typstgen 0.5.0. See [Installation](../../getting-started/installation/)
 and [Versions](../releases/).
 

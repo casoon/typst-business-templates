@@ -25,7 +25,7 @@ US routing/account fields rather than IBAN/BIC fields.
 
 ## Rebuild
 
-From the repository root, with typstgen 0.6.1 on PATH:
+From the repository root, with typstgen 0.6.2 on PATH:
 
 ```sh
 python3 examples/invoice-languages/build.py

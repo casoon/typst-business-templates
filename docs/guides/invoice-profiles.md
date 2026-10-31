@@ -40,7 +40,7 @@ VAT ID confirmation is current, goods, B2C and the recipient's national rules. S
 applicable electronic invoicing obligation. The existing Factur-X pipeline remains available
 separately and is checked with canonical data and external validators below. Versioned XRechnung
 3.0.2/UBL 2.1 and Peppol BIS Billing 3.0.21/UBL 2.1 are catalog outputs (`xrechnung-3.0`,
-`peppol-bis-3.0`) of the released DE profiles, selectable with typstgen 0.6.1 or later. Selecting
+`peppol-bis-3.0`) of the released DE profiles, selectable with typstgen 0.6.2 or later. Selecting
 one makes `validate-document` report the extra fields the format needs; the XML itself is written
 by `typstgen e-invoice --format xrechnung-3.0|peppol-bis-3.0` from the same invoice data, see
 [E-invoice files](#e-invoice-files-xrechnung-and-peppol). The FR draft offers only the preview.
@@ -195,7 +195,7 @@ published 0.5.0 binary does not have them.
 5. Run the existing `check`/`preview` tools, inspect the PDF, then `compile`. For a hybrid invoice,
    use the same canonical data with the existing ZUGFeRD compile path and external validators.
 
-Install it with `cargo install typstgen --version 0.6.1 --locked`.
+Install it with `cargo install typstgen --version 0.6.2 --locked`.
 
 CLI equivalent, from `examples/invoice-profiles/`, with typstgen on PATH:
 
@@ -310,7 +310,7 @@ scenario assembled by the script from the UBL schema, the CEN rules and the Pepp
 buyer reference must be rejected, so a pass cannot come from a validator that checks nothing.
 Report and files land in `output/einvoice/`. Run it again after changing typstgen or a pin.
 
-Result on 2026-10-31 with typstgen 0.6.1: both files accepted, both controls rejected. This
+Result on 2026-10-31 with typstgen 0.6.2: both files accepted, both controls rejected. This
 covers the German demo invoice (one standard-rated VAT group), not every tax case; the Peppol
 scenario is assembled here and is not an official Peppol validator distribution. Credit notes,
 sales-tax invoices and transmission are not covered.

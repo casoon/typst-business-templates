@@ -120,7 +120,7 @@ are PDF additions; they do not automatically create new structured XML elements.
 
 ## Build an invoice
 
-From `examples/invoice-config/`, with typstgen 0.6.1:
+From `examples/invoice-config/`, with typstgen 0.6.2:
 
 ```sh
 typstgen prepare-invoice --config ../../invoice-config.json invoice.json > resolved.json

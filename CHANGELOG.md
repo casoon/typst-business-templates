@@ -22,9 +22,9 @@ is archived separately.
 
 ### Changed
 - **Invoices:** Reverse-charge and intra-Community invoices print the recipient's VAT ID, as § 14a UStG requires. Other invoices are unchanged.
-- **Tooling:** typstgen 0.6.1 is the single pinned compiler version. It is the published crate, so
+- **Tooling:** typstgen 0.6.2 is the single pinned compiler version. It is the published crate, so
   the separate source build for invoice configuration and profile tools is gone: install it with
-  `cargo install typstgen --version 0.6.1 --locked`. CI, `scripts/test.sh` and the demo builder use it.
+  `cargo install typstgen --version 0.6.2 --locked`. CI, `scripts/test.sh` and the demo builder use it.
 - **Installation:** `scripts/install-package.sh` copies the package into Typst's local package
   directory; README and installation guide describe setup in three steps.
 - **Metadata:** Year-only prose `created_at` labels remain visible and no longer imply a fabricated PDF calendar date. Details: [migration](https://casoon.github.io/typst-business-templates/docs/guides/migration/#document-identity).

@@ -40,7 +40,7 @@ Running-text documents and credentials have their documented branding and locale
 
 ## Package version and boundaries
 
-Package 0.2.0 is distributed as the `templates-v0.2.0` source release for local installation. Checked with typstgen 0.6.1
+Package 0.2.0 is distributed as the `templates-v0.2.0` source release for local installation. Checked with typstgen 0.6.2
 (`tool-versions.json`), which provides configured invoices, profile tools and e-invoice files.
 See [Installation](getting-started/installation/) for setup, and [Capabilities and limits](reference/project-status/) for the implementation map.
 
