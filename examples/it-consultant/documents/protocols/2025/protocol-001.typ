@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.2.0": protocol
+#import "@local/business-templates:0.3.0": protocol
 
 #show: protocol.with(
   title: "Projekt Kick-off Meeting - API Migration",

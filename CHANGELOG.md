@@ -7,6 +7,8 @@ is archived separately.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-01
+
 ### Added
 - **Invoices:** XRechnung 3.0 and Peppol BIS Billing 3.0 files (UBL 2.1) from the same invoice data via
   `typstgen e-invoice`, checked against the canonical values and validated with Mustang 2.26.0.

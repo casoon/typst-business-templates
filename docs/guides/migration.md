@@ -6,11 +6,11 @@ order: 6
 
 ## Version pair
 
-This checkout contains the Typst package `business-templates` **0.2.0**, requiring
+This checkout contains the Typst package `business-templates` **0.3.0**, requiring
 Typst **0.15.0** or later and checked with **typstgen 0.6.2** (embedded Typst 0.15). Tool versions
 are pinned in `tool-versions.json`. Existing `v0.7.x` tags belong to docgen/the discontinued Rust
 crate; they are not Typst package versions. See [Releases](../../reference/releases/).
-Use the `templates-v0.2.0` tag or pin its commit alongside the package version:
+Use the `templates-v0.3.0` tag or pin its commit alongside the package version:
 a symlink to `templates/` changes as the checkout changes.
 
 ## From docgen
@@ -20,7 +20,7 @@ describes the earlier document/reporting workflow. It uses docgen; follow this g
 current setup and supported commands.
 
 Replace `docgen` with the pinned typstgen tool and install `templates/` as
-`local/business-templates/0.2.0`. Replace `sys.inputs` template wrappers with explicit package
+`local/business-templates/0.3.0`. Replace `sys.inputs` template wrappers with explicit package
 calls; use the examples as reference. Typstgen has no replacement for the old client/project
 database, number allocation or `--encrypt`. Keep assigned identifiers, content, branding and
 secret management in the calling project. Do not regenerate document numbers during migration.
