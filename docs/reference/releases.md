@@ -8,7 +8,7 @@ order: 3
 
 | Artifact | Version/tag | Meaning |
 | --- | --- | --- |
-| Current Typst package | `business-templates` 0.2.0 | Source release `templates-v0.2.0`; local import `@local/business-templates:0.2.0` |
+| Current Typst package | `business-templates` 0.3.0 | Source release `templates-v0.3.0`; local import `@local/business-templates:0.3.0` |
 | Typst package release tags | `templates-vX.Y.Z` | Tag version equals the manifest version; the first release is `templates-v0.2.0` |
 | Historical repository releases | `v0.7.x` and older | docgen CLI/Rust crate; historical tags retain their original contents and meaning |
 | Minimum compiler | Typst 0.15.0 | `compiler` in the package manifest |
