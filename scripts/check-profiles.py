@@ -54,22 +54,24 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
         check(result['status'] == expected, f'Unexpected profile result: {result}')
         return result
 
+    RELEASED = {'de-standard', 'de-small-business', 'de-eu-services-b2b', 'de-eu-goods-b2b', 'de-third-country-export', 'de-zero-rate-section-12-3',
+                'de-exempt-section-4', 'de-domestic-reverse-charge', 'de-eu-b2c-oss', 'de-eu-small-business'}
     listed = json.loads(run([binary, 'list-document-profiles', '--catalog', catalog], root))
-    check({p['id'] for p in listed['profiles']} == {'de-standard', 'de-small-business'}, 'Draft/unsupported profile leaked into released catalog')
-    check(all(p['country']=='DE' and p['languages']==['de','en'] and p['outputs']==['pdf-preview','xrechnung-3.0','peppol-bis-3.0'] for p in listed['profiles']), 'Listed capabilities lost inherited fields')
+    check({p['id'] for p in listed['profiles']} == RELEASED, 'Draft/unsupported profile leaked into released catalog')
+    check(all(p['country']=='DE' and p['languages']==['de','en'] and p['outputs']==(['pdf-preview','xrechnung-3.0','peppol-bis-3.0'] if p['id'] in ('de-standard','de-small-business') else ['pdf-preview']) for p in listed['profiles']), 'Listed capabilities lost inherited fields')
     base = json.loads((REPO/'examples/invoice-profiles/de-standard.json').read_text())
     small = json.loads((REPO/'examples/invoice-profiles/de-small-business.json').read_text())
     france = json.loads((REPO/'examples/invoice-profiles/fr-standard-draft.json').read_text())
-    eu_services = json.loads((REPO/'examples/invoice-profiles/de-eu-services-draft.json').read_text())
-    eu_goods = json.loads((REPO/'examples/invoice-profiles/de-eu-goods-draft.json').read_text())
-    export_case = json.loads((REPO/'examples/invoice-profiles/de-export-draft.json').read_text())
+    eu_services = json.loads((REPO/'examples/invoice-profiles/de-eu-services.json').read_text())
+    eu_goods = json.loads((REPO/'examples/invoice-profiles/de-eu-goods.json').read_text())
+    export_case = json.loads((REPO/'examples/invoice-profiles/de-export.json').read_text())
     # Further draft tax cases: (example, name, facts that must hold -> rule id, category rule, note rule or None)
     more_cases = [
-        ('de-zero-rate-draft', 'zero-rate', {'pv_supply_or_installation': 'ZERO-PV', 'qualifying_location': 'ZERO-LOCATION', 'capacity_within_30_kwp': 'ZERO-CAPACITY'}, 'ZERO-CATEGORY', 'ZERO-NOTE', {'code': 'Standard', 'percentage': '19'}),
-        ('de-exempt-draft', 'exempt', {'exemption_provision_confirmed': 'EXEMPT-CONFIRMED', 'no_option_to_tax': 'EXEMPT-NO-OPTION'}, 'EXEMPT-CATEGORY', 'EXEMPT-NOTE', {'code': 'Reduced', 'percentage': '7'}),
-        ('de-domestic-reverse-charge-draft', 'domestic-rc', {'recipient_status_confirmed': 'RC-RECIPIENT'}, 'RC-CATEGORY', 'RC-NOTE', {'code': 'Reduced', 'percentage': '7'}),
-        ('de-eu-b2c-oss-draft', 'oss', {'oss_registered': 'OSS-REGISTERED', 'destination_taxation_applies': 'OSS-DESTINATION', 'destination_rate_confirmed': 'OSS-RATE-CONFIRMED'}, 'OSS-CATEGORY', None, {'code': 'Zero', 'percentage': '0'}),
-        ('de-eu-small-business-draft', 'eu-small-business', {'small_business_id_issued': 'SB-ID', 'eu_turnover_within_limit': 'SB-LIMIT', 'destination_conditions_met': 'SB-CONDITIONS'}, 'SB-CATEGORY', None, {'code': 'Reduced', 'percentage': '7'}),
+        ('de-zero-rate', 'zero-rate', {'pv_supply_or_installation': 'ZERO-PV', 'qualifying_location': 'ZERO-LOCATION', 'capacity_within_30_kwp': 'ZERO-CAPACITY'}, 'ZERO-CATEGORY', 'ZERO-NOTE', {'code': 'Standard', 'percentage': '19'}),
+        ('de-exempt', 'exempt', {'exemption_provision_confirmed': 'EXEMPT-CONFIRMED', 'no_option_to_tax': 'EXEMPT-NO-OPTION'}, 'EXEMPT-CATEGORY', 'EXEMPT-NOTE', {'code': 'Reduced', 'percentage': '7'}),
+        ('de-domestic-reverse-charge', 'domestic-rc', {'recipient_status_confirmed': 'RC-RECIPIENT'}, 'RC-CATEGORY', 'RC-NOTE', {'code': 'Reduced', 'percentage': '7'}),
+        ('de-eu-b2c-oss', 'oss', {'oss_registered': 'OSS-REGISTERED', 'destination_taxation_applies': 'OSS-DESTINATION', 'destination_rate_confirmed': 'OSS-RATE-CONFIRMED'}, 'OSS-CATEGORY', None, {'code': 'Zero', 'percentage': '0'}),
+        ('de-eu-small-business', 'eu-small-business', {'small_business_id_issued': 'SB-ID', 'eu_turnover_within_limit': 'SB-LIMIT', 'destination_conditions_met': 'SB-CONDITIONS'}, 'SB-CATEGORY', None, {'code': 'Reduced', 'percentage': '7'}),
     ]
     more = {name: (json.loads((REPO/f'examples/invoice-profiles/{example}.json').read_text()), facts, category, note, bad_rate)
             for example, name, facts, category, note, bad_rate in more_cases}
@@ -82,6 +84,10 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     changed = copy.deepcopy(small); changed['facts']['regime_valid_until'] = '2026-10-24'; negative_cases.append((changed, 'DE-19-PERIOD'))
     changed = copy.deepcopy(small); changed['data']['items'][0]['vat_rate']['percentage'] = '19'; negative_cases.append((changed, 'DE-19-RATE'))
     changed = copy.deepcopy(base); changed['data']['metadata']['delivery_date'] = '2024-12-31'; negative_cases.append((changed, 'PROFILE-VALIDITY'))
+    # The French case stays a draft; the German cases were released and must not need or accept the draft route.
+    for case in (eu_services, eu_goods, export_case, *[m[0] for m in more.values()]):
+        changed = copy.deepcopy(case); changed['selection']['profile_version'] = '1-draft'; negative_cases.append((changed, 'PROFILE-IDENTITY'))
+        changed = copy.deepcopy(case); changed['selection']['output_profile'] = 'xrechnung-3.0'; negative_cases.append((changed, 'selection.output_profile'))
     changed = copy.deepcopy(france); changed['selection'].pop('allow_draft'); negative_cases.append((changed, 'PROFILE-STATUS'))
     changed = copy.deepcopy(france); changed['data']['recipient'].pop('registration_number'); negative_cases.append((changed, 'data.recipient.registration_number'))
     changed = copy.deepcopy(france); changed['facts']['vat_on_debits'] = True; negative_cases.append((changed, 'FR-DEBITS'))
@@ -99,7 +105,6 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
         negative_cases.append((changed, 'company.electronic_address'))
         negative_cases.append((changed, extra))
     changed = copy.deepcopy(france); changed['selection']['output_profile'] = 'xrechnung-3.0'; negative_cases.append((changed, 'selection.output_profile'))
-    changed = copy.deepcopy(eu_services); changed['selection'].pop('allow_draft'); negative_cases.append((changed, 'PROFILE-STATUS'))
     changed = copy.deepcopy(eu_services); changed['data']['recipient']['address']['country_code'] = 'DE'; negative_cases.append((changed, 'DE-BUYER'))
     changed = copy.deepcopy(eu_services); changed['facts']['place_of_supply'] = 'DE'; negative_cases.append((changed, 'DE-PLACE'))
     changed = copy.deepcopy(eu_services); changed['facts']['supply_kind'] = 'goods'; negative_cases.append((changed, 'DE-SUPPLY'))
@@ -117,7 +122,6 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     for item in changed['data']['items']: item['vat_rate']['exemption_reason'] = 'Reverse charge'
     negative_cases.append((changed, 'EU-RC-NOTE'))
     for case, name in ((eu_goods, 'EU'), (export_case, 'EXPORT')):
-        changed = copy.deepcopy(case); changed['selection'].pop('allow_draft'); negative_cases.append((changed, 'PROFILE-STATUS'))
         changed = copy.deepcopy(case); changed['facts']['supply_kind'] = 'services'; negative_cases.append((changed, 'DE-SUPPLY'))
         changed = copy.deepcopy(case); changed['facts']['no_excluded_transaction_type'] = False; negative_cases.append((changed, name + '-NO-EXCLUDED-TYPE'))
         changed = copy.deepcopy(case)
@@ -135,7 +139,6 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
     changed = copy.deepcopy(export_case); changed['facts']['goods_exported_to_third_country'] = False; negative_cases.append((changed, 'EXPORT-DESTINATION'))
     changed = copy.deepcopy(export_case); changed['facts']['export_transport_by'] = 'carrier'; negative_cases.append((changed, 'EXPORT-TRANSPORT'))
     for name, (case, facts, category, note, bad_rate) in more.items():
-        changed = copy.deepcopy(case); changed['selection'].pop('allow_draft'); negative_cases.append((changed, 'PROFILE-STATUS'))
         for fact, rule in facts.items():
             changed = copy.deepcopy(case); changed['facts'][fact] = False; negative_cases.append((changed, rule))
         changed = copy.deepcopy(case)
@@ -338,16 +341,16 @@ with tempfile.TemporaryDirectory(prefix='invoice-profiles-') as directory:
             if reference is None: reference = normalized
             check(normalized == reference,'Language/layout changed fiscal data')
     export(small,'de-small-business',hybrid=True)
-    eu_model = export(eu_services,'eu-services-draft',hybrid=True)
+    eu_model = export(eu_services,'eu-services',hybrid=True)
     check(Decimal(eu_model['tax_total'])==0,'Reverse charge invoice shows VAT')
     check(eu_model['grand_total']==eu_model['line_total'],'Reverse charge total differs from net total')
-    for case, name in ((eu_goods, 'eu-goods-draft'), (export_case, 'export-draft')):
+    for case, name in ((eu_goods, 'eu-goods'), (export_case, 'export')):
         model = export(case, name, hybrid=True)
         check(Decimal(model['tax_total']) == 0 and model['grand_total'] == model['line_total'], name + ': zero-tax invoice shows VAT')
     for name, (case, facts, category, note, bad_rate) in more.items():
         # The small business has no VAT ID; typstgen has no mapping for its Kleinunternehmer ID to BT-29/BT-30,
         # so EN 16931 (BR-CO-26) rejects the structured file. Only the PDF is checked for that case.
-        model = export(case, name + '-draft', hybrid=name != 'eu-small-business')
+        model = export(case, name, hybrid=name != 'eu-small-business')
         if name != 'oss':
             check(Decimal(model['tax_total']) == 0, name + ': zero-tax invoice shows VAT')
     french = export(france,'fr-draft')

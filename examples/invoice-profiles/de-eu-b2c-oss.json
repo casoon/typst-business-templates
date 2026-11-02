@@ -1,37 +1,36 @@
 {
   "$schema": "../../schema/document-request.schema.json",
   "selection": {
-    "profile_id": "de-third-country-export",
-    "profile_version": "1-draft",
+    "profile_id": "de-eu-b2c-oss",
+    "profile_version": "1",
     "language": "en",
     "format_locale": "en-GB",
     "currency": "EUR",
     "layout": "international",
-    "output_profile": "pdf-preview",
-    "allow_draft": true
+    "output_profile": "pdf-preview"
   },
   "data": {
     "metadata": {
       "invoice_number": "SYNTH-2026-001",
       "invoice_date": "2026-10-26",
       "delivery_date": "2026-10-25",
-      "applied_tax_case": "de-third-country-export"
+      "applied_tax_case": "de-eu-b2c-oss"
     },
     "recipient": {
-      "name": "Example Client Ltd",
+      "name": "Example Consumer",
       "address": {
-        "street": "Example Road",
+        "street": "Example Avenue",
         "house_number": "2",
-        "postal_code": "SW1A 1AA",
-        "city": "London",
-        "country": "United Kingdom",
-        "country_code": "GB"
+        "postal_code": "75002",
+        "city": "Paris",
+        "country": "France",
+        "country_code": "FR"
       }
     },
     "items": [
       {
         "position": 1,
-        "description": "Synthetic goods",
+        "description": "Synthetic consulting service",
         "quantity": "2",
         "unit": "stunde",
         "unit_code": "HUR",
@@ -40,9 +39,8 @@
           "currency": "EUR"
         },
         "vat_rate": {
-          "code": "Export",
-          "percentage": "0",
-          "exemption_reason": "Steuerfreie Ausfuhrlieferung (§ 4 Nr. 1 Buchst. a i. V. m. § 6 UStG)"
+          "code": "Standard",
+          "percentage": "20"
         },
         "total": {
           "amount": "200.00",
@@ -58,26 +56,25 @@
       "vat_breakdown": [
         {
           "rate": {
-            "code": "Export",
-            "percentage": "0",
-            "exemption_reason": "Steuerfreie Ausfuhrlieferung (§ 4 Nr. 1 Buchst. a i. V. m. § 6 UStG)"
+            "code": "Standard",
+            "percentage": "20"
           },
           "base": {
             "amount": "200.00",
             "currency": "EUR"
           },
           "amount": {
-            "amount": "0.00",
+            "amount": "40.00",
             "currency": "EUR"
           }
         }
       ],
       "vat_total": {
-        "amount": "0.00",
+        "amount": "40.00",
         "currency": "EUR"
       },
       "total": {
-        "amount": "200.00",
+        "amount": "240.00",
         "currency": "EUR"
       }
     },
@@ -118,14 +115,14 @@
     }
   },
   "facts": {
-    "buyer_type": "business",
-    "place_of_supply": "DE",
+    "buyer_type": "consumer",
+    "place_of_supply": "FR",
     "supply_kind": "goods",
-    "goods_exported_to_third_country": true,
-    "export_transport_by": "supplier",
-    "no_excluded_transaction_type": true,
     "evidence_refs": [
-      "synthetic-export-confirmation"
-    ]
+      "synthetic-evidence"
+    ],
+    "oss_registered": true,
+    "destination_taxation_applies": true,
+    "destination_rate_confirmed": true
   }
 }

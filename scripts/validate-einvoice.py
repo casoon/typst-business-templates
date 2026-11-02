@@ -130,9 +130,9 @@ output.mkdir(parents=True)
 demo = REPO / 'examples/invoice-languages/de'
 resolved = json.loads(run([typstgen, 'prepare-invoice', '--config', str(demo / 'invoice-config.json'), str(demo / 'invoice.json')]).stdout)
 inputs = [('standard-rate', resolved['data'], resolved['company'])]
-for case, example in [('reverse-charge', 'de-eu-services-draft'), ('intra-community', 'de-eu-goods-draft'), ('export', 'de-export-draft'),
-                      ('zero-rate', 'de-zero-rate-draft'), ('exempt', 'de-exempt-draft'), ('domestic-reverse-charge', 'de-domestic-reverse-charge-draft'),
-                      ('oss', 'de-eu-b2c-oss-draft')]:
+for case, example in [('reverse-charge', 'de-eu-services'), ('intra-community', 'de-eu-goods'), ('export', 'de-export'),
+                      ('zero-rate', 'de-zero-rate'), ('exempt', 'de-exempt'), ('domestic-reverse-charge', 'de-domestic-reverse-charge'),
+                      ('oss', 'de-eu-b2c-oss')]:
     view = json.loads(run([typstgen, 'validate-document', '--catalog', str(REPO / 'profiles/catalog.json'),
                            str(REPO / 'examples/invoice-profiles' / (example + '.json'))]).stdout)
     inputs.append((case, view['data'], view['company']))

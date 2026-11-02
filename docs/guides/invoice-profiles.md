@@ -14,25 +14,27 @@ The versioned source is `profiles/catalog.json`, validated by
 `schema/document-profiles.schema.json`. Each profile declares its country, tax case, languages,
 format locales, currencies, layouts, outputs, sources, review date and effective review window.
 `released` means the listed bounded combination; it does not mean unrestricted country support.
+The released cases are templates that have **not been reviewed by a tax adviser or accountant**; have
+them checked before you issue real invoices.
 
 | Profile | State | Scope | Output |
 | --- | --- | --- | --- |
 | `de-standard@1` | released | Domestic DE B2B, confirmed ordinary/reduced rate applicability, 19%/7%, no special sectors or territories | PDF preview |
 | `de-small-business@1` | released | Domestic DE B2B, explicitly confirmed § 19 eligibility interval and no waiver, 0 VAT/category E | PDF preview |
 | `fr-domestic-standard@1-draft` | draft, explicit opt-in | Mainland FR domestic B2B ordinary services at 20%, bounded prerequisites below | PDF preview |
-| `de-eu-services-b2b@1-draft` | draft, explicit opt-in | German supplier, other service to a business customer in another EU member state (general place-of-supply rule, § 3a Abs. 2 UStG), tax owed by the recipient: category AE at 0%, bounded prerequisites below | PDF preview |
-| `de-eu-goods-b2b@1-draft` | draft, explicit opt-in | German supplier, goods to a business customer registered for VAT in another EU member state (tax-exempt intra-Community supply, § 4 Nr. 1 Buchst. b, § 6a UStG): category K at 0% | PDF preview |
-| `de-third-country-export@1-draft` | draft, explicit opt-in | German supplier, goods exported to a third country by the supplier or a foreign buyer (§ 4 Nr. 1 Buchst. a, § 6 UStG): category G at 0% | PDF preview |
-| `de-zero-rate-section-12-3@1-draft` | draft, explicit opt-in | Domestic supply or installation of photovoltaic systems at 0% (§ 12 Abs. 3 UStG): category Z | PDF preview |
-| `de-exempt-section-4@1-draft` | draft, explicit opt-in | Domestic supply exempt under a named § 4 UStG provision (not Nr. 1, not § 19): category E | PDF preview |
-| `de-domestic-reverse-charge@1-draft` | draft, explicit opt-in | Domestic supply where the recipient owes the tax (§ 13b Abs. 2 UStG): category AE | PDF preview |
-| `de-eu-b2c-oss@1-draft` | draft, explicit opt-in | Supply to a consumer in another EU member state taxed there under the Union scheme (§ 18j UStG): category S at the caller-confirmed destination rate | PDF preview |
-| `de-eu-small-business@1-draft` | draft, explicit opt-in | German small business using another member state's exemption (§ 19a UStG): category E | PDF preview |
+| `de-eu-services-b2b@1` | released | German supplier, other service to a business customer in another EU member state (general place-of-supply rule, § 3a Abs. 2 UStG), tax owed by the recipient: category AE at 0%, bounded prerequisites below | PDF preview |
+| `de-eu-goods-b2b@1` | released | German supplier, goods to a business customer registered for VAT in another EU member state (tax-exempt intra-Community supply, § 4 Nr. 1 Buchst. b, § 6a UStG): category K at 0% | PDF preview |
+| `de-third-country-export@1` | released | German supplier, goods exported to a third country by the supplier or a foreign buyer (§ 4 Nr. 1 Buchst. a, § 6 UStG): category G at 0% | PDF preview |
+| `de-zero-rate-section-12-3@1` | released | Domestic supply or installation of photovoltaic systems at 0% (§ 12 Abs. 3 UStG): category Z | PDF preview |
+| `de-exempt-section-4@1` | released | Domestic supply exempt under a named § 4 UStG provision (not Nr. 1, not § 19): category E | PDF preview |
+| `de-domestic-reverse-charge@1` | released | Domestic supply where the recipient owes the tax (§ 13b Abs. 2 UStG): category AE | PDF preview |
+| `de-eu-b2c-oss@1` | released | Supply to a consumer in another EU member state taxed there under the Union scheme (§ 18j UStG): category S at the caller-confirmed destination rate | PDF preview |
+| `de-eu-small-business@1` | released | German small business using another member state's exemption (§ 19a UStG): category E | PDF preview |
 | Other listed cases | unsupported | Everything else, in particular new vehicles, chain and triangular transactions, non-Union OSS schemes, travellers' exports | none |
 
-### EU service to a business customer (draft)
+### EU service to a business customer
 
-Selecting `de-eu-services-b2b` (with `allow_draft`) requires caller-confirmed facts: the recipient is
+Selecting `de-eu-services-b2b` requires caller-confirmed facts: the recipient is
 an entrepreneur and the service is for its business (`service_for_recipient_business`), its VAT ID has
 been confirmed (`recipient_vat_id_confirmed`), no special place-of-supply rule applies
 (`no_special_place_of_supply_rule`, i.e. none of § 3a Abs. 3-8, § 3b, § 3e UStG) and the place of
@@ -60,9 +62,9 @@ the FR draft starts 2026-09-01. These are bounded package review windows, not st
 dates. Recheck sources and version the profile before extending a window or releasing a case.
 
 
-### EU goods and export (drafts)
+### EU goods and export
 
-Both drafts need caller-confirmed facts and keep the evidence as references; the proof itself
+Both cases need caller-confirmed facts and keep the evidence as references; the proof itself
 (accounting evidence, shipping or export confirmation) is not checked.
 
 - **`de-eu-goods-b2b`:** goods dispatched to another member state
@@ -87,10 +89,10 @@ rules of the other state. Sources: § 6, § 6a, § 14, § 14a UStG, checked 2026
 previews for documented cases, not tax advice.
 
 
-### Further drafts: 0% rate, exemptions, § 13b, OSS, EU small business
+### Further cases: 0% rate, exemptions, § 13b, OSS, EU small business
 
 Each needs caller-confirmed facts, cites its provision on every line (the line's `exemption_reason`
-is printed under the description) and previews only; the legal assessment stays with the caller.
+is printed under the description) and produce a PDF preview only; the legal assessment stays with the caller.
 
 - **`de-zero-rate-section-12-3`:** photovoltaic supply or installation (`pv_supply_or_installation`),
   qualifying location (`qualifying_location`) and capacity of at most 30 kWp

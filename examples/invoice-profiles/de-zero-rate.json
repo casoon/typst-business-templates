@@ -1,31 +1,30 @@
 {
   "$schema": "../../schema/document-request.schema.json",
   "selection": {
-    "profile_id": "de-eu-b2c-oss",
-    "profile_version": "1-draft",
+    "profile_id": "de-zero-rate-section-12-3",
+    "profile_version": "1",
     "language": "en",
     "format_locale": "en-GB",
     "currency": "EUR",
     "layout": "international",
-    "output_profile": "pdf-preview",
-    "allow_draft": true
+    "output_profile": "pdf-preview"
   },
   "data": {
     "metadata": {
       "invoice_number": "SYNTH-2026-001",
       "invoice_date": "2026-10-26",
       "delivery_date": "2026-10-25",
-      "applied_tax_case": "de-eu-b2c-oss"
+      "applied_tax_case": "de-zero-rate-section-12-3"
     },
     "recipient": {
-      "name": "Example Consumer",
+      "name": "Example Buyer GmbH",
       "address": {
         "street": "Example Avenue",
         "house_number": "2",
-        "postal_code": "75002",
-        "city": "Paris",
-        "country": "France",
-        "country_code": "FR"
+        "postal_code": "10115",
+        "city": "Berlin",
+        "country": "Deutschland",
+        "country_code": "DE"
       }
     },
     "items": [
@@ -40,8 +39,9 @@
           "currency": "EUR"
         },
         "vat_rate": {
-          "code": "Standard",
-          "percentage": "20"
+          "code": "Zero",
+          "percentage": "0",
+          "exemption_reason": "Steuersatz 0 % nach § 12 Abs. 3 UStG (Photovoltaikanlage)"
         },
         "total": {
           "amount": "200.00",
@@ -57,25 +57,26 @@
       "vat_breakdown": [
         {
           "rate": {
-            "code": "Standard",
-            "percentage": "20"
+            "code": "Zero",
+            "percentage": "0",
+            "exemption_reason": "Steuersatz 0 % nach § 12 Abs. 3 UStG (Photovoltaikanlage)"
           },
           "base": {
             "amount": "200.00",
             "currency": "EUR"
           },
           "amount": {
-            "amount": "40.00",
+            "amount": "0.00",
             "currency": "EUR"
           }
         }
       ],
       "vat_total": {
-        "amount": "40.00",
+        "amount": "0.00",
         "currency": "EUR"
       },
       "total": {
-        "amount": "240.00",
+        "amount": "200.00",
         "currency": "EUR"
       }
     },
@@ -117,13 +118,13 @@
   },
   "facts": {
     "buyer_type": "consumer",
-    "place_of_supply": "FR",
+    "place_of_supply": "DE",
     "supply_kind": "goods",
     "evidence_refs": [
       "synthetic-evidence"
     ],
-    "oss_registered": true,
-    "destination_taxation_applies": true,
-    "destination_rate_confirmed": true
+    "pv_supply_or_installation": true,
+    "qualifying_location": true,
+    "capacity_within_30_kwp": true
   }
 }
