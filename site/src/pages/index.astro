@@ -96,6 +96,7 @@ python3 examples/invoice-languages/build.py`;
     </figure>
   </Hero>
 
+  <div class="facts-gap">
   <Facts
     items={[
       { value: String(templateCount), label: 'document templates' },
@@ -103,6 +104,7 @@ python3 examples/invoice-languages/build.py`;
       { value: 'JSON + Typst', label: 'data and layout kept in versionable files' },
     ]}
   />
+  </div>
 
   <section class="notice" aria-label="Notice about tax and legal correctness">
     <Callout type="caution" title="Templates, not tax advice">
@@ -178,6 +180,7 @@ python3 examples/invoice-languages/build.py`;
       <a href={url('docs/getting-started/installation/')}>setup guide</a> has the remaining two steps.</p>
   </section>
 
+  <div class="features-three">
   <Features
     items={[
       {
@@ -202,6 +205,7 @@ python3 examples/invoice-languages/build.py`;
       },
     ]}
   />
+  </div>
 
   <section class="toolchain agent-workflow" aria-labelledby="agent-title">
     <h2 id="agent-title">Let your AI assistant check the document it builds</h2>
@@ -328,6 +332,9 @@ python3 examples/invoice-languages/build.py`;
   }
   .notice :global(.callout) { margin: 8px 0 32px; }
   .notice :global(p) { margin: 0; }
+  .features-three :global(.features ul) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .features-three :global(.features ul) { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); } }
+  .facts-gap { padding-top: clamp(32px, 6vw, 64px); }
 
   .cases {
     max-width: var(--max);
