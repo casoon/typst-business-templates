@@ -1,31 +1,30 @@
 {
   "$schema": "../../schema/document-request.schema.json",
   "selection": {
-    "profile_id": "de-zero-rate-section-12-3",
-    "profile_version": "1-draft",
+    "profile_id": "de-eu-small-business",
+    "profile_version": "1",
     "language": "en",
     "format_locale": "en-GB",
     "currency": "EUR",
     "layout": "international",
-    "output_profile": "pdf-preview",
-    "allow_draft": true
+    "output_profile": "pdf-preview"
   },
   "data": {
     "metadata": {
       "invoice_number": "SYNTH-2026-001",
       "invoice_date": "2026-10-26",
       "delivery_date": "2026-10-25",
-      "applied_tax_case": "de-zero-rate-section-12-3"
+      "applied_tax_case": "de-eu-small-business"
     },
     "recipient": {
-      "name": "Example Buyer GmbH",
+      "name": "Example Client SAS",
       "address": {
         "street": "Example Avenue",
         "house_number": "2",
-        "postal_code": "10115",
-        "city": "Berlin",
-        "country": "Deutschland",
-        "country_code": "DE"
+        "postal_code": "75002",
+        "city": "Paris",
+        "country": "France",
+        "country_code": "FR"
       }
     },
     "items": [
@@ -40,9 +39,9 @@
           "currency": "EUR"
         },
         "vat_rate": {
-          "code": "Zero",
+          "code": "Exempt",
           "percentage": "0",
-          "exemption_reason": "Steuersatz 0 % nach § 12 Abs. 3 UStG (Photovoltaikanlage)"
+          "exemption_reason": "TVA non applicable, franchise en base (synthetic wording of the destination state)"
         },
         "total": {
           "amount": "200.00",
@@ -58,9 +57,9 @@
       "vat_breakdown": [
         {
           "rate": {
-            "code": "Zero",
+            "code": "Exempt",
             "percentage": "0",
-            "exemption_reason": "Steuersatz 0 % nach § 12 Abs. 3 UStG (Photovoltaikanlage)"
+            "exemption_reason": "TVA non applicable, franchise en base (synthetic wording of the destination state)"
           },
           "base": {
             "amount": "200.00",
@@ -103,7 +102,6 @@
       "country_code": "DE"
     },
     "tax_id": "TEST-TAX-ID",
-    "vat_id": "DE123456789",
     "contact": {
       "email": "hello@example.invalid"
     },
@@ -115,17 +113,18 @@
       "bic": "COBADEFFXXX",
       "bank_name": "Example Bank",
       "account_holder": "Example Studio GmbH"
-    }
+    },
+    "small_business_id": "SYNTH-KU-ID"
   },
   "facts": {
-    "buyer_type": "consumer",
-    "place_of_supply": "DE",
-    "supply_kind": "goods",
+    "buyer_type": "business",
+    "place_of_supply": "FR",
+    "supply_kind": "services",
     "evidence_refs": [
       "synthetic-evidence"
     ],
-    "pv_supply_or_installation": true,
-    "qualifying_location": true,
-    "capacity_within_30_kwp": true
+    "small_business_id_issued": true,
+    "eu_turnover_within_limit": true,
+    "destination_conditions_met": true
   }
 }

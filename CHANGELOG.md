@@ -7,6 +7,10 @@ is archived separately.
 
 ## [Unreleased]
 
+### Changed
+- **Invoices:** Eight DE tax-case profiles (EU services and goods, export, 0% PV, § 4 exemption, § 13b, OSS, § 19a) are released as version 1 and no longer need `allow_draft`. They are PDF previews and have not been reviewed by a tax adviser; the French case stays a draft.
+  Details: [Supported combinations](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#supported-combinations).
+
 ## [0.3.0] - 2026-11-01
 
 ### Added

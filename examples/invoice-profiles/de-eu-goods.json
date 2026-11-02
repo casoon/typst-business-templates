@@ -2,13 +2,12 @@
   "$schema": "../../schema/document-request.schema.json",
   "selection": {
     "profile_id": "de-eu-goods-b2b",
-    "profile_version": "1-draft",
+    "profile_version": "1",
     "language": "en",
     "format_locale": "en-GB",
     "currency": "EUR",
     "layout": "international",
-    "output_profile": "pdf-preview",
-    "allow_draft": true
+    "output_profile": "pdf-preview"
   },
   "data": {
     "metadata": {

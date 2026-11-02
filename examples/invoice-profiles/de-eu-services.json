@@ -1,21 +1,20 @@
 {
   "$schema": "../../schema/document-request.schema.json",
   "selection": {
-    "profile_id": "de-eu-small-business",
-    "profile_version": "1-draft",
+    "profile_id": "de-eu-services-b2b",
+    "profile_version": "1",
     "language": "en",
     "format_locale": "en-GB",
     "currency": "EUR",
     "layout": "international",
-    "output_profile": "pdf-preview",
-    "allow_draft": true
+    "output_profile": "pdf-preview"
   },
   "data": {
     "metadata": {
       "invoice_number": "SYNTH-2026-001",
       "invoice_date": "2026-10-26",
       "delivery_date": "2026-10-25",
-      "applied_tax_case": "de-eu-small-business"
+      "applied_tax_case": "de-eu-services-b2b"
     },
     "recipient": {
       "name": "Example Client SAS",
@@ -26,7 +25,8 @@
         "city": "Paris",
         "country": "France",
         "country_code": "FR"
-      }
+      },
+      "vat_id": "FR00987654321"
     },
     "items": [
       {
@@ -40,9 +40,9 @@
           "currency": "EUR"
         },
         "vat_rate": {
-          "code": "Exempt",
+          "code": "ReverseCharge",
           "percentage": "0",
-          "exemption_reason": "TVA non applicable, franchise en base (synthetic wording of the destination state)"
+          "exemption_reason": "Steuerschuldnerschaft des Leistungsempfängers"
         },
         "total": {
           "amount": "200.00",
@@ -58,9 +58,9 @@
       "vat_breakdown": [
         {
           "rate": {
-            "code": "Exempt",
+            "code": "ReverseCharge",
             "percentage": "0",
-            "exemption_reason": "TVA non applicable, franchise en base (synthetic wording of the destination state)"
+            "exemption_reason": "Steuerschuldnerschaft des Leistungsempfängers"
           },
           "base": {
             "amount": "200.00",
@@ -103,6 +103,7 @@
       "country_code": "DE"
     },
     "tax_id": "TEST-TAX-ID",
+    "vat_id": "DE123456789",
     "contact": {
       "email": "hello@example.invalid"
     },
@@ -114,18 +115,17 @@
       "bic": "COBADEFFXXX",
       "bank_name": "Example Bank",
       "account_holder": "Example Studio GmbH"
-    },
-    "small_business_id": "SYNTH-KU-ID"
+    }
   },
   "facts": {
     "buyer_type": "business",
     "place_of_supply": "FR",
     "supply_kind": "services",
+    "recipient_vat_id_confirmed": true,
+    "service_for_recipient_business": true,
+    "no_special_place_of_supply_rule": true,
     "evidence_refs": [
-      "synthetic-evidence"
-    ],
-    "small_business_id_issued": true,
-    "eu_turnover_within_limit": true,
-    "destination_conditions_met": true
+      "synthetic-vat-id-confirmation"
+    ]
   }
 }

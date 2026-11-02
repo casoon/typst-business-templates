@@ -504,12 +504,12 @@
     },
     {
       "id": "de-zero-rate-section-12-3",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
       },
-      "status": "draft",
+      "status": "released",
       "tax_case": "zero-rate-section-12-3",
       "scope": "Domestic supply or installation of photovoltaic systems at the 0% rate (§ 12 Abs. 3 UStG): solar modules, essential components and storage supplied to the operator, or their installation, for installations on or near homes, apartments and public or common-good buildings; an installed capacity of at most 30 kWp (Marktstammdatenregister) counts as met. Category Z at 0%, no inference from the product or the buyer; preview only.",
       "outputs": [
@@ -588,12 +588,12 @@
     },
     {
       "id": "de-exempt-section-4",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
       },
-      "status": "draft",
+      "status": "released",
       "tax_case": "exempt-section-4",
       "scope": "Domestic supply exempt under § 4 UStG other than export and intra-Community supply (Nr. 1, own profiles) and § 19: the caller names the exemption provision and it must be cited on every line (category E at 0%). No option to tax (§ 9 UStG); the provision itself is not assessed; preview only.",
       "outputs": [
@@ -669,12 +669,12 @@
     },
     {
       "id": "de-domestic-reverse-charge",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
       },
-      "status": "draft",
+      "status": "released",
       "tax_case": "domestic-reverse-charge-section-13b",
       "scope": "Domestic supply by a German supplier to a German business customer who owes the tax under § 13b Abs. 2 UStG (not Nr. 1 and Nr. 5 Buchst. a, which concern foreign suppliers): category AE at 0% with the note 'Steuerschuldnerschaft des Leistungsempfängers' (§ 14a Abs. 5 UStG) and no separate tax. The caller names the provision and confirms the recipient's status (for construction services, Nr. 4: the recipient itself provides such services, § 13b Abs. 5); the provision itself is not assessed; preview only.",
       "outputs": [
@@ -752,7 +752,7 @@
     },
     {
       "id": "de-eu-goods-b2b",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
@@ -761,7 +761,7 @@
         "DE-BUYER",
         "DE-SUPPLY"
       ],
-      "status": "draft",
+      "status": "released",
       "tax_case": "eu-goods-b2b",
       "scope": "German supplier, delivery of goods to a business customer registered for VAT in another EU member state, goods transported or shipped there by the supplier or the buyer (tax-exempt intra-Community supply, § 4 Nr. 1 Buchst. b i. V. m. § 6a UStG), category K at 0%. No new vehicles, chain or triangular transactions, consignment stock or distance sales; the proof (accounting and shipping evidence) is referenced, not checked; preview only. The invoice deadline (15th of the following month) is not checked.",
       "outputs": [
@@ -918,7 +918,7 @@
     },
     {
       "id": "de-eu-services-b2b",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
@@ -928,7 +928,7 @@
         "DE-PLACE",
         "DE-SUPPLY"
       ],
-      "status": "draft",
+      "status": "released",
       "tax_case": "eu-services-b2b",
       "scope": "German supplier, other service (not goods) to a business customer in another EU member state under the general place-of-supply rule (§ 3a Abs. 2 UStG), tax owed by the recipient (reverse charge, category AE, 0%). No special place-of-supply rules (§ 3a Abs. 3-8, § 3b, § 3e), no B2C, no goods; preview only. The invoice deadline (15th of the following month) is not checked.",
       "outputs": [
@@ -1077,7 +1077,7 @@
     },
     {
       "id": "de-third-country-export",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
@@ -1086,7 +1086,7 @@
         "DE-BUYER",
         "DE-SUPPLY"
       ],
-      "status": "draft",
+      "status": "released",
       "tax_case": "third-country-export",
       "scope": "German supplier, delivery of goods to a business customer outside the EU, goods exported to the third-country territory by the supplier or by a foreign buyer (tax-exempt export delivery, § 4 Nr. 1 Buchst. a i. V. m. § 6 UStG), category G at 0%. No travellers' exports, no deliveries to the areas of § 1 Abs. 3 UStG, no processing by agents; the export proof is referenced, not checked; preview only.",
       "outputs": [
@@ -1172,12 +1172,12 @@
     },
     {
       "id": "de-eu-b2c-oss",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
       },
-      "status": "draft",
+      "status": "released",
       "tax_case": "eu-b2c-oss",
       "scope": "German supplier, supply to a consumer in another EU member state taxed in the destination state under the Union scheme (§ 18j UStG): intra-Community distance sales of goods or services to non-business recipients (§ 3c, § 3a Abs. 5 UStG) once the EU-wide 10,000 euro threshold is exceeded or waived. The destination state's rate is confirmed by the caller (category S, rate above 0); rates are not looked up. Registration, returns and the destination state's invoicing rules are not assessed; preview only.",
       "outputs": [
@@ -1317,12 +1317,12 @@
     },
     {
       "id": "de-eu-small-business",
-      "version": "1-draft",
+      "version": "1",
       "extends": {
         "id": "de-invoice-base",
         "version": "1"
       },
-      "status": "draft",
+      "status": "released",
       "tax_case": "eu-small-business-section-19a",
       "scope": "German small business using the exemption of another EU member state through the procedure of § 19a UStG: the Kleinunternehmer identification number issued by the BZSt is stated, EU-wide turnover stays within 100,000 euro, and the destination state's exemption conditions are met (confirmed by the caller). Category E at 0% with the exemption wording of the destination state in the line's exemption reason; that wording and the quarterly reports are not assessed; preview only.",
       "outputs": [

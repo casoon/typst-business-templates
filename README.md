@@ -62,18 +62,21 @@ Each case is a profile with its own prerequisites, notes and checks. You confirm
 package does not decide which case applies to you. *Released* means a bounded case, not a tax
 opinion; a *draft* is a preview you opt into and have checked.
 
+> **Templates, not tax advice.** The released cases have **not been reviewed by a tax adviser or
+> accountant**. Have them checked before you issue real invoices.
+
 | Case | Basis | State |
 | --- | --- | --- |
 | Domestic sale, standard or reduced rate | § 12 UStG | Released |
 | Small business (Kleinunternehmer) | § 19 UStG | Released |
-| 0 % rate for photovoltaic systems | § 12 Abs. 3 UStG | Draft |
-| Tax-exempt supply | § 4 UStG | Draft |
-| Domestic reverse charge | § 13b UStG | Draft |
-| Goods to a business in another EU state | § 4 Nr. 1b, § 6a UStG | Draft |
-| Service to a business in another EU state (reverse charge) | § 3a, § 14a UStG | Draft |
-| Export to a non-EU country | § 4 Nr. 1a, § 6 UStG | Draft |
-| Consumer in another EU state (OSS) | § 18j UStG | Draft |
-| Small business selling in another EU state | § 19a UStG | Draft |
+| 0 % rate for photovoltaic systems | § 12 Abs. 3 UStG | Released |
+| Tax-exempt supply | § 4 UStG | Released |
+| Domestic reverse charge | § 13b UStG | Released |
+| Goods to a business in another EU state | § 4 Nr. 1b, § 6a UStG | Released |
+| Service to a business in another EU state (reverse charge) | § 3a, § 14a UStG | Released |
+| Export to a non-EU country | § 4 Nr. 1a, § 6 UStG | Released |
+| Consumer in another EU state (OSS) | § 18j UStG | Released |
+| Small business selling in another EU state | § 19a UStG | Released |
 | France: domestic sale between businesses | French VAT rules | Draft |
 
 Chain and triangular transactions, new vehicles and other schemes are not supported. The

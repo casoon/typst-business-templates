@@ -18,9 +18,10 @@ See the [package reference](../../reference/package/) and
 ## Are the invoice and tax cases reviewed by a tax adviser?
 
 No. The profiles are templates built from the statutes and standards named in their sources.
-Nobody has certified them for your situation. Only two cases are released (domestic standard and
-reduced rates, and the small business exemption of § 19 UStG), and even those are bounded previews;
-the other cases are drafts that you select explicitly, and you confirm their prerequisites. Have a
+Nobody has certified them for your situation. Ten cases are released as bounded templates (domestic standard and
+reduced rates, § 19, § 4 exemptions, § 13b, § 12 Abs. 3, EU goods and services, export, OSS and
+§ 19a), and you confirm their prerequisites; only the French case is still a draft that you select
+explicitly. Have a
 tax adviser or accountant check the profile, wording and amounts before you issue real invoices.
 See [invoice profiles](../../guides/invoice-profiles/).
 
