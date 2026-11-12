@@ -7,6 +7,10 @@ is archived separately.
 
 ## [Unreleased]
 
+### Added
+- **Branding:** `branding.signal_color` sets the colour of confidentiality marks and security notices on the credentials sheet independently of `accent_color`; the default stays red, and `warning-box` uses it.
+  Details: [Colours and fonts](https://casoon.github.io/typst-business-templates/docs/guides/branding/#colours-and-fonts).
+
 ### Changed
 - **Invoices:** Eight DE tax-case profiles (EU services and goods, export, 0% PV, § 4 exemption, § 13b, OSS, § 19a) are released as version 1 and no longer need `allow_draft`. They are PDF previews and have not been reviewed by a tax adviser; the French case stays a draft.
   Details: [Supported combinations](https://casoon.github.io/typst-business-templates/docs/guides/invoice-profiles/#supported-combinations).

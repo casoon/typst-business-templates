@@ -14,6 +14,7 @@
 #let locale = load-locale(locale, company)
 // Get branding from company data
 #let accent-color = get-accent-color(company)
+#let signal-color = get-signal-color(company)
 #let fonts = get-font-preset(company)
 
 // Locale helpers with fallbacks
@@ -50,7 +51,7 @@
       #grid(
         columns: (1fr, 1fr),
         align: (left, right),
-        [#text(fill: accent-color, weight: "bold")[#upper(l-confidential)]],
+        [#text(fill: signal-color, weight: "bold")[#upper(l-confidential)]],
         [#data.metadata.document_number]
       )
       #v(0.2em)
@@ -107,13 +108,13 @@
 // Security warning box (credentials-specific custom content)
 #let security-box = align(center)[
   #box(
-    stroke: 1.5pt + accent-color,
+    stroke: 1.5pt + signal-color,
     radius: 6pt,
     inset: 1em,
     width: 70%,
   )[
     #align(center)[
-      #text(size: size-medium, fill: accent-color, weight: "bold")[
+      #text(size: size-medium, fill: signal-color, weight: "bold")[
         #upper(l-confidential)
       ]
       #v(0.3em)
@@ -277,12 +278,12 @@
 
 #align(center)[
   #box(
-    stroke: border-normal + accent-color,
+    stroke: border-normal + signal-color,
     radius: 6pt,
     inset: 1.2em,
     width: 90%,
   )[
-    #text(size: size-normal, weight: "bold", fill: accent-color)[#l-security]
+    #text(size: size-normal, weight: "bold", fill: signal-color)[#l-security]
     #v(0.5em)
     #set text(size: size-small)
     #align(left)[

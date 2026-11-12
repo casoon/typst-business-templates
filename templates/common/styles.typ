@@ -109,6 +109,8 @@
 // Default colors (overridden by company branding in templates)
 #let color-primary = rgb("#2c3e50")
 #let color-accent = rgb("#E94B3C")
+// Signal colour for confidentiality marks and warnings, independent of the accent.
+#let color-signal = rgb("#E94B3C")
 
 // Helper functions to get colors from company data
 #let get-primary-color(company) = {
@@ -124,6 +126,14 @@
     rgb(company.branding.accent_color)
   } else {
     color-accent
+  }
+}
+
+#let get-signal-color(company) = {
+  if company != none and "branding" in company and "signal_color" in company.branding {
+    rgb(company.branding.signal_color)
+  } else {
+    color-signal
   }
 }
 
@@ -259,7 +269,7 @@
 )
 
 // UTILITY: Warning box
-#let warning-box(content, accent: color-accent) = block(
+#let warning-box(content, accent: color-signal) = block(
   stroke: 1.5pt + accent,
   radius: 6pt,
   inset: spacing-medium,

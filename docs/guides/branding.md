@@ -61,6 +61,7 @@ accounting documents keep a fixed layout in Helvetica.
 | --- | --- | --- |
 | `accent_color` | `#E94B3C` | accent colour (header, rules, highlights) |
 | `primary_color` | `#2c3e50` | primary colour (titles, headings) |
+| `signal_color` | `#E94B3C` | confidentiality marks and security notices on the credentials sheet |
 | `font_preset` | `default` | body, heading and monospace font |
 
 ### Font presets
