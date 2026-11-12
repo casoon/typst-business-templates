@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.3.0": concept
+#import "@local/business-templates:0.4.0": concept
 
 #show: concept.with(
   document_number: "KO-2025-001",

@@ -16,7 +16,7 @@ a practical extension point: presentation changes do not require national templa
 The remaining work is concentrated in distribution, real consumer integration and additional
 reviewed invoice/export cases.
 
-Package `business-templates` 0.3.0 is distributed as the `templates-v0.3.0` source release. Configured invoice preparation and profile
+Package `business-templates` 0.4.0 is distributed as the `templates-v0.4.0` source release. Configured invoice preparation and profile
 tools use typstgen 0.6.2 (`tool-versions.json`); these commands are
 not present in typstgen 0.5.0. See [Installation](../../getting-started/installation/)
 and [Versions](../releases/).
@@ -63,7 +63,7 @@ transaction data still need their own applicable checks; unexecuted validators s
 | [#17–#23](https://github.com/casoon/typst-business-templates/issues/17) | Publication/component, masking, metadata, task, locale and brochure implementations are present and checked |
 | [#24](https://github.com/casoon/typst-business-templates/issues/24) | Version namespaces and release strategy documented; publication remains a separate decision |
 | [#14](https://github.com/casoon/typst-business-templates/issues/14) | XRechnung 3.0 and Peppol BIS 3.0 UBL files with catalog output selection, Mustang checks and on-demand KoSIT/Peppol rule checks; transmission and credit notes are not implemented |
-| [#11](https://github.com/casoon/typst-business-templates/issues/11), [#13](https://github.com/casoon/typst-business-templates/issues/13) | Initial VAT/configuration/Factur-X/UBL milestone present; every case family now has a bounded draft; the drafts are not yet released profiles |
+| [#11](https://github.com/casoon/typst-business-templates/issues/11), [#13](https://github.com/casoon/typst-business-templates/issues/13) | Initial VAT/configuration/Factur-X/UBL milestone present; the bounded DE case families are released profiles without review by a tax adviser |
 | [#16](https://github.com/casoon/typst-business-templates/issues/16) | FR domestic B2B draft only; no completed national electronic issuance/transmission path |
 | [#25](https://github.com/casoon/typst-business-templates/issues/25) | Package compatibility examples and migration guidance present; migrating a consumer repository is outside this repository's scope (closed) |
 

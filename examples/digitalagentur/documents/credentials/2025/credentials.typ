@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.3.0": credentials
+#import "@local/business-templates:0.4.0": credentials
 
 #credentials(
   data: json("credentials.json"),

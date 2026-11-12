@@ -92,7 +92,7 @@ previews for documented cases, not tax advice.
 ### Further cases: 0% rate, exemptions, § 13b, OSS, EU small business
 
 Each needs caller-confirmed facts, cites its provision on every line (the line's `exemption_reason`
-is printed under the description) and produce a PDF preview only; the legal assessment stays with the caller.
+is printed under the description) and produces a PDF preview only; the legal assessment stays with the caller.
 
 - **`de-zero-rate-section-12-3`:** photovoltaic supply or installation (`pv_supply_or_installation`),
   qualifying location (`qualifying_location`) and capacity of at most 30 kWp
