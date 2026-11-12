@@ -204,36 +204,53 @@
 
   #for note in data.at("notes", default: ()) [#block(above: 4pt, below: 4pt)[#note]]
 
-  #if data.payment.at("due_date", default: none) != none [
+  // With bank details the payment block names the due date shown in the header instead.
+  #let due-in-header = "bank_account" in data.payment and data.metadata.at("due_date", default: none) != none
+  #if due-in-header [] else if data.payment.at("due_date", default: none) != none [
     #labels.payable_by #date(data.payment.due_date).
   ] else if data.payment.at("payment_terms", default: none) != none [
     #data.payment.payment_terms
   ]
 
+  // Payment details, retention of title and regards are three separate blocks;
+  // hairlines divide them.
+  #let divider = block(above: 7pt, below: 7pt, line(length: 100%, stroke: 0.3pt + luma(170)))
+
   #if "bank_account" in data.payment [
-    #v(8pt)
-    #if data.payment.bank_account.at("iban", default: none) != none [*#labels.iban:* #data.payment.bank_account.iban]
-    #if "bic" in data.payment.bank_account [#linebreak()*#labels.bic:* #data.payment.bank_account.bic]
-    #if "routing_number" in data.payment.bank_account [#linebreak()*#labels.routing_number:* #data.payment.bank_account.routing_number]
-    #if "account_number" in data.payment.bank_account [#linebreak()*#labels.account_number:* #data.payment.bank_account.account_number]
+    #let account = data.payment.bank_account
+    #let details = ()
+    #for (key, label) in (
+      ("account_holder", labels.account_holder),
+      ("iban", labels.iban),
+      ("bic", labels.bic),
+      ("routing_number", labels.at("routing_number", default: none)),
+      ("account_number", labels.at("account_number", default: none)),
+    ) {
+      if account.at(key, default: none) != none {
+        details.push(text(weight: "bold")[#label:])
+        details.push([#account.at(key)])
+      }
+    }
+    #v(4pt)
+    #block(breakable: false, stack(spacing: 8pt,
+      text(weight: "bold")[#labels.payment_info],
+      [#labels.payment_request],
+      grid(columns: (auto, 1fr), column-gutter: 16pt, row-gutter: 4pt, ..details),
+    ))
   ]
   #for field in data.at("profile_fields", default: ()) [
     #block(above: 4pt, below: 4pt)[*#field.label:* #field.value]
   ]
-  #v(8pt)
 
-  #if not sales-tax [#labels.retention_of_title]
-
-  #v(12pt)
-
-  #labels.regards
-
-  #v(20pt)
-
-  #if "business_owner" in company and company.business_owner != none [
-    #company.business_owner
-  ] else [
-    #company.name
+  #if not sales-tax [
+    #divider
+    #text(size: 8pt)[#labels.retention_of_title]
   ]
+
+  #divider
+  #block(breakable: false, stack(spacing: 22pt,
+    [#labels.regards],
+    [#if "business_owner" in company and company.business_owner != none [#company.business_owner] else [#company.name]],
+  ))
 ]
 ]

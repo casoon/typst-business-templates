@@ -7,6 +7,9 @@ is archived separately.
 
 ## [Unreleased]
 
+### Changed
+- **Invoices:** Bank details appear in a separate "Payment information" block below the total, with a transfer request and the account holder; hairlines divide it from the retention-of-title note and the regards. With bank details and a due date in the header, the "payable by" sentence is omitted.
+
 ## [0.4.0] - 2026-11-12
 
 ### Breaking

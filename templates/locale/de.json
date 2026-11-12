@@ -31,6 +31,7 @@
     "vat": "MwSt.",
     "total": "Gesamtbetrag",
     "payment_info": "Zahlungsinformationen",
+    "payment_request": "Bitte überweisen Sie den Rechnungsbetrag bis zum angegebenen Fälligkeitsdatum unter Angabe der Rechnungsnummer auf folgendes Konto:",
     "bank": "Bank",
     "iban": "IBAN",
     "bic": "BIC",

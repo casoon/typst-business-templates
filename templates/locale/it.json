@@ -31,6 +31,7 @@
     "vat": "IVA",
     "total": "Importo totale",
     "payment_info": "Informazioni di pagamento",
+    "payment_request": "Vi preghiamo di versare l’importo della fattura entro la data di scadenza indicata, specificando il numero della fattura, sul seguente conto:",
     "bank": "Banca",
     "iban": "IBAN",
     "bic": "BIC",

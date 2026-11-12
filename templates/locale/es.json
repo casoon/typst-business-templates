@@ -31,6 +31,7 @@
     "vat": "IVA",
     "total": "Importe total",
     "payment_info": "Información de pago",
+    "payment_request": "Le rogamos que transfiera el importe de la factura antes de la fecha de vencimiento indicada, citando el número de factura, a la siguiente cuenta:",
     "bank": "Banco",
     "iban": "IBAN",
     "bic": "BIC",

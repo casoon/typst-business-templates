@@ -31,6 +31,7 @@
     "vat": "IVA",
     "total": "Valor total",
     "payment_info": "Informações de pagamento",
+    "payment_request": "Agradecemos a transferência do montante da fatura até à data de vencimento indicada, com indicação do número da fatura, para a seguinte conta:",
     "bank": "Banco",
     "iban": "IBAN",
     "bic": "BIC",
