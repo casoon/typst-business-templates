@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.3.0": publication, writing-field, choice-group, priority-tag, process-phase
+#import "@local/business-templates:0.4.0": publication, writing-field, choice-group, priority-tag, process-phase
 #show: publication.with(title: "Projektbriefing und Erfassungsbogen", document-type: "Erfassung", document-number: "FORM-2026-001", company: (name: "Beispielbüro", language: "de"))
 
 #priority-tag("required")

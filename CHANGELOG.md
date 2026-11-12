@@ -7,6 +7,11 @@ is archived separately.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-12
+
+### Breaking
+- **Invoices:** The eight released DE tax-case profiles are selected as version `1`; requests that name `1-draft` for them are rejected and must switch to `1`.
+
 ### Added
 - **Branding:** `branding.signal_color` sets the colour of confidentiality marks and security notices on the credentials sheet independently of `accent_color`; the default stays red, and `warning-box` uses it.
   Details: [Colours and fonts](https://casoon.github.io/typst-business-templates/docs/guides/branding/#colours-and-fonts).

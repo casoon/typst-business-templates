@@ -3,7 +3,7 @@
 // Based on casoon-documents structure
 //
 // USAGE (Package Import):
-//   #import "@local/business-templates:0.3.0": documentation
+//   #import "@local/business-templates:0.4.0": documentation
 //   #let company = json("/data/company.json")
 //   #show: documentation.with(
 //     title: "My Documentation",

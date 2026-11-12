@@ -1,5 +1,5 @@
 // Validate first, saving the returned canonical rendering view as resolved.json.
-#import "@local/business-templates:0.3.0": invoice
+#import "@local/business-templates:0.4.0": invoice
 #let resolved = json("resolved.json")
 #assert(resolved.status == "ready_for_preview", message: "Invoice profile validation is blocked")
 #let company = resolved.company

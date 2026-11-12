@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.3.0": task-list
+#import "@local/business-templates:0.4.0": task-list
 #task-list(title: "Project responsibilities", document-number: "TASK-2026-001", created: "2026-10-26", company: (language: "en"), show-title-page: false,
   roles: ((name: "Sponsor", description: "Reviews the scope and accepts the result."), (name: "Project lead", description: "Coordinates reviews and records decisions.")),
   tasks: range(1, 35).map(i => (

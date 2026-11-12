@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.3.0": task-list
+#import "@local/business-templates:0.4.0": task-list
 
 // Einfaches Beispiel für eine Aufgabenliste
 #task-list(
