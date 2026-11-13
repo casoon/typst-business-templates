@@ -31,6 +31,7 @@
     "vat": "TVA",
     "total": "Montant total",
     "payment_info": "Informations de paiement",
+    "payment_request": "Merci de virer le montant de la facture avant la date d’échéance indiquée, en mentionnant le numéro de facture, sur le compte suivant :",
     "bank": "Banque",
     "iban": "IBAN",
     "bic": "BIC",

@@ -31,6 +31,7 @@
     "vat": "BTW",
     "total": "Totaalbedrag",
     "payment_info": "Betalingsgegevens",
+    "payment_request": "Wij verzoeken u het factuurbedrag vóór de vermelde vervaldatum over te maken op de volgende rekening, onder vermelding van het factuurnummer:",
     "bank": "Bank",
     "iban": "IBAN",
     "bic": "BIC",

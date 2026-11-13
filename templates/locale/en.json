@@ -31,6 +31,7 @@
     "vat": "VAT",
     "total": "Total Amount",
     "payment_info": "Payment Information",
+    "payment_request": "Please transfer the invoice amount by the stated due date, quoting the invoice number, to the following account:",
     "bank": "Bank",
     "iban": "IBAN",
     "bic": "BIC",
