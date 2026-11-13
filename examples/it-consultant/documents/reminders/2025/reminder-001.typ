@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.4.0": reminder
+#import "@local/business-templates:0.4.1": reminder
 
 #reminder(
   data: json("reminder-001.json"),

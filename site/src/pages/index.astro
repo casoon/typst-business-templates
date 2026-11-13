@@ -59,7 +59,7 @@ const invoiceCases = catalog.profiles
   .sort((a, b) => Number(b.released) - Number(a.released) || Number(a.id.startsWith('fr-')) - Number(b.id.startsWith('fr-')));
 
 const quickstart = `cargo install typstgen --version ${toolVersions.typstgen} --locked
-git clone --branch templates-v0.4.0 https://github.com/casoon/typst-business-templates
+git clone --branch templates-v0.4.1 https://github.com/casoon/typst-business-templates
 cd typst-business-templates && ./scripts/install-package.sh
 python3 examples/invoice-languages/build.py`;
 ---
@@ -286,7 +286,7 @@ python3 examples/invoice-languages/build.py`;
     items={[
       {
         q: 'Is business-templates published on Typst Universe?',
-        a: 'No. It is distributed as a source release tag (currently templates-v0.4.0) and installed locally as @local/business-templates; clone the tagged repository rather than fetching a package.',
+        a: 'No. It is distributed as a source release tag (currently templates-v0.4.1) and installed locally as @local/business-templates; clone the tagged repository rather than fetching a package.',
       },
       {
         q: 'Do I need typstgen to use these templates?',

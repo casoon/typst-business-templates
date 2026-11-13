@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.4.0": order-confirmation
+#import "@local/business-templates:0.4.1": order-confirmation
 
 #order-confirmation(
   data: json("order-confirmation-001.json"),

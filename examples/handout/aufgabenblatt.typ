@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.4.0": handout, aufgabe, hinweis, wichtig, antwortfeld
+#import "@local/business-templates:0.4.1": handout, aufgabe, hinweis, wichtig, antwortfeld
 
 #show: handout.with(
   title: "Argumente prüfen",

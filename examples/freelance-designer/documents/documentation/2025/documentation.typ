@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.4.0": documentation
+#import "@local/business-templates:0.4.1": documentation
 
 #show: documentation.with(
   document_number: "DOC-2025-001",
