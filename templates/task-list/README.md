@@ -17,7 +17,7 @@ Professionelles Template für Aufgabenlisten, Todo-Listen und Projektplanung.
 ## Verwendung
 
 ```typst
-#import "@local/business-templates:0.4.0": task-list
+#import "@local/business-templates:0.4.1": task-list
 
 #task-list(
   title: "Meine Aufgabenliste",

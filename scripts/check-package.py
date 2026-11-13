@@ -55,7 +55,7 @@ with tempfile.TemporaryDirectory(prefix="business-templates-check-") as director
     def text(reader):
         return "\n".join(page.extract_text() for page in reader.pages)
 
-    locale_import = '#import "@local/business-templates:0.4.0" as pkg\n'
+    locale_import = '#import "@local/business-templates:0.4.1" as pkg\n'
     prefix = locale_import + "#let load-locale = pkg.load-locale\n"
     compile_source("locale-contract", prefix + '''
 #let base = load-locale(none, (language: "en"))

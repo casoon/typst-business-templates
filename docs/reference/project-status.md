@@ -16,7 +16,7 @@ a practical extension point: presentation changes do not require national templa
 The remaining work is concentrated in distribution, real consumer integration and additional
 reviewed invoice/export cases.
 
-Package `business-templates` 0.4.0 is distributed as the `templates-v0.4.0` source release. Configured invoice preparation and profile
+Package `business-templates` 0.4.1 is distributed as the `templates-v0.4.1` source release. Configured invoice preparation and profile
 tools use typstgen 0.6.2 (`tool-versions.json`); these commands are
 not present in typstgen 0.5.0. See [Installation](../../getting-started/installation/)
 and [Versions](../releases/).

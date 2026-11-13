@@ -1,4 +1,4 @@
-#import "@local/business-templates:0.4.0": concept
+#import "@local/business-templates:0.4.1": concept
 
 // Company data from the example project
 #let company = json("/data/company.json")
