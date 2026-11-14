@@ -7,6 +7,11 @@ is archived separately.
 
 ## [Unreleased]
 
+### Changed
+
+- **Pages:** the project site uses the current shared theme (0.12.14).
+
+
 ## [0.4.1] - 2026-11-13
 
 ### Changed
