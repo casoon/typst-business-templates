@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'node:url';
 
 // Project-owned styles for notices in the docs; the vendored theme stays untouched.
+/** @type {import('astro').AstroIntegration} */
 const noticeStyles = {
   name: 'notice-styles',
   hooks: {
