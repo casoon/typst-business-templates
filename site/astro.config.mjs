@@ -34,9 +34,12 @@ export default defineConfig({
       ],
       docsGroups: {
         'getting-started': 'Getting started',
+        catalogue: 'Document catalogue',
+        katalog: 'Dokumentenkatalog (Deutsch)',
         guides: 'Guides',
         reference: 'Reference',
       },
+      mdxComponents: './src/mdx-components.ts',
     }),
   ],
 });

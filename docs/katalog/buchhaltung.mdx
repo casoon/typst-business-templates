@@ -1,0 +1,138 @@
+---
+title: Buchhaltungsdokumente
+description: Zehn datengetriebene Vorlagen von der Rechnung bis zu den Zugangsdaten, mit Beispiel, Besonderheiten und Aufbau.
+order: 2
+---
+
+**English version:** [Accounting documents](../../catalogue/accounting/)
+
+<div lang="de">
+
+## So sind sie gebaut
+
+Jedes Buchhaltungsdokument ist ein DIN-5008-Brief: Briefkopf mit Logo und Metadatenkasten,
+Adressblock mit Rücksendezeile für Fensterumschläge und eine vierspaltige Fußzeile mit
+Firmendaten (Adresse, Kontakt, Steuerdaten, Bankverbindung). Die gemeinsamen Teile liegen in
+`templates/common/` (`accounting-header.typ`, `din5008-address.typ`, `totals-summary.typ`,
+`footers.typ`), deshalb sehen alle zehn verwandt aus.
+
+Der Inhalt ist eine JSON-Datei, die ein Schema prüft; das Dokument ist ein Wrapper aus vier Zeilen:
+
+```typst
+#import "@local/business-templates:0.4.1": offer
+
+#offer(
+  data: json("AN-2026-007.json"),
+  company: json("/data/company.json"),
+)
+```
+
+Vorlagen mit Geldbeträgen prüfen die Summen: Passen die Positionen nicht zur angegebenen Summe,
+bricht der Build ab, statt eine falsche Zahl zu drucken. Einzelheiten und die Feldübersicht:
+[Accounting documents](../../guides/json-documents/) (englisch).
+
+## Rechnung
+
+<Sample slug="invoice" name="Rechnung" lang="de" />
+
+Positionstabelle mit Unterpositionen, Steueraufstellung und Zahlungsziel. Sie ist die Vorlage mit
+dem meisten Zusatz: sieben Sprachen, internationales Layout, A4 oder US Letter und konfigurierte
+Umsatz- oder Verkaufssteuer ([Invoice configuration](../../guides/invoice-configuration/), englisch).
+Zusammen mit typstgen wird aus demselben JSON eine ZUGFeRD-E-Rechnung
+([E-invoices](https://casoon.github.io/typstgen/docs/guides/e-invoices/), englisch;
+[Tutorial](https://casoon.github.io/typstgen/docs/tutorial-de/e-invoice/)).
+
+**Vorschlag:** Eine JSON-Datei je Rechnung, benannt wie die Rechnungsnummer, und der dünne Wrapper
+daneben. Die JSON gehört in die Versionsverwaltung und ist die Grundlage der E-Rechnung.
+
+## Angebot
+
+<Sample slug="offer" name="Angebot" lang="de" />
+
+Positionstabelle, Gültigkeitsdatum und Bedingungen, mit Summenprüfung. Die Positionen haben
+dieselbe Form wie bei der Rechnung.
+
+**Vorschlag:** Nimmt der Kunde an, kopiert man die Positionen in die Auftragsbestätigung und später
+in die Rechnung, statt sie neu zu tippen.
+
+## Gutschrift
+
+<Sample slug="credit-note" name="Gutschrift" lang="de" />
+
+Verweist auf die ursprüngliche Rechnung und den Grund, dann die korrigierten Positionen; die
+Summen werden geprüft.
+
+**Vorschlag:** Eine Gutschrift ausstellen, statt eine versandte Rechnung zu ändern. Die Historie
+bleibt sichtbar.
+
+## Mahnung
+
+<Sample slug="reminder" name="Mahnung" lang="de" />
+
+Mahnstufe 1 bis 3, Tabelle der offenen Rechnungen, Gebühren und eine neue Frist. Sie führt
+`outstanding_invoices` mit Nummern auf und braucht keine Kopie der Rechnungspositionen.
+
+## Lieferschein
+
+<Sample slug="delivery-note" name="Lieferschein" lang="de" />
+
+Positionen mit Mengen, Lieferadresse, Versanddaten und Unterschriftsfelder. Die Vorlage hat keine
+Preisspalten.
+
+## Auftragsbestätigung
+
+<Sample slug="order-confirmation" name="Auftragsbestätigung" lang="de" />
+
+Auftragsreferenz, voraussichtliche Lieferung und Positionstabelle; die Summen werden geprüft.
+
+## Angebotsanfrage
+
+<Sample slug="quotation-request" name="Angebotsanfrage" lang="de" />
+
+Die andere Richtung: Sie fragen bei einem Lieferanten an. Angefragte Positionen mit Spezifikation,
+Anforderungen und Antwortfrist. Der Empfänger heißt in den Daten `supplier` statt `recipient`.
+
+## Stundenzettel
+
+<Sample slug="time-sheet" name="Stundenzettel" lang="de" />
+
+Tageseinträge mit Beginn und Ende, Stundensummen und Unterschriftsfelder; der Kunde heißt in den
+Daten `client`.
+
+**Vorschlag:** Den Zettel als unterschriebene Anlage zu einer Rechnung für Leistungen nach Zeit
+nutzen und die Stundensumme als Menge der Rechnungsposition übernehmen.
+
+## Brief
+
+<Sample slug="letter" name="Brief" lang="de" />
+
+Betreff, Ihr und unser Zeichen, Kopfzeile ab Seite 2 und Anlagen. Der Text steht als einfacher
+`content` in den Daten oder, für Überschriften, Listen und Tabellen, als Typst-Inhalt nach dem
+Aufruf:
+
+```typst
+#letter(
+  data: (
+    metadata: (date: "2026-10-08", subject: "Bieterfragen", reference_number: "BRF-2026-001"),
+    recipient: (lines: ("Muster GmbH", "Herr Max Muster", "Hauptstraße 1", "12345 Musterstadt")),
+    salutation: "Sehr geehrte Damen und Herren,",
+  ),
+  company: json("/data/company.json"),
+)[
+  = A. Eignung
+  …
+]
+```
+
+## Zugangsdaten
+
+<Sample slug="credentials" name="Zugangsdaten" lang="de" />
+
+Zugangsdaten für eine Übergabe: Titelseite, Vertraulichkeitshinweis und ein Abschnitt je Dienst mit
+Logins, Ports und Einstellungen. Sie nutzt das Dokumentlayout (Titelseite, Gestaltung, übersetzte
+Beschriftungen), nimmt ihren Inhalt aber als Daten und akzeptiert teilweise `locale:`-Überschreibungen.
+
+**Vorschlag:** Das Blatt aus derselben Quelle erzeugen, aus der man bereitstellt, damit es nicht von
+der Wirklichkeit abweicht, und es auf Papier oder verschlüsselt übergeben, nicht per E-Mail.
+
+</div>

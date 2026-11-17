@@ -1,0 +1,41 @@
+---
+import { url } from '@casoon/pages-theme/lib/url';
+
+interface Props {
+  /** File name in public/showcase/ without extension */
+  slug: string;
+  /** Name of the example, used in the alt text */
+  name: string;
+  lang?: 'en' | 'de';
+}
+
+const { slug, name, lang = 'en' } = Astro.props;
+const de = lang === 'de';
+const alt = de ? `Erste Seite des Beispiels ${name}` : `First page of the example ${name}`;
+const label = de ? 'PDF öffnen' : 'Open PDF';
+---
+
+<figure class="sample">
+  <img src={url(`showcase/${slug}.webp`)} width="778" height="1100" alt={alt} loading="lazy" decoding="async" />
+  <figcaption><a href={url(`showcase/${slug}.pdf`)}>{label}: {slug}.pdf</a></figcaption>
+</figure>
+
+<style>
+  .sample {
+    margin: 20px 0;
+    max-width: 380px;
+  }
+  .sample img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+  }
+  .sample figcaption {
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+title: Documents with a title page
+description: Eight templates for concepts, contracts, minutes and more, written as Typst text after a show rule, with an example of each.
+order: 3
+---
+
+**Deutsche Fassung:** [Dokumente mit Titelseite](../../katalog/dokumente/)
+
+## How they are built
+
+These templates take metadata as parameters of a `#show:` rule and the content as ordinary Typst
+text below it. Title page with logo, title, document number, metadata and tags come from
+`templates/common/title-page.typ`; branding and labels follow `company.json`. Most have an optional
+table of contents (`show_toc`), and all take `show-title-page` and `show-footer`.
+
+```typst
+#import "@local/business-templates:0.4.1": protocol
+
+#show: protocol.with(
+  title: "Projekt Kick-off Meeting - API Migration",
+  document_number: "PROT-2025-001",
+  meeting_date: "02.01.2025",
+  location: "DataFlow Analytics AG, Konferenzraum 3",
+  moderator: "Max Mustermann (IT-Consultant)",
+  participants: ("Dr. Sarah Schmidt (DataFlow Analytics AG, CTO)", "Michael Berger (DataFlow Analytics AG, Lead Developer)"),
+  company: json("/data/company.json"),
+)
+
+= Begrüßung und Agenda
+
+Dr. Schmidt eröffnet das Meeting …
+```
+
+More: [Documents in Typst](../../guides/typst-documents/).
+
+## Concept
+
+<Sample slug="concept" name="concept" />
+
+Project and client, version, status and authors on the title page; free text below.
+
+## Documentation
+
+<Sample slug="documentation" name="documentation" />
+
+Subject, document type, version and status; code blocks are part of the layout.
+
+## Contract
+
+<Sample slug="contract" name="contract" />
+
+Contract type, parties, effective and termination date.
+
+<Callout type="caution">
+  The contract template provides layout, not legal wording. Have the text checked by a lawyer.
+</Callout>
+
+## Minutes
+
+<Sample slug="protocol" name="minutes" />
+
+Date, time, location, participants, absent persons, moderator and note taker, as in the call above.
+
+## Specification
+
+<Sample slug="specification" name="specification" />
+
+Version, last update and authors.
+
+## Proposal
+
+<Sample slug="proposal" name="project proposal" />
+
+Budget, timeline and validity on the title page.
+
+**Suggestion:** a proposal that is accepted becomes the base of the concept and the contract. They
+share title page and branding, so the set looks consistent.
+
+## SLA
+
+<Sample slug="sla" name="service level agreement" />
+
+Provider, customer, effective date and review period.
+
+## Task list
+
+<Sample slug="task-list" name="task list" />
+
+The one template here that is called as a function, not a show rule: you pass `categories:` with
+`tasks:`. Each task has status, priority, due date, assignee, tags and subtasks; dependencies are
+supported, too.
+
+**Suggestion:** keep the tasks in data and render the list for a sprint review or a client report.

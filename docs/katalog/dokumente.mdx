@@ -1,0 +1,101 @@
+---
+title: Dokumente mit Titelseite
+description: Acht Vorlagen für Konzept, Vertrag, Protokoll und mehr, geschrieben als Typst-Text nach einer Show-Regel, jeweils mit Beispiel.
+order: 3
+---
+
+**English version:** [Documents with a title page](../../catalogue/documents/)
+
+<div lang="de">
+
+## So sind sie gebaut
+
+Diese Vorlagen nehmen Metadaten als Parameter einer `#show:`-Regel und den Inhalt als gewöhnlichen
+Typst-Text darunter. Titelseite mit Logo, Titel, Dokumentnummer, Metadaten und Schlagwörtern kommen
+aus `templates/common/title-page.typ`; Gestaltung und Beschriftungen folgen `company.json`. Die
+meisten haben ein optionales Inhaltsverzeichnis (`show_toc`), und alle nehmen `show-title-page` und
+`show-footer`.
+
+```typst
+#import "@local/business-templates:0.4.1": protocol
+
+#show: protocol.with(
+  title: "Projekt Kick-off Meeting - API Migration",
+  document_number: "PROT-2025-001",
+  meeting_date: "02.01.2025",
+  location: "DataFlow Analytics AG, Konferenzraum 3",
+  moderator: "Max Mustermann (IT-Consultant)",
+  participants: ("Dr. Sarah Schmidt (DataFlow Analytics AG, CTO)", "Michael Berger (DataFlow Analytics AG, Lead Developer)"),
+  company: json("/data/company.json"),
+)
+
+= Begrüßung und Agenda
+
+Dr. Schmidt eröffnet das Meeting …
+```
+
+Mehr: [Documents in Typst](../../guides/typst-documents/) (englisch).
+
+## Konzept
+
+<Sample slug="concept" name="Konzept" lang="de" />
+
+Projekt und Kunde, Version, Status und Autoren auf der Titelseite; darunter freier Text.
+
+## Dokumentation
+
+<Sample slug="documentation" name="Dokumentation" lang="de" />
+
+Thema, Dokumenttyp, Version und Status; Codeblöcke sind Teil des Layouts.
+
+## Vertrag
+
+<Sample slug="contract" name="Vertrag" lang="de" />
+
+Vertragsart, Parteien, Beginn und Kündigungsdatum.
+
+<Callout type="caution">
+  Die Vorlage liefert Layout, keine rechtlichen Formulierungen. Lassen Sie den Text von einer
+  Juristin oder einem Juristen prüfen.
+</Callout>
+
+## Protokoll
+
+<Sample slug="protocol" name="Protokoll" lang="de" />
+
+Datum, Uhrzeit, Ort, Teilnehmende, Entschuldigte, Moderation und Protokollführung, wie im Aufruf
+oben.
+
+## Spezifikation
+
+<Sample slug="specification" name="Spezifikation" lang="de" />
+
+Version, letzte Änderung und Autoren.
+
+## Projektvorschlag
+
+<Sample slug="proposal" name="Projektvorschlag" lang="de" />
+
+Budget, Zeitplan und Gültigkeit auf der Titelseite.
+
+**Vorschlag:** Ein angenommener Projektvorschlag wird zur Grundlage von Konzept und Vertrag. Sie
+teilen Titelseite und Gestaltung, der Satz wirkt einheitlich.
+
+## SLA
+
+<Sample slug="sla" name="Service-Level-Vereinbarung" lang="de" />
+
+Anbieter, Kunde, Inkrafttreten und Überprüfungszeitraum.
+
+## Aufgabenliste
+
+<Sample slug="task-list" name="Aufgabenliste" lang="de" />
+
+Die einzige Vorlage hier, die als Funktion aufgerufen wird statt als Show-Regel: Man übergibt
+`categories:` mit `tasks:`. Jede Aufgabe hat Status, Priorität, Fälligkeit, Zuständige, Schlagwörter
+und Unteraufgaben; Abhängigkeiten werden ebenfalls unterstützt.
+
+**Vorschlag:** Die Aufgaben als Daten halten und die Liste für einen Sprint-Review oder einen
+Kundenbericht ausgeben.
+
+</div>

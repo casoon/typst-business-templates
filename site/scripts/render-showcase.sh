@@ -28,6 +28,14 @@ sources=(
   specification=it-consultant/documents/specifications/2025/specification-001.typ
   concept=digitalagentur/documents/concepts/2025/concept.typ
   documentation=digitalagentur/documents/documentation/2025/documentation.typ
+  contract=it-consultant/documents/contracts/2025/contract-001.typ
+  delivery-note=it-consultant/documents/delivery-notes/2025/delivery-note-001.typ
+  order-confirmation=it-consultant/documents/order-confirmations/2025/order-confirmation-001.typ
+  protocol=it-consultant/documents/protocols/2025/protocol-001.typ
+  sla=it-consultant/documents/slas/2025/sla-001.typ
+  time-sheet=it-consultant/documents/time-sheets/2025/timesheet-001.typ
+  task-list=digitalagentur/documents/task-lists/2025/task-list.typ
+  handout=handout/aufgabenblatt.typ
 )
 pdfs=()
 for entry in "${sources[@]}"; do

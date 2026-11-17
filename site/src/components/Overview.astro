@@ -1,0 +1,83 @@
+---
+import { url } from '@casoon/pages-theme/lib/url';
+
+interface Props {
+  lang?: 'en' | 'de';
+}
+
+const { lang = 'en' } = Astro.props;
+const de = lang === 'de';
+const base = de ? 'katalog' : 'catalogue';
+const pages = de
+  ? { accounting: 'buchhaltung', documents: 'dokumente', more: 'handouts-und-diagramme' }
+  : { accounting: 'accounting', documents: 'documents', more: 'handouts-and-diagrams' };
+
+// [slug, English label, German label, page, anchor in English page, anchor in German page]
+const items: [string, string, string, 'accounting' | 'documents' | 'more', string, string][] = [
+  ['invoice', 'Invoice', 'Rechnung', 'accounting', 'invoice', 'rechnung'],
+  ['offer', 'Offer', 'Angebot', 'accounting', 'offer', 'angebot'],
+  ['credit-note', 'Credit note', 'Gutschrift', 'accounting', 'credit-note', 'gutschrift'],
+  ['reminder', 'Reminder', 'Mahnung', 'accounting', 'reminder', 'mahnung'],
+  ['delivery-note', 'Delivery note', 'Lieferschein', 'accounting', 'delivery-note', 'lieferschein'],
+  ['order-confirmation', 'Order confirmation', 'Auftragsbestätigung', 'accounting', 'order-confirmation', 'auftragsbestätigung'],
+  ['quotation-request', 'Quotation request', 'Angebotsanfrage', 'accounting', 'quotation-request', 'angebotsanfrage'],
+  ['time-sheet', 'Time sheet', 'Stundenzettel', 'accounting', 'time-sheet', 'stundenzettel'],
+  ['letter', 'Letter', 'Brief', 'accounting', 'letter', 'brief'],
+  ['credentials', 'Credentials', 'Zugangsdaten', 'accounting', 'credentials', 'zugangsdaten'],
+  ['concept', 'Concept', 'Konzept', 'documents', 'concept', 'konzept'],
+  ['documentation', 'Documentation', 'Dokumentation', 'documents', 'documentation', 'dokumentation'],
+  ['contract', 'Contract', 'Vertrag', 'documents', 'contract', 'vertrag'],
+  ['protocol', 'Minutes', 'Protokoll', 'documents', 'minutes', 'protokoll'],
+  ['specification', 'Specification', 'Spezifikation', 'documents', 'specification', 'spezifikation'],
+  ['proposal', 'Proposal', 'Projektvorschlag', 'documents', 'proposal', 'projektvorschlag'],
+  ['sla', 'SLA', 'SLA', 'documents', 'sla', 'sla'],
+  ['task-list', 'Task list', 'Aufgabenliste', 'documents', 'task-list', 'aufgabenliste'],
+  ['handout', 'Handout', 'Handout', 'more', 'handout', 'handout'],
+];
+---
+
+<ul class="overview">
+  {
+    items.map(([slug, en, deLabel, page, enAnchor, deAnchor]) => {
+      const label = de ? deLabel : en;
+      return (
+        <li>
+          <a href={url(`docs/${base}/${pages[page]}/#${de ? deAnchor : enAnchor}`)}>
+            <img src={url(`showcase/${slug}.webp`)} width="778" height="1100" alt="" loading="lazy" decoding="async" />
+            <span>{label}</span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+    padding: 0;
+    list-style: none;
+  }
+  .overview a {
+    display: block;
+    color: var(--heading);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .overview img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+  }
+  .overview a:hover img,
+  .overview a:focus-visible img {
+    border-color: var(--border-strong);
+  }
+</style>

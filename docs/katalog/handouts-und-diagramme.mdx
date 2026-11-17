@@ -1,0 +1,52 @@
+---
+title: Handouts, Publikationen und Diagramme
+description: Das Unterrichts-Handout, die Publikationslayouts und der chartlet-Diagramm-Workflow, mit Beispielen.
+order: 4
+---
+
+**English version:** [Handouts, publications and diagrams](../../catalogue/handouts-and-diagrams/)
+
+<div lang="de">
+
+## Handout
+
+<Sample slug="handout" name="Handout" lang="de" />
+
+Ein Unterrichts-Handout: ein Lehrerblatt, gefolgt vom Material für die Lernenden. Die Helfer
+`aufgabe`, `hinweis`, `wichtig`, `kriterium`, `antwortfeld` und `textblock` bauen Aufgaben mit
+Punkten, Hinweise und Antwortfelder; die Beschriftungen sind deutsch.
+
+```typst
+#show: handout.with(
+  title: "Argumente prüfen",
+  handout-type: "Aufgabenblatt",
+  subject: "Deutsch",
+  target-group: "Oberstufe",
+  duration: "45 Minuten",
+)
+
+#aufgabe(1, punkte: 4)[
+  Nenne die These des Kommentars in einem Satz.
+  #antwortfeld(hoehe: 60pt, linien: true)
+]
+```
+
+## Publikationen
+
+Freie Layouts für Leitfäden, Broschüren und Formulare: Die Funktion `publication` legt das
+Seitenformat fest, `brochure` ist eine Querformat-Variante, und eine Reihe von Komponenten
+(Schreibfelder, Ankreuzoptionen, Auswahlgruppen, Hinweisboxen, Prozessphasen, ruhige Tabellen,
+Prioritätsmarken und Karten) deckt ab, was solche Dokumente wiederholen. Drei Beispiele stehen im
+[Showcase](../../../showcase/): ein Leitfaden, ein Aufnahmebogen und eine Broschüre.
+
+## Diagramme
+
+Das Paket hat keine Diagrammvorlage. [chartlet](https://casoon.github.io/chartlet/) legt eine
+JSON-Spezifikation (Ablauf, Zeitleiste, Schwimmbahnen, Quadrant, Roadmap und mehr) aus und schreibt
+SVG, das Typst wie ein Bild einbettet: in ein Konzept oder eine Dokumentation oder auf eine eigene
+Seite. Anleitung: [Diagrams](../../guides/diagrams/) (englisch).
+
+**Vorschlag:** Die Spezifikation neben dem Dokument halten und im Build rendern, damit sich das
+Diagramm als Text ändern und im Diff prüfen lässt.
+
+</div>

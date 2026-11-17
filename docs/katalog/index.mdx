@@ -1,0 +1,46 @@
+---
+title: Dokumentenkatalog
+description: Alle Dokumenttypen von business-templates auf einen Blick, mit Beispiel, Aufbau und Hinweisen, welche gut zusammenpassen.
+order: 1
+---
+
+**English version:** [Document catalogue](../catalogue/)
+
+<div lang="de">
+
+Das Paket bringt 21 Vorlagen und einen Diagramm-Workflow mit. Dieser Katalog zeigt, was jede erzeugt
+und wie sie gelöst ist. Jedes Bild ist die erste Seite eines echten Beispiels aus `examples/`,
+übersetzt mit typstgen; das PDF öffnet sich über die Bildunterschrift. Funktionen, Aufrufarten und
+Schemas stehen in der [Referenz](../reference/document-types/) (englisch).
+
+## Drei Wege, ein Dokument zu bauen
+
+| Art | Inhalt kommt als | Layout | Seite |
+| --- | --- | --- | --- |
+| **Buchhaltungsdokumente** | JSON-Datei, per Schema geprüft | DIN-5008-Brief mit Adressfenster und vierspaltiger Fußzeile | [Buchhaltungsdokumente](./buchhaltung/) |
+| **Dokumente** | Typst-Text nach einer `#show:`-Regel, Metadaten als Parameter | Titelseite, optionales Inhaltsverzeichnis, Fußzeile mit Firmendaten | [Dokumente mit Titelseite](./dokumente/) |
+| **Handouts, Publikationen, Diagramme** | Typst-Text mit Hilfsfunktionen oder chartlet-Spezifikation | freies Layout, Komponenten, SVG | [Handouts, Publikationen und Diagramme](./handouts-und-diagramme/) |
+
+Buchhaltungsdokumente und Dokumente lesen dieselbe `company.json` (Name, Adresse, Bank, Logo,
+Farben); ändert sich die Firmenangabe, ändert sich jedes dieser Dokumente.
+
+## Übersicht
+
+<Overview lang="de" />
+
+## Was gut zusammenpasst
+
+Das sind Vorschläge, keine Funktionen des Pakets: Die Vorlagen sind unabhängig, teilen aber
+`company.json` und ähnliche Datenformen und lassen sich deshalb gut verketten.
+
+- **Verkaufskette:** Angebotsanfrage, dann Angebot, Auftragsbestätigung, Lieferschein, Rechnung.
+  Angebot, Auftragsbestätigung und Rechnung nehmen ihre Positionen in `items` in derselben Form,
+  die Positionen lassen sich also weiterkopieren, und nur `metadata` ändert sich.
+- **Mahnwesen:** Rechnung, Mahnung (Stufe 1 bis 3), Gutschrift für Korrekturen. Die Mahnung führt
+  `outstanding_invoices` mit Nummern auf und braucht keine Kopie der Positionen.
+- **Projektkette:** Projektvorschlag, Konzept, Spezifikation, Vertrag, SLA, Protokolle während des
+  Projekts, Dokumentation am Ende. Sie teilen Titelseite und Gestaltung und wirken wie ein Satz.
+- **Abrechnung nach Zeit:** Die Stundensumme des Stundenzettels ist die Menge der
+  Rechnungsposition; der Zettel ist die Anlage, die der Kunde unterschreibt.
+
+</div>

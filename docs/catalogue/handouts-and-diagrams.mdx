@@ -1,0 +1,48 @@
+---
+title: Handouts, publications and diagrams
+description: The teaching handout, the publication layouts and the chartlet diagram workflow, with examples.
+order: 4
+---
+
+**Deutsche Fassung:** [Handouts, Publikationen und Diagramme](../../katalog/handouts-und-diagramme/)
+
+## Handout
+
+<Sample slug="handout" name="handout" />
+
+A teaching handout: a teacher sheet followed by student material. The helpers `aufgabe`, `hinweis`,
+`wichtig`, `kriterium`, `antwortfeld` and `textblock` build tasks with points, notes and answer
+fields; the labels are German.
+
+```typst
+#show: handout.with(
+  title: "Argumente prüfen",
+  handout-type: "Aufgabenblatt",
+  subject: "Deutsch",
+  target-group: "Oberstufe",
+  duration: "45 Minuten",
+)
+
+#aufgabe(1, punkte: 4)[
+  Nenne die These des Kommentars in einem Satz.
+  #antwortfeld(hoehe: 60pt, linien: true)
+]
+```
+
+## Publications
+
+Free-form layouts for guides, brochures and forms: the `publication` function sets the page size,
+`brochure` is a landscape variant, and a set of components (writing fields, check options, choice
+groups, notices, process phases, quiet tables, priority tags and cards) covers what such documents
+repeat. Three examples are in the [showcase](../../../showcase/): a guide, an intake form and a
+brochure.
+
+## Diagrams
+
+The package has no diagram template. [chartlet](https://casoon.github.io/chartlet/) lays out a JSON
+specification (flow, timeline, swimlane, quadrant, roadmap and more) and writes SVG, which Typst
+embeds like an image: inside a concept or documentation, or on a page of its own. How:
+[Diagrams](../../guides/diagrams/).
+
+**Suggestion:** keep the spec next to the document and render it in the build, so the diagram can
+be changed as text and reviewed in a diff.
